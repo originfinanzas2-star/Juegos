@@ -54,21 +54,41 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .cd.emp{background:#0003;border:2px dashed #3d5878;box-shadow:none}
 .pile.ok{outline:3px solid #f5a623;box-shadow:0 0 14px #f5a623}
 .hand .cd{transition:transform .1s}.hand .cd.sel{transform:translateY(-12px);outline:3px solid #f5a623}
-.lb{font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9fb2cc;margin:0 0 6px;text-align:center}
+.lb{font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9fb2cc;margin:0 0 6px;text-align:center;position:relative;top:1px}
 .ex{display:block;margin:8px auto 0;background:none;color:#9fb2cc;font-size:13px;padding:4px 16px;border-radius:8px}
 .log{font-size:15px;color:#7f93ad;line-height:1.2;background:#0000002e;border-radius:10px;padding:6px 10px;min-height:calc(3.6em + 12px)}
 .log div{overflow-wrap:anywhere}.log div:last-child{color:#fff}
 .hint{text-align:center;color:#9fb2cc;font-size:15px;line-height:1.2}.hint.hl{color:#ffd54a;font-weight:700}
-.ms.rdy{background:linear-gradient(160deg,#fff 35%,#ffefb0);box-shadow:0 0 0 3px #ffd54a,0 0 16px 4px #ffc107aa;animation:gl 1.4s ease-in-out infinite;position:relative}
-.ms.rdy small{color:#b07d00}
-.ms.rdy::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#fff9 50%,transparent 65%);background-size:250% 100%;animation:sh 2.2s linear infinite;pointer-events:none}
-@keyframes gl{50%{box-shadow:0 0 0 3px #fff3a0,0 0 26px 9px #ffc107dd}}
+.mw{position:relative}
+.ms.dn::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(160deg,#fff 30%,#ffefb0);opacity:0;animation:fin .4s ease var(--d,0s) both;pointer-events:none}
+.ms.dn::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(115deg,transparent 35%,#fffc 50%,transparent 65%);background-size:250% 100%;background-position:150% 0;animation-name:sh;animation-duration:1.5s;animation-timing-function:linear;animation-delay:calc(var(--d,0s) + .3s);animation-iteration-count:3;animation-fill-mode:both;pointer-events:none}
+.ms.dn>small,.ms.dn>p,.ms.dn>.dk{position:relative;z-index:1}
+.ms.dn{animation:mdone 5s linear var(--d,0s) both,gl 1.2s ease-in-out var(--d,0s) infinite}
+.ms.dn small .l1{animation:fout .3s ease var(--d,0s) both}
+.ms.dn small .l2{position:absolute;left:8cqw;top:6cqw;white-space:nowrap;color:#b07d00;opacity:0;animation:fin .3s ease var(--d,0s) both}
+.stamp{position:absolute;left:50%;top:50%;z-index:3;transform:translate(-50%,-50%) rotate(-12deg) scale(2.4);opacity:0;border:1cqw solid #2e9c4a;color:#2e9c4a;background:#ffffffe6;border-radius:3cqw;padding:2cqw 4cqw;font-size:14cqw;font-weight:800;letter-spacing:.5px;white-space:nowrap;animation:stamp .5s cubic-bezier(.2,1.5,.4,1) calc(var(--d,0s) + .35s) forwards}
+.ms.en{animation:men .65s cubic-bezier(.2,1.3,.4,1) var(--d,0s) both}
+.pt{position:absolute;left:50%;top:48%;width:9px;height:9px;margin:-4px;border-radius:2px;background:var(--c);opacity:0;pointer-events:none;z-index:5;animation:pt 1.2s ease-out calc(var(--d,0s) + var(--o,0s)) forwards}
+@keyframes gl{0%,100%{box-shadow:0 0 0 3px #ffd54a,0 0 16px 4px #ffc107aa}50%{box-shadow:0 0 0 3px #fff3a0,0 0 28px 10px #ffc107dd}}
 @keyframes sh{from{background-position:150% 0}to{background-position:-100% 0}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+@keyframes fout{to{opacity:0}}
+@keyframes stamp{to{opacity:1;transform:translate(-50%,-50%) rotate(-12deg) scale(1)}}
+@keyframes mdone{0%{transform:none;opacity:1;filter:none}5%{transform:scale(1.09)}10%{transform:scale(1)}80%{transform:scale(1);opacity:1;filter:none}88%{transform:scale(1.07) translateY(-4px);opacity:1;filter:brightness(1.15)}100%{transform:translateY(-36px) scale(.5) rotate(-9deg);opacity:0;filter:blur(2px)}}
+@keyframes men{from{opacity:0;transform:translateY(-26px) scale(.8) rotate(4deg)}to{opacity:1;transform:none}}
+@keyframes pt{0%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.3) rotate(300deg)}}
+.fl{position:fixed;z-index:60;pointer-events:none;perspective:800px;filter:drop-shadow(0 10px 10px #000a)}
+.fi{position:absolute;inset:0;transform-style:preserve-3d}
+.ff,.fk{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.ff .cd{width:100%;height:100%}
+.fk{transform:rotateY(180deg);background:#1f2a38;border:3px solid #fff;border-radius:9px;display:flex;align-items:center;justify-content:center}
+.fk svg{width:60%}
+.cd.hid{visibility:hidden}
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .sg button:disabled{opacity:.35}.sg button{padding:7px 4px;font-size:14px;line-height:1.1;background:#2a3d58}.sg button.on{background:#f5a623}
 .pn{display:flex;flex-direction:column;gap:8px}
 .bx{width:min(320px,100%);margin:0 auto}
-.hm{flex:1;display:flex;flex-direction:column;gap:10px;padding:14px 14px 18px;min-height:calc(100dvh - 20px)}
+.hm{flex:1;display:flex;flex-direction:column;gap:10px;padding:46px 14px 18px;min-height:calc(100dvh - 20px)}
 .hm .mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px}
 .bx>svg{width:100%;display:block}
 .bx text{font-family:"Roboto Slab",Rockwell,Georgia,serif;font-weight:800;font-style:italic;fill:#f6f4ef;stroke:#f6f4ef;stroke-width:1.6;stroke-linejoin:round}
@@ -116,14 +136,13 @@ const tp=p=>p[p.length-1],tops=()=>S.piles.map(tp),okp=(c,p)=>c.c==tp(p).c||c.n=
 function newGame(){
  const np=S.players.length;let d=[];for(let c=0;c<4;c++)for(let n=1;n<=7;n++)d.push({c,n},{c,n});shuf(d);
  S.hands=S.players.map(()=>d.splice(0,4));S.piles=[0,1,2,3].map(()=>d.splice(0,1));S.draw=d;
- S.target=T(np)[S.diff];S.mdeck=shuf([...M.keys()]).slice(0,S.target);S.active=[];S.done=0;S.turn=0;S.st='play';S.why='';
- S.sigs=[];S.log=['Empieza la partida. ¡Suerte!'];refill();settle(false);
+ S.target=T(np)[S.diff];S.mdeck=shuf([...M.keys()]).slice(0,S.target);S.active=[null,null,null,null];S.evs=[];S.done=0;S.turn=0;S.st='play';S.why='';
+ S.sigs=[];S.log=['Empieza la partida. ¡Suerte!'];refill();resolve();settle(false);
 }
-function refill(){while(S.active.length<4&&S.mdeck.length)S.active.push(S.mdeck.pop())}
-const rdy=()=>S.active.map(id=>!!M[id].f(tops()));
-function claim(i){S.log.push('Misión cumplida: '+strip(M[S.active[i]].t));S.active.splice(i,1);S.done++;refill()}
-function autoClaim(){let f=1;while(f){f=0;for(let i=0;i<S.active.length;i++)if(M[S.active[i]].f(tops())){claim(i);f=1;break}}}
-function lose(w){autoClaim();if(S.done>=S.target){S.st='won';return}S.st='lost';S.why=w}
+function refill(){for(let i=0;i<4;i++)if(S.active[i]==null&&S.mdeck.length)S.active[i]=S.mdeck.pop()}
+function ev(o){S.seq=(S.seq||0)+1;o.n=S.seq;S.evs=(S.evs||[]).concat(o).slice(-12)}
+function resolve(){let k=0,f=1;while(f){f=0;for(let i=0;i<4;i++){const id=S.active[i];if(id!=null&&M[id].f(tops())){S.log.push('Misión cumplida: '+strip(M[id].t));ev({k:'done',s:i,id});S.active[i]=null;S.done++;k++;f=1;refill();break}}}return k}
+function lose(w){S.st='lost';S.why=w}
 function settle(adv){
  if(S.done>=S.target){S.st='won';return}
  const np=S.players.length,ok=i=>!S.players[i].off&&S.hands[i].length;
@@ -135,8 +154,8 @@ function settle(adv){
 }
 function play(i,h,p){
  const c=S.hands[i][h];if(!c||!S.piles[p]||!okp(c,S.piles[p]))return;
- S.hands[i].splice(h,1);S.piles[p].push(c);S.log.push(S.players[i].name+' juega en la pila '+(p+1));
- const k=rdy().filter(Boolean).length;if(S.draw.length)S.hands[i].push(S.draw.pop());S.log=S.log.slice(-30);S.sigs=[];settle(!k);
+ const pv=tp(S.piles[p]);S.hands[i].splice(h,1);S.piles[p].push(c);S.log.push(S.players[i].name+' juega en la pila '+(p+1));ev({k:'play',by:i,h,p,c,pv});
+ const k=resolve();if(S.draw.length){S.hands[i].push(S.draw.pop());ev({k:'draw',by:i})}S.log=S.log.slice(-30);S.sigs=[];settle(!k);
 }
 function act(i,m){
  if(m.t=='diff'&&S.st=='lobby'&&i==0)S.diff=m.d;
@@ -144,14 +163,13 @@ function act(i,m){
  else if(m.t=='again'&&i==0&&(S.st=='won'||S.st=='lost')){const keep=[],nc={};S.players.forEach((p,k)=>{if(!p.off){if(conns[k]){conns[k]._i=keep.length;nc[keep.length]=conns[k]}keep.push(p)}});S.players=keep;conns=nc;S.hands=null;S.st='lobby'}
  else if(m.t=='sig'&&S.st=='play'&&!S.sigs.includes(i)){S.sigs.push(i);S.log.push(S.players[i].name+': '+m.x)}
  else if(m.t=='play'&&S.st=='play'&&S.turn==i)play(i,m.h,m.p);
- else if(m.t=='claim'&&S.st=='play'&&S.turn==i&&S.active[m.m]!=null&&rdy()[m.m]){claim(m.m);S.log=S.log.slice(-30);settle(false)}
  push();
 }
 function view(i){
  const pl=S.players.map((p,k)=>({name:p.name,off:!!p.off,n:S.hands&&S.hands[k]?S.hands[k].length:0}));
  if(S.st=='lobby')return{st:'lobby',players:pl,diff:S.diff,me:i};
  return{st:S.st,why:S.why,players:pl,turn:S.turn,me:i,sg:S.sigs.includes(i),hand:S.hands[i],piles:S.piles.map(p=>({top:tp(p),n:p.length})),
-  missions:S.active,ready:rdy(),done:S.done,target:S.target,draw:S.draw.length,mleft:S.mdeck.length,log:S.log.slice(-4)};
+  missions:[0,1,2,3].map(i=>S.active[i]==null?null:S.active[i]),evs:S.evs||[],done:S.done,target:S.target,draw:S.draw.length,mleft:S.mdeck.length,log:S.log.slice(-4)};
 }
 function push(){sto('mcS',JSON.stringify(S));S.players.forEach((_,i)=>{const v=view(i);if(i==0)render(v);else if(conns[i])conns[i].send(v)})}
 const go=m=>host?act(0,m):conn&&conn.send(m);
@@ -213,7 +231,7 @@ function toRoom(){
 }
 function retry(){if(rt)return;if(tries++>60){alert('No se pudo reconectar');quit();return}bn('Reconectando…');rt=setTimeout(()=>{rt=0;toRoom()},2500)}
 /* ---------- UI ---------- */
-const P={0:'<path d="M5 5l14 14M19 5L5 19" stroke-width="4"/>',1:'<g stroke-width="2.1"><path d="M12 19V5.5"/><path d="M12 15.6L6.8 11.6V9"/><path d="M12 12.4l5.4-3.4V8.2"/></g><path d="M12 1.2l3.3 4.8H8.7z" fill="currentColor" stroke-width="1"/><circle cx="6.8" cy="6.8" r="2.1" fill="currentColor" stroke="none"/><rect x="15.4" y="4.6" width="4" height="4" fill="currentColor" stroke="none"/><circle cx="12" cy="20.6" r="2.6" fill="currentColor" stroke="none"/>',
+const P={0:'<path d="M5 5l14 14M19 5L5 19" stroke-width="4"/>',1:'<g stroke-width="2.9" stroke-linecap="butt" stroke-linejoin="round"><path d="M12 3.7V22.5"/><path d="M5.5 13.8V22.5"/><path d="M12 20.2L18.5 14.8V9.8"/></g><circle cx="12" cy="3.7" r="3.1" fill="currentColor" stroke="none"/><circle cx="5.5" cy="13.8" r="3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="9.8" r="3" fill="currentColor" stroke="none"/>',
 2:'<path d="M13.5 1.5L5 13.5h6l-1.5 9L19 10h-6.5z" fill="currentColor" stroke-width="1.2"/>',3:'<circle cx="12" cy="12" r="6" stroke-width="4"/><path d="M12 1.5v5M12 17.5v5M1.5 12h5M17.5 12h5M4.6 4.6l3.2 3.2M16.2 16.2l3.2 3.2M19.4 4.6l-3.2 3.2M7.8 16.2l-3.2 3.2" stroke-width="3.4" stroke-linecap="butt"/>',
 chev:'<path d="M9 5l7 7-7 7"/>',ban:'<circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/>',ok:'<path d="M4 13l5 5L20 6"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/>',flag:'<path d="M6 21V4M6 5h12l-3 4 3 4H6"/>',card:'<rect x="6" y="3" width="12" height="18" rx="2"/>',tg:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>'};
 const sv=(k,s='1em',w=3)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em">${P[k]}</svg>`;
@@ -232,7 +250,9 @@ const ttl=()=>`<div class="bx"><svg viewBox="0 0 300 132"><text x="150" y="60" t
 const fan=()=>`<div class="bx"><div class="fan"><div class="fc" style="left:5%;transform:rotate(-2deg);z-index:1">${card({c:B,n:1})}</div><div class="fc" style="left:31.5%;z-index:2">${card({c:G,n:2})}</div><div class="fc" style="left:55%;transform:rotate(7deg);transform-origin:bottom left;z-index:3">${card({c:O,n:3})}</div></div></div>`;
 const PC=['#9b6bff','#ff6fb5','#c9d3dd','#b9824f'];
 const avs=(pl,t,me)=>`<div class="avs ${t<0?'all':''}">${pl.map((p,i)=>`<div class="av ${i==t?'on':''} ${p.off?'off':''}"><div class="ci" style="--g:${PC[i]}">${rb(i+1)}</div><span class="${i==me?'m':''}">${p.name}</span></div>`).join(`<i class="ar">${sv('chev','12px',3.5)}</i>`)}</div>`;
-const mcard=(id,r,x='')=>`<div class="ms${r?' rdy':''}" ${x}><small>${r?'✓ COMPLETADA':'MISIÓN:'}</small><p>${mt(M[id].t)}</p><div class="dk">${rb(id)}<span class="ch">${M[id].p.split(' ').map(chip).join('')}</span></div></div>`;
+const BC=['#ffd54a','#fff','#3aa655','#ffb300','#fff'];
+const burst=o=>Array.from({length:10},(_,k)=>{const a=k*36*Math.PI/180,d=55+(k%3)*22;return `<i class="pt" style="--x:${Math.round(Math.cos(a)*d)}px;--y:${Math.round(Math.sin(a)*d)}px;--c:${BC[k%5]};--o:${o}s"></i>`}).join('');
+const mcard=(id,x='',f=null)=>{const dn=f&&f.k=='done';return `<div class="mw" ${f?`style="--d:${f.d}s"`:''}><div class="ms${dn?' dn':''}${f&&f.k=='enter'?' en':''}" ${x}><small><span class="l1">MISIÓN:</span>${dn?'<span class="l2">✓ COMPLETADA</span>':''}</small><p>${mt(M[id].t)}</p><div class="dk">${rb(id)}<span class="ch">${M[id].p.split(' ').map(chip).join('')}</span></div>${dn?'<div class="stamp">¡CUMPLIDA!</div>':''}</div>${dn?burst(.3)+burst(4.2):''}</div>`};
 const bk=(n,l,i)=>`<div class="bk">${i=='rb'?RB:sv('tg','22px',2.2)}<b>${n}</b><small>${l}</small></div>`;
 const card=(c,cl='',x='')=>`<div class="cd ${cl}" ${x} style="--c:${CC[c.c]}"><div class="bd"><b>${c.n}</b></div><i>${c.n}</i><s>${sv(c.c)}</s><u>${c.n}</u><em>${sv(c.c)}</em></div>`;
 const SG=[['No juegues en la pila','p','No juegues en la pila','ban'],['Buena carta para la pila','p','Tengo una buena carta para la pila','ok'],['Puedo ayudar en misión','m','Puedo ayudar con la misión','help'],['Yo cumplo la misión','m','Yo puedo cumplir la misión','flag']];
@@ -241,7 +261,55 @@ function pc(p){
  if(pend&&pend.k=='p'){go({t:'sig',x:pend.x+' '+(p+1)});pend=null;return render(V)}
  if(V.st=='play'&&V.turn==V.me&&sel!=null){const h=sel;sel=null;go({t:'play',h,p})}
 }
-function mc(i){if(pend&&pend.k=='m'){go({t:'sig',x:pend.x+' '+(i+1)});pend=null;render(V);return}if(V.st=='play'&&V.turn==V.me&&V.ready&&V.ready[i])go({t:'claim',m:i})}
+function mc(i){if(pend&&pend.k=='m'){go({t:'sig',x:pend.x+' '+(i+1)});pend=null;render(V)}}
+let sn=null,GH=[[],[],[],[]],PLY={},DRW=0,ENT={};
+const cen=r=>[r.left+r.width/2,r.top+r.height/2];
+function flier(front,sz,from,to,o){
+ const f=document.createElement('div');f.className='fl';
+ f.style.cssText=`left:${from[0]-sz.width/2}px;top:${from[1]-sz.height/2}px;width:${sz.width}px;height:${sz.height}px`;
+ f.innerHTML=`<div class="fi"${o.back?' style="transform:rotateY(180deg)"':''}><div class="ff">${front}</div><div class="fk">${RB}</div></div>`;
+ document.body.appendChild(f);const dl=o.delay||0;
+ f.animate(o.kf(to[0]-from[0],to[1]-from[1]),{duration:o.d,delay:dl,easing:o.ease||'ease',fill:'both'});
+ if(o.flip)f.firstChild.animate([{transform:'rotateY(180deg)'},{transform:'rotateY(0deg)'}],{duration:o.d*.65,delay:dl,easing:'ease-out',fill:'both'});
+ setTimeout(()=>f.remove(),o.d+dl+(o.hold||0));
+}
+function pulse(p){const el=document.querySelector(`.cols .c1:nth-child(${p+1}) .cd`);if(el)el.animate([{boxShadow:'0 0 0 0 #ffffffd0,0 2px 5px #0006',transform:'scale(1.08)',filter:'brightness(1.35)'},{boxShadow:'0 0 0 18px #ffffff00,0 2px 5px #0006',transform:'scale(1)',filter:'none'}],{duration:480,easing:'ease-out'})}
+function flyPlay(e,v){
+ const pc=document.querySelector(`.cols .c1:nth-child(${e.p+1}) .cd`);if(!pc)return;
+ const pr=pc.getBoundingClientRect(),me=e.by==v.me;let from,s0=1;
+ if(me){const h=document.querySelectorAll('.hand>*')[e.h];if(!h)return;const r=h.getBoundingClientRect();from=cen(r);s0=r.width/pr.width}
+ else{const c=document.querySelectorAll('.avs .av .ci')[e.by];if(!c)return;from=cen(c.getBoundingClientRect());s0=.3}
+ flier(card(e.c),pr,from,cen(pr),{d:450,hold:110,ease:'cubic-bezier(.25,.8,.3,1)',kf:(dx,dy)=>[{transform:`translate(0,0) scale(${s0}) rotate(${me?0:-18}deg)`,opacity:me?1:.3},{transform:`translate(${dx*.6}px,${dy*.6-26}px) scale(${Math.max(s0,1)*1.1}) rotate(-6deg)`,opacity:1,offset:.6},{transform:`translate(${dx}px,${dy}px) scale(1) rotate(0deg)`,opacity:1}]});
+}
+function flyDraw(e,v){
+ const dk=document.querySelectorAll('.dks .bk')[1];if(!dk)return;const dr=dk.getBoundingClientRect(),from=cen(dr);
+ dk.animate([{transform:'scale(1)'},{transform:'scale(1.14)',filter:'brightness(1.5)'},{transform:'scale(1)'}],{duration:380,easing:'ease-out'});
+ if(e.by==v.me){
+  const h=document.querySelectorAll('.hand>*')[v.hand.length-1];if(!h)return;const r=h.getBoundingClientRect(),s0=dr.width/r.width;
+  flier(card(v.hand[v.hand.length-1]),r,from,cen(r),{d:700,delay:260,hold:60,flip:1,ease:'cubic-bezier(.3,.7,.3,1)',kf:(dx,dy)=>[{transform:`translate(0,0) scale(${s0}) rotate(-8deg)`},{transform:`translate(${dx*.55}px,${dy*.55-30}px) scale(${(1+s0)/2+.2}) rotate(4deg)`,offset:.55},{transform:`translate(${dx}px,${dy}px) scale(1) rotate(0deg)`}]});
+ }else{
+  const c=document.querySelectorAll('.avs .av .ci')[e.by];if(!c)return;
+  flier('',dr,from,cen(c.getBoundingClientRect()),{d:600,delay:260,hold:40,back:1,ease:'ease-in',kf:(dx,dy)=>[{transform:'translate(0,0) scale(1) rotate(0deg)',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.35) rotate(25deg)`,opacity:.1}]});
+ }
+}
+function evs(v){
+ const tk=[];if(!v.evs)return tk;
+ const mx=v.evs.reduce((a,e)=>Math.max(a,e.n),0);
+ if(sn==null||mx<sn){sn=mx;return tk}
+ const now=performance.now();
+ v.evs.filter(e=>e.n>sn).forEach(e=>{
+  if(e.k=='play'){PLY[e.p]={pv:e.pv};setTimeout(()=>{delete PLY[e.p];if(V){render(V);pulse(e.p)}},520);tk.push(()=>flyPlay(e,v))}
+  else if(e.k=='draw'){tk.push(()=>flyDraw(e,v));if(e.by==v.me){DRW++;setTimeout(()=>{DRW--;if(V)render(V)},1000)}}
+  else if(e.k=='done'){const q=GH[e.s]=GH[e.s].filter(g=>g.t0+5000>now),t0=q.length?q[q.length-1].t0+5000:now+650;q.push({id:e.id,t0});setTimeout(()=>{ENT[e.s]=performance.now();if(V)render(V)},t0+5000-now+30)}
+ });
+ sn=mx;return tk;
+}
+function slot(i){
+ const now=performance.now();GH[i]=GH[i].filter(g=>g.t0+5000>now);const g=GH[i][0],oc=`onclick="mc(${i})"`;
+ if(g)return mcard(g.id,oc,{k:'done',d:((g.t0-now)/1000).toFixed(3)});
+ if(V.missions[i]==null)return '<div class="mw"><div class="ms emp"></div></div>';
+ return mcard(V.missions[i],oc,ENT[i]&&now-ENT[i]<800?{k:'enter',d:(-(now-ENT[i])/1000).toFixed(3)}:null);
+}
 function sg(i){if(V.sg)return;pend=pend&&pend.x==SG[i][2]?null:{k:SG[i][1],x:SG[i][2]};render(V)}
 function mm(m){nmv=(($('nm')||{}).value)||nmv;menu=menu==m?null:m;render(null)}
 function render(v){
@@ -252,24 +320,24 @@ function render(v){
   <button onclick="mm('c')">Crear sala</button>${menu=='c'?`<div class="pn">${nin}<button onclick="create()">Empezar</button></div>`:''}
   <button class="g" onclick="mm('j')">Unirme a sala</button>${menu=='j'?`<div class="pn">${nin}<input id="cd" placeholder="Código de 4 números" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="this.value=this.value.replace(/\\D/g,'')"><button onclick="join()">Entrar</button></div>`:''}</div>${fan()}</div>`;return}
  if(v.turn!=v.me)sel=null;
- if(v.st=='lobby'){const np=v.players.length;
+ if(v.st=='lobby'){sn=null;GH=[[],[],[],[]];PLY={};DRW=0;ENT={};const np=v.players.length;
   a.innerHTML=`<div class="col" style="text-align:center"><h1>SALA</h1><div>Código</div><div class="code">${code}</div>
   ${avs(v.players,-1,v.me)}
   ${v.me==0?`<div class="g2">${DN.map((d,i)=>`<button class="${v.diff==i?'on':'g'}" onclick="go({t:'diff',d:${i}})">${d}<br>${T(np)[i]} misiones</button>`).join('')}</div>
   <button onclick="go({t:'start'})">Empezar (${np} jugador${np>1?'es':''})</button>`:`<p>Dificultad: <b>${DN[v.diff]}</b> · ${T(np)[v.diff]} misiones<br>Esperando al anfitrión…</p>`}<button class="g" onclick="quit()">Salir</button></div>`;return}
- const my=v.st=='play'&&v.turn==v.me,sc=sel!=null?v.hand[sel]:null;
+ const my=v.st=='play'&&v.turn==v.me,sc=sel!=null?v.hand[sel]:null,tk=evs(v),nw=performance.now(),busy=GH.some(q=>q.some(g=>g.t0+5000>nw)),pt=i=>PLY[i]?PLY[i].pv:v.piles[i].top;
  a.innerHTML=`<div class="top"><div class="dks">${bk(v.mleft,'Misiones','tg')}${bk(v.draw,'Robar','rb')}</div>
  <div class="st"><div class="bar"><span>Cumplidas ${v.done}/${v.target}</span>${my?'<span class="me">TU TURNO</span>':'<span>Turno de '+v.players[v.turn].name+'</span>'}</div>
  ${avs(v.players,v.st=='play'?v.turn:-1,v.me)}</div></div>
- <div class="cols">${[0,1,2,3].map(i=>`<div class="c1">${v.missions[i]!=null?mcard(v.missions[i],v.ready[i],`onclick="mc(${i})"`):'<div class="ms emp"></div>'}
- ${card(v.piles[i].top,'pile'+(sc&&(sc.c==v.piles[i].top.c||sc.n==v.piles[i].top.n)?' ok':''),`onclick="pc(${i})"`)}</div>`).join('')}</div>
+ <div class="cols">${[0,1,2,3].map(i=>`<div class="c1">${slot(i)}
+ ${card(pt(i),'pile'+(sc&&(sc.c==pt(i).c||sc.n==pt(i).n)?' ok':''),`onclick="pc(${i})"`)}</div>`).join('')}</div>
  <div class="log">${v.log.slice(-3).map(l=>'<div>'+esc(l)+'</div>').join('')}</div>
- ${v.st=='play'&&v.ready.some(Boolean)?(my?'<div class="hint hl">¡Misión lista! Toca la misión que brilla para cumplirla</div>':'<div class="hint hl">Misión lista: le toca a '+v.players[v.turn].name+' cumplirla</div>'):''}
  <div class="sg">${SG.map((s,i)=>`<button ${v.sg||v.st!='play'?'disabled':''} class="${pend&&pend.x==s[2]?'on':''}" onclick="sg(${i})">${sv(s[3])} ${s[0]}</button>`).join('')}</div>
  ${v.sg?'<div class="hint">Ya has usado tu señal en este turno</div>':''}${pend?`<div class="hint hl">Toca ${pend.k=='p'?'una pila':'una misión'} para enviar la señal</div>`:''}
- <div style="margin-top:auto"><div class="lb">Tus cartas</div><div class="g4 hand" style="padding-top:10px">${v.hand.map((c,i)=>card(c,i==sel?'sel':'',`onclick="hc(${i})"`)).join('')}${Array(Math.max(0,4-v.hand.length)).fill('<div class="cd emp"></div>').join('')}</div><button class="ex" onclick="bye()">Salir</button></div>
- ${v.st!='play'?`<div class="ov"><div><h1>${v.st=='won'?'¡MISIÓN CUMPLIDA!':'DERROTA'}</h1><p>${v.st=='won'?'Habéis superado la prueba del robot BZ1.':esc(v.why)}</p>
+ <div style="margin-top:auto"><div class="lb">Tus cartas</div><div class="g4 hand" style="padding-top:10px">${v.hand.map((c,i)=>card(c,(i==sel?'sel':'')+(DRW&&i==v.hand.length-1?' hid':''),`onclick="hc(${i})"`)).join('')}${Array(Math.max(0,4-v.hand.length)).fill('<div class="cd emp"></div>').join('')}</div><button class="ex" onclick="bye()">Salir</button></div>
+ ${v.st!='play'&&!busy?`<div class="ov"><div><h1>${v.st=='won'?'¡MISIÓN CUMPLIDA!':'DERROTA'}</h1><p>${v.st=='won'?'Habéis superado la prueba del robot BZ1.':esc(v.why)}</p>
  ${v.me==0?`<button onclick="go({t:'again'})">Volver a la sala</button>`:'<p>Esperando al anfitrión…</p>'}</div></div>`:''}`;
+ tk.forEach(t=>{try{t()}catch(e){}});
 }
 (function(){try{const x=JSON.parse(localStorage.mcSess||'null');if(x&&Date.now()-x.t<108e5){code=x.code;SN=x.name;ever=true;
  if(x.r=='c'){host=false;wait('Reconectando…');toRoom();return}
