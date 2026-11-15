@@ -144,6 +144,11 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 <script>
 const R=0,B=1,O=2,G=3;
 const CN=['rojas','azules','naranja','verdes'],CS=['rojo','azul','naranja','verde'],CC=['#e53935','#1e9be0','#f5a623','#3aa655'];
+const ICE={iceServers:[
+ {urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun.cloudflare.com:3478']},
+ {urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},
+ {urls:['turn:openrelay.metered.ca:80','turn:openrelay.metered.ca:443','turn:openrelay.metered.ca:443?transport=tcp','turns:openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}
+],iceCandidatePoolSize:4},PO={config:ICE};
 const DT=2000;let lst='';
 const DN=['Principiante','Normal','Experto','Locura'];
 const T=np=>np==2||np==3?[15,18,21,24]:[12,15,18,21];
@@ -237,7 +242,7 @@ function leave(i){
 }
 function startHost(){
  const old=peer;peer=null;try{old&&old.destroy()}catch(e){}
- const p=peer=new Peer('mc-'+code),cur=()=>p===peer;
+ const p=peer=new Peer('mc-'+code,PO),cur=()=>p===peer;
  p.on('open',()=>{if(!cur())return;hostTries=0;if(S.st=='play')settle(false);push()});
  p.on('disconnected',()=>{if(cur())try{p.reconnect()}catch(e){}});
  p.on('error',e=>{
@@ -268,14 +273,14 @@ function join(){
 }
 function toRoom(){
  const old=peer;peer=null;try{old&&old.destroy()}catch(e){}
- const p=peer=new Peer();
- p.on('error',e=>{if(p!==peer)return;if(e.type=='peer-unavailable'&&!ever){alert('No existe esa sala');quit()}else retry()});
- p.on('open',()=>{if(p!==peer)return;const c=conn=p.connect('mc-'+code,{reliable:true});
-  c.on('open',()=>{if(p!==peer)return;ever=true;tries=0;c.send({t:'join',name:SN,cid:CID})});
+ const p=peer=new Peer(undefined,PO);
+ p.on('error',e=>{if(p!==peer)return;if(e.type=='peer-unavailable'&&!ever){alert('No existe esa sala');quit()}else retry(e.type)});
+ p.on('open',()=>{if(p!==peer)return;const c=conn=p.connect('mc-'+code,{reliable:true});const ct=setTimeout(()=>{if(p===peer&&!c.open)retry('tiempo')},15000);
+  c.on('open',()=>{clearTimeout(ct);if(p!==peer)return;ever=true;tries=0;c.send({t:'join',name:SN,cid:CID})});
   c.on('data',v=>{if(p!==peer)return;if(v.st=='full'){alert('Sala llena o partida ya empezada');quit();return}render(v)});
-  c.on('close',()=>{if(p===peer&&conn===c)retry()})});
+  c.on('close',()=>{clearTimeout(ct);if(p===peer&&conn===c)retry('cierre')})});
 }
-function retry(){if(rt)return;if(tries++>60){alert('No se pudo reconectar');quit();return}bn('Reconectando…');rt=setTimeout(()=>{rt=0;toRoom()},2500)}
+function retry(why){if(rt)return;if(tries++>(ever?60:5)){alert(ever?'No se pudo reconectar':'No se pudo conectar con la sala'+(why?' ('+why+')':'')+'. Si estáis en redes distintas, prueba con la misma wifi o con datos móviles.');quit();return}bn((ever?'Reconectando…':'Conectando…')+(why&&!ever?' ('+why+')':''));rt=setTimeout(()=>{rt=0;toRoom()},2500)}
 /* ---------- UI ---------- */
 const P={0:'<path d="M5 5l14 14M19 5L5 19" stroke-width="4"/>',1:'<g stroke-width="2.9" stroke-linecap="butt" stroke-linejoin="round"><path d="M12 3.7V22.5"/><path d="M5.5 13.8V22.5"/><path d="M12 20.2L18.5 14.8V9.8"/></g><circle cx="12" cy="3.7" r="3.1" fill="currentColor" stroke="none"/><circle cx="5.5" cy="13.8" r="3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="9.8" r="3" fill="currentColor" stroke="none"/>',
 2:'<path d="M13.5 1.5L5 13.5h6l-1.5 9L19 10h-6.5z" fill="currentColor" stroke-width="1.2"/>',3:'<circle cx="12" cy="12" r="6" stroke-width="4"/><path d="M12 1.5v5M12 17.5v5M1.5 12h5M17.5 12h5M4.6 4.6l3.2 3.2M16.2 16.2l3.2 3.2M19.4 4.6l-3.2 3.2M7.8 16.2l-3.2 3.2" stroke-width="3.4" stroke-linecap="butt"/>',
