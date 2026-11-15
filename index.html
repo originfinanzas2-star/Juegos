@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Misión Cumplida</title>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto+Slab:wght@800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;color:#fff;font:600 15px "Barlow Condensed","Arial Narrow",system-ui,sans-serif;height:100dvh;overflow:hidden;background:#17222f;background-image:linear-gradient(#5b86ad14 1px,transparent 1px),linear-gradient(90deg,#5b86ad14 1px,transparent 1px);background-size:22px 22px}
+#app{height:100%;display:flex;flex-direction:column;gap:7px;padding:max(6px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom));max-width:480px;margin:auto}
+h1{margin:6px 0 0;text-align:center;font-size:34px;font-style:italic;font-weight:800;letter-spacing:1px}
+input,button{font:inherit;font-size:17px;border-radius:10px;border:0;padding:11px}
+input{width:100%;background:#1f2e42;color:#fff;text-align:center}
+button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58}button.on{background:#f5a623;color:#111}
+.col{display:flex;flex-direction:column;gap:10px;padding:14px}
+.code{font-size:40px;letter-spacing:6px;color:#f5a623}
+.top{display:flex;gap:10px;align-items:center}.st{flex:1;display:flex;flex-direction:column;gap:6px}
+.bar{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:700}
+.me{background:#f5a623;color:#111;border-radius:12px;padding:1px 10px}
+.avs{display:flex;gap:6px}.avs.all .av{opacity:1}
+.av{flex:1;min-width:0;max-width:62px;display:flex;flex-direction:column;align-items:center;gap:3px;opacity:.5;transition:.15s}
+.av.on{opacity:1}.av.off{opacity:.2;filter:grayscale(1)}.pn{display:flex;flex-direction:column;gap:8px;animation:dn .2s}@keyframes dn{from{opacity:0;transform:translateY(-8px)}}.ex{background:none;color:#6f819a;font-size:14px;padding:4px;width:100%}
+.ci{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid transparent;background:var(--g)}
+.ci svg{width:80%;height:80%}
+.av.on .ci{border-color:#fff;box-shadow:0 0 0 3px var(--g),0 0 16px 4px var(--g);transform:scale(1.08)}
+.av span{font-size:13px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.av span.m{text-decoration:underline}
+.pl{display:flex;gap:4px;flex-wrap:wrap}
+.pl span{background:#1f2e42;border-radius:12px;padding:2px 9px;font-size:14px;display:inline-flex;gap:4px;align-items:center}
+.pl span.t{background:#fff;color:#17222f}
+.dks{display:flex;gap:9px;padding-right:6px}
+.bk{width:50px;aspect-ratio:2/3;background:#1f2a38;border:2px solid #fff;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:3px 3px 0 #33465e,6px 6px 0 #26354a}
+.bk svg{width:22px;height:22px}.bk b{font-size:22px;line-height:1}.bk small{font-size:9px;color:#9fb2cc;text-transform:uppercase}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px}.g4,.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.c1{display:flex;flex-direction:column;gap:6px}
+.ms{background:#fff;color:#1b2430;border-radius:9px;overflow:hidden;display:flex;flex-direction:column;min-height:132px;box-shadow:0 2px 5px #0006}
+.ms small{font-size:8px;color:#8a96a6;padding:5px 7px 0;letter-spacing:.6px;font-weight:800}
+.ms p{margin:0;padding:2px 7px 9px;font-size:13.5px;line-height:1.02;font-weight:700;flex:1}
+.ms.emp{background:#0003;border:2px dashed #3d5878;box-shadow:none}
+.dk{background:#1f2a38;height:38px;margin:0 4px 4px;border-radius:14px 14px 7px 7px;display:flex;align-items:center;gap:3px;padding:0 5px;position:relative}
+.dk::before{content:"";position:absolute;top:-1px;left:34%;border:6px solid transparent;border-top-color:#fff;border-bottom:0}
+.dk svg{width:21px;height:21px;flex:none}
+.ch{display:flex;gap:2px;margin-left:auto;align-items:center}
+.ch u{min-width:12px;height:16px;padding:0 1px;border-radius:3px;font-size:10px;line-height:16px;font-weight:800;text-align:center;text-decoration:none;box-shadow:inset 0 -1px 0 #0003}
+.ch i{font-style:normal;color:#fff;font-size:11px;line-height:16px}
+.cd{container-type:inline-size;aspect-ratio:2/3;background:#fff;border-radius:9px;position:relative;color:var(--c);box-shadow:0 2px 5px #0006}
+.cd .bd{position:absolute;inset:3.5% 5.5%;background:var(--c);border-radius:46cqw 7cqw 46cqw 7cqw;display:flex;align-items:center;justify-content:center}
+.cd i{position:absolute;left:9cqw;top:6cqw;font-style:normal;font-weight:800;font-size:16cqw;line-height:1}
+.cd u{position:absolute;right:9cqw;bottom:5cqw;font-weight:800;font-size:16cqw;text-decoration:none;transform:rotate(180deg);line-height:1}
+.cd s,.cd em{position:absolute;color:#fff;font-size:15cqw;line-height:1;font-style:normal;text-decoration:none}
+.cd s{right:12cqw;top:9cqw}.cd em{left:12cqw;bottom:9cqw;transform:rotate(180deg)}
+.cd b{color:#fff;font-family:"Roboto Slab",serif;font-size:min(14vw,56px);font-size:68cqw;font-weight:800;line-height:1}
+.cd.emp{background:#0003;border:2px dashed #3d5878;box-shadow:none}
+.pile.ok{outline:3px solid #f5a623;box-shadow:0 0 14px #f5a623}
+.hand .cd{transition:transform .1s}.hand .cd.sel{transform:translateY(-12px);outline:3px solid #f5a623}
+.lb{font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9fb2cc;margin:0 0 6px 2px}
+.log{font-size:14px;color:#9fb2cc;min-height:36px;line-height:1.15}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.sg button:disabled{opacity:.35}.sg button{padding:6px;font-size:14px;background:#2a3d58}
+.ov{position:fixed;inset:0;background:#000c;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
+.ov div{background:#1b2a3f;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;max-width:320px}
+</style></head><body><div id="app"></div>
+<script>
+const R=0,B=1,O=2,G=3;
+const CN=['rojas','azules','naranja','verdes'],CS=['rojo','azul','naranja','verde'],CC=['#e53935','#1e9be0','#f5a623','#3aa655'];
+const DN=['Principiante','Normal','Experto','Locura'];
+const T=np=>np==2||np==3?[15,18,21,24]:[12,15,18,21];
+/* ---------- MISIONES ---------- */
+const sm=(a,c)=>a.reduce((s,x)=>s+(x.c==c?x.n:0),0),ct=(a,c)=>a.filter(x=>x.c==c).length,ps=(a,c)=>a.map((x,i)=>x.c==c?i:-1).filter(i=>i>=0);
+const M=[],add=(t,f,p)=>M.push({t,f,p});
+const L='rbog';
+[[B,9],[B,3],[O,11],[O,2],[G,7],[G,6],[R,10],[R,4]].forEach(([c,n])=>add(`Las cartas {${c}} suman ${n}`,a=>sm(a,c)==n,L[c]+n));
+[15,20,18,10].forEach(n=>add(`Todas las cartas suman ${n}`,a=>a.reduce((s,x)=>s+x.n,0)==n,'w'+n));
+[[R,O],[O,G],[B,R],[B,O],[G,R],[G,B]].forEach(([x,y])=>add(`Las cartas {${x}} suman igual que las {${y}}`,a=>ct(a,x)&&ct(a,y)&&sm(a,x)==sm(a,y),`${L[x]} = ${L[y]}`));
+[[R,O],[B,R],[G,B],[O,G],[R,G],[O,B]].forEach(([x,y])=>add(`Las cartas {${x}} suman el doble que las {${y}}`,a=>ct(a,x)&&ct(a,y)&&sm(a,x)==2*sm(a,y),`${L[x]}×2 ${L[y]}`));
+[R,G,B,O].forEach(c=>add(`Hay tres cartas {${c}}`,a=>ct(a,c)==3,`${L[c]} ${L[c]} w ${L[c]}`));
+[G,B,O,R].forEach(c=>add(`Hay dos cartas {${c}} adyacentes`,a=>{let p=ps(a,c);return p.length==2&&p[1]-p[0]==1},`${L[c]} ${L[c]} w w`));
+[B,R,O,G].forEach(c=>add(`Hay dos cartas {${c}} no adyacentes`,a=>{let p=ps(a,c);return p.length==2&&p[1]-p[0]>1},`${L[c]} w w ${L[c]}`));
+[G,B,R,O].forEach(c=>add(`Dos cartas alternas son de color [${c}]`,a=>{let p=ps(a,c);return p.length==2&&p[1]-p[0]==2},`${L[c]} w ${L[c]} w`));
+[[B,O],[R,G],[G,O],[B,R]].forEach(([x,y])=>add(`Todas las cartas son {${x}} y/o {${y}}`,a=>a.every(k=>k.c==x||k.c==y),Array(4).fill('/'+L[x]+L[y]).join(' ')));
+const dn=a=>new Set(a.map(x=>x.n)).size==4,dc=a=>new Set(a.map(x=>x.c)).size==4;
+add('Todas las cartas son menores de 4',a=>a.every(x=>x.n<4),'w3 w2 w1 w2');
+add('Todas las cartas son mayores de 4',a=>a.every(x=>x.n>4),'w7 w6 w5 w7');
+add('Todas las cartas son pares',a=>a.every(x=>x.n%2==0),'w2 w6 w4 w2');
+add('Todas las cartas son impares',a=>a.every(x=>x.n%2),'w7 w5 w7 w3');
+add('Hay escalera de cuatro cartas en cualquier orden',a=>{let n=a.map(x=>x.n).sort((p,q)=>p-q);return n.every((v,i)=>!i||v==n[i-1]+1)},'w2 w3 w5 w4');
+add('Hay escalera de tres cartas seguidas',a=>[0,1].some(i=>a[i+1].n==a[i].n+1&&a[i+2].n==a[i].n+2),'w3 w4 w5 w');
+add('Dos cartas alternas son pares y dos impares',a=>{let q=a.map(x=>x.n%2);return q[0]==q[2]&&q[1]==q[3]&&q[0]!=q[1]},'w2 w1 w4 w3');
+add('Ningún número está repetido',dn,'w7 w3 w1 w4');
+add('Ningún color está repetido',dc,'b r o g');
+add('Ningún número ni color está repetido',a=>dn(a)&&dc(a),'b7 r3 o1 g4');
+const strip=t=>t.replace(/\{(\d)\}/g,(_,k)=>CN[k]).replace(/\[(\d)\]/g,(_,k)=>CS[k]);
+/* ---------- ESTADO (anfitrión) ---------- */
+let host=false,peer,conn,conns={},S,V=null,sel=null,pend=null,code='',CID,SN='',tries=0,ever=false,rt=0,hostTries=0,menu=null,nmv='';
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt()+';');
+const shuf=a=>{for(let i=a.length-1;i>0;i--){let j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const tp=p=>p[p.length-1],tops=()=>S.piles.map(tp),okp=(c,p)=>c.c==tp(p).c||c.n==tp(p).n;
+function newGame(){
+ const np=S.players.length;let d=[];for(let c=0;c<4;c++)for(let n=1;n<=7;n++)d.push({c,n},{c,n});shuf(d);
+ S.hands=S.players.map(()=>d.splice(0,4));S.piles=[0,1,2,3].map(()=>d.splice(0,1));S.draw=d;
+ S.target=T(np)[S.diff];S.mdeck=shuf([...M.keys()]).slice(0,S.target);S.active=[];S.done=0;S.turn=0;S.st='play';S.why='';
+ S.sigs=[];S.log=['Empieza la partida. ¡Suerte!'];refill();resolve();settle(false);
+}
+function refill(){while(S.active.length<4&&S.mdeck.length)S.active.push(S.mdeck.pop())}
+function resolve(){let k=0,f=1;while(f){f=0;for(let i=0;i<S.active.length;i++){if(M[S.active[i]].f(tops())){S.log.push('Misión cumplida: '+strip(M[S.active[i]].t));S.active.splice(i,1);S.done++;k++;f=1;refill();break}}}return k}
+function settle(adv){
+ if(S.done>=S.target){S.st='won';return}
+ const np=S.players.length,ok=i=>!S.players[i].off&&S.hands[i].length;
+ if(S.players.every(p=>p.off))return;
+ if(adv)S.turn=(S.turn+1)%np;
+ for(let k=0;k<np&&!ok(S.turn);k++)S.turn=(S.turn+1)%np;
+ if(!ok(S.turn)){S.st='lost';S.why='Os habéis quedado sin cartas.';return}
+ if(!S.hands[S.turn].some(c=>S.piles.some(p=>okp(c,p)))){S.st='lost';S.why=S.players[S.turn].name+' está bloqueado y no puede jugar ninguna carta.'}
+}
+function play(i,h,p){
+ const c=S.hands[i][h];if(!c||!S.piles[p]||!okp(c,S.piles[p]))return;
+ S.hands[i].splice(h,1);S.piles[p].push(c);S.log.push(S.players[i].name+' juega en la pila '+(p+1));
+ const k=resolve();if(S.draw.length)S.hands[i].push(S.draw.pop());S.log=S.log.slice(-30);S.sigs=[];settle(!k);
+}
+function act(i,m){
+ if(m.t=='diff'&&S.st=='lobby'&&i==0)S.diff=m.d;
+ else if(m.t=='start'&&i==0&&S.st=='lobby')newGame();
+ else if(m.t=='again'&&i==0&&(S.st=='won'||S.st=='lost')){const keep=[],nc={};S.players.forEach((p,k)=>{if(!p.off){if(conns[k]){conns[k]._i=keep.length;nc[keep.length]=conns[k]}keep.push(p)}});S.players=keep;conns=nc;S.hands=null;S.st='lobby'}
+ else if(m.t=='sig'&&S.st=='play'&&!S.sigs.includes(i)){S.sigs.push(i);S.log.push(S.players[i].name+': '+m.x)}
+ else if(m.t=='play'&&S.st=='play'&&S.turn==i)play(i,m.h,m.p);
+ push();
+}
+function view(i){
+ const pl=S.players.map((p,k)=>({name:p.name,off:!!p.off,n:S.hands&&S.hands[k]?S.hands[k].length:0}));
+ if(S.st=='lobby')return{st:'lobby',players:pl,diff:S.diff,me:i};
+ return{st:S.st,why:S.why,players:pl,turn:S.turn,me:i,sg:S.sigs.includes(i),hand:S.hands[i],piles:S.piles.map(p=>({top:tp(p),n:p.length})),
+  missions:S.active,done:S.done,target:S.target,draw:S.draw.length,mleft:S.mdeck.length,log:S.log.slice(-4)};
+}
+function push(){sto('mcS',JSON.stringify(S));S.players.forEach((_,i)=>{const v=view(i);if(i==0)render(v);else if(conns[i])conns[i].send(v)})}
+const go=m=>host?act(0,m):conn&&conn.send(m);
+/* ---------- RED ---------- */
+try{CID=localStorage.mcid||(localStorage.mcid=Math.random().toString(36).slice(2))}catch(e){CID=Math.random().toString(36).slice(2)}
+const sto=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage[k]=v}catch(e){}};
+const sess=r=>sto('mcSess',JSON.stringify({r,code,name:SN,t:Date.now()}));
+const wait=m=>{$('app').innerHTML='<div class="col"><h1>'+m+'</h1></div>'};
+const bn=t=>{let b=$('bn');if(!b){b=document.createElement('div');b.id='bn';b.style.cssText='position:fixed;top:0;left:0;right:0;background:#f5a623;color:#111;text-align:center;font-weight:700;padding:3px;z-index:9';document.body.appendChild(b)}b.style.display=t?'block':'none';b.textContent=t||''};
+function quit(){sto('mcSess');sto('mcS');try{peer&&peer.destroy()}catch(e){}location.reload()}
+function bye(){if(confirm(host?'Si sales, la partida se cierra para todos. ¿Salir?':'¿Salir de la partida? Podrás volver con el mismo código.'))quit()}
+function nmin(){SN=((($('nm')||{}).value)||'').trim().slice(0,12)||'Jugador';sto('mcname',SN)}
+const newCode=()=>String(1000+Math.random()*9000|0);
+function create(){nmin();code=newCode();host=true;S={st:'lobby',players:[{name:esc(SN),cid:CID}],diff:1,log:[]};sess('h');wait('Conectando…');startHost()}
+function leave(i){
+ if(S.st=='lobby'){S.players.splice(i,1);const nc={};Object.keys(conns).forEach(k=>{k=+k;if(k<i)nc[k]=conns[k];else if(k>i){nc[k-1]=conns[k];conns[k]._i=k-1}});conns=nc}
+ else{S.players[i].off=true;S.log.push(S.players[i].name+' se ha desconectado');if(S.st=='play')settle(false)}
+ push();
+}
+function startHost(){
+ try{peer&&peer.destroy()}catch(e){}
+ peer=new Peer('mc-'+code);
+ peer.on('open',()=>{hostTries=0;if(S.st=='play')settle(false);push()});
+ peer.on('disconnected',()=>{try{peer.reconnect()}catch(e){}});
+ peer.on('error',e=>{
+  if(e.type=='unavailable-id'){if(S.st=='lobby'){code=newCode();sess('h');startHost()}else if(hostTries++<12){wait('Reabriendo sala…');setTimeout(startHost,3000)}else{alert('No se pudo reabrir la sala.');quit()}}
+  else if(e.type=='invalid-id'){alert('No se pudo abrir la sala.');quit()}});
+ peer.on('connection',c=>{
+  c.on('data',m=>{
+   if(m.t=='join'){
+    let i=S.players.findIndex(p=>p.cid==m.cid);if(i==0)return;
+    if(S.st=='lobby'){if(i<0){if(S.players.length>=4){c.send({st:'full'});return}i=S.players.length;S.players.push({cid:m.cid})}S.players[i].name=esc(m.name||'Jugador')}
+    else if(i<0){c.send({st:'full'});return}
+    conns[i]=c;c._i=i;
+    if(S.players[i].off){S.players[i].off=false;if(S.st!='lobby')S.log.push(S.players[i].name+' vuelve a la partida')}
+    if(S.st=='play')settle(false);
+    push();
+   }else if(c._i!=null&&conns[c._i]===c)act(c._i,m)});
+  c.on('close',()=>{const i=c._i;if(i==null||conns[i]!==c)return;delete conns[i];leave(i)});
+ });
+}
+function join(){
+ nmin();code=((($('cd')||{}).value)||'').trim();if(!/^\d{4}$/.test(code))return alert('El código son 4 números');
+ host=false;ever=false;tries=0;sess('c');wait('Conectando…');toRoom();
+}
+function toRoom(){
+ try{peer&&peer.destroy()}catch(e){}
+ peer=new Peer();
+ peer.on('error',e=>{if(e.type=='peer-unavailable'&&!ever){alert('No existe esa sala');quit()}else retry()});
+ peer.on('open',()=>{conn=peer.connect('mc-'+code,{reliable:true});
+  conn.on('open',()=>{ever=true;tries=0;conn.send({t:'join',name:SN,cid:CID})});
+  conn.on('data',v=>{if(v.st=='full'){alert('Sala llena o partida ya empezada');quit();return}render(v)});
+  conn.on('close',retry)});
+}
+function retry(){if(rt)return;if(tries++>60){alert('No se pudo reconectar');quit();return}bn('Reconectando…');rt=setTimeout(()=>{rt=0;toRoom()},2500)}
+/* ---------- UI ---------- */
+const P={0:'<path d="M5 5l14 14M19 5L5 19" stroke-width="4"/>',1:'<path d="M12 20V4.5M12 4.5l-3 4h6zM12 14.5l-5-3.5V8.5M12 16.5l5-3.5V10.5"/><circle cx="7" cy="7" r="1.8"/><rect x="15.2" y="7.2" width="3.6" height="3.6"/><circle cx="12" cy="20.5" r="2" fill="currentColor"/>',2:'<path d="M13.5 1.5L5 13.5h6l-1.5 9L19 10h-6.5z" fill="currentColor" stroke-width="1.2"/>',3:'<circle cx="12" cy="12" r="6" stroke-width="4"/><path d="M12 1.5v5M12 17.5v5M1.5 12h5M17.5 12h5M4.6 4.6l3.2 3.2M16.2 16.2l3.2 3.2M19.4 4.6l-3.2 3.2M7.8 16.2l-3.2 3.2" stroke-width="3.4" stroke-linecap="butt"/>',
+ban:'<circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/>',ok:'<path d="M4 13l5 5L20 6"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/>',flag:'<path d="M6 21V4M6 5h12l-3 4 3 4H6"/>',card:'<rect x="6" y="3" width="12" height="18" rx="2"/>',tg:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>'};
+const sv=(k,s='1em',w=3)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em">${P[k]}</svg>`;
+const MO=['<path d="M8 16.5h8"/>','<path d="M8 16l2 1.6 2-1.6 2 1.6 2-1.6"/>','<path d="M8 16.5h.01M11 16.5h.01M14 16.5h.01M17 16.5h.01" stroke-width="2.2"/>','<path d="M8.5 15.5q3.5 3 7 0"/>','<path d="M8 15.5v2.5M10.7 15.5v2.5M13.3 15.5v2.5M16 15.5v2.5"/>','<path d="M8.5 17.5q3.5-3 7 0"/>'];
+const EY=['<ellipse cx="9" cy="11" rx="1.3" ry="2.2" fill="#1f2a38"/><ellipse cx="15" cy="11" rx="1.3" ry="2.2" fill="#1f2a38"/>','<circle cx="9" cy="11" r="1.8" fill="#1f2a38"/><circle cx="15" cy="11" r="1.8" fill="#1f2a38"/>','<path d="M7 9.5l4 2M17 9.5l-4 2"/>'];
+const rb=n=>`<svg viewBox="0 0 24 24"><path d="M2.5 18v-6.5a9.5 8 0 0 1 19 0V18a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2z" fill="#fff"/><g fill="none" stroke="#1f2a38" stroke-width="1.6" stroke-linecap="round">${EY[n%3]}${MO[n%6]}</g></svg>`;
+const RB=rb(0);
+const mt=t=>t.replace(/\{(\d)\}/g,(_,k)=>`<b style="color:${CC[k]}">${CN[k]} ${sv(k,'.8em',3.5)}</b>`).replace(/\[(\d)\]/g,(_,k)=>`<b style="color:${CC[k]}">${CS[k]} ${sv(k,'.8em',3.5)}</b>`);
+const CK={r:0,b:1,o:2,g:3};
+function chip(t){
+ if(t=='=')return '<i>=</i>';
+ if(t[0]=='/')return `<u style="background:linear-gradient(135deg,${CC[CK[t[1]]]} 50%,${CC[CK[t[2]]]} 50%)"></u>`;
+ const k=CK[t[0]];return `<u style="background:${k!=null?CC[k]:'#fff'};color:${k!=null?'#fff':'#1b2430'}">${t.slice(1)}</u>`;
+}
+const PC=['#9b6bff','#ff6fb5','#c9d3dd','#b9824f'];
+const avs=(pl,t,me)=>`<div class="avs ${t<0?'all':''}">${pl.map((p,i)=>`<div class="av ${i==t?'on':''} ${p.off?'off':''}"><div class="ci" style="--g:${PC[i]}">${rb(i+1)}</div><span class="${i==me?'m':''}">${p.name}</span></div>`).join('')}</div>`;
+const mcard=id=>`<div class="ms"><small>MISIÓN:</small><p>${mt(M[id].t)}</p><div class="dk">${rb(id)}<span class="ch">${M[id].p.split(' ').map(chip).join('')}</span></div></div>`;
+const bk=(n,l,i)=>`<div class="bk">${i=='rb'?RB:sv('tg','22px',2.2)}<b>${n}</b><small>${l}</small></div>`;
+const card=(c,cl='',x='')=>`<div class="cd ${cl}" ${x} style="--c:${CC[c.c]}"><div class="bd"><b>${c.n}</b></div><i>${c.n}</i><s>${sv(c.c)}</s><u>${c.n}</u><em>${sv(c.c)}</em></div>`;
+const SG=[['No juegues en la pila','p','No juegues en la pila','ban'],['Buena carta para la pila','p','Tengo una buena carta para la pila','ok'],['Puedo ayudar en misión','m','Puedo ayudar con la misión','help'],['Yo cumplo la misión','m','Yo puedo cumplir la misión','flag']];
+function hc(i){if(V.st=='play'&&V.turn==V.me){sel=sel==i?null:i;render(V)}}
+function pc(p){
+ if(pend&&pend.k=='p'){go({t:'sig',x:pend.x+' '+(p+1)});pend=null;return render(V)}
+ if(V.st=='play'&&V.turn==V.me&&sel!=null){const h=sel;sel=null;go({t:'play',h,p})}
+}
+function mc(i){if(pend&&pend.k=='m'){go({t:'sig',x:pend.x+' '+(i+1)});pend=null;render(V)}}
+function sg(i){if(V.sg)return;pend=pend&&pend.x==SG[i][2]?null:{k:SG[i][1],x:SG[i][2]};render(V)}
+function mm(m){nmv=(($('nm')||{}).value)||nmv;menu=menu==m?null:m;render(null)}
+function render(v){
+ V=v;const a=$('app');bn('');if(v&&code)sess(host?'h':'c');
+ if(!v){let n=nmv;try{n=n||localStorage.mcname||''}catch(e){}
+  const nin=`<input id="nm" placeholder="Tu nombre" maxlength="12" value="${esc(n)}">`;
+  a.innerHTML=`<div class="col"><div style="width:70px;margin:10px auto 0">${RB}</div><h1>MISIÓN CUMPLIDA</h1><p style="text-align:center;color:#9fb2cc;margin:0 0 14px">El juego cooperativo · 1 a 4 jugadores</p>
+  <button onclick="mm('c')">Crear sala</button>${menu=='c'?`<div class="pn">${nin}<button onclick="create()">Empezar</button></div>`:''}
+  <button class="g" onclick="mm('j')">Unirme a sala</button>${menu=='j'?`<div class="pn">${nin}<input id="cd" placeholder="Código de 4 números" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="this.value=this.value.replace(/\\D/g,'')"><button onclick="join()">Entrar</button></div>`:''}</div>`;return}
+ if(v.turn!=v.me)sel=null;
+ if(v.st=='lobby'){const np=v.players.length;
+  a.innerHTML=`<div class="col" style="text-align:center"><h1>SALA</h1><div>Código</div><div class="code">${code}</div>
+  ${avs(v.players,-1,v.me)}
+  ${v.me==0?`<div class="g2">${DN.map((d,i)=>`<button class="${v.diff==i?'on':'g'}" onclick="go({t:'diff',d:${i}})">${d}<br>${T(np)[i]} misiones</button>`).join('')}</div>
+  <button onclick="go({t:'start'})">Empezar (${np} jugador${np>1?'es':''})</button>`:`<p>Dificultad: <b>${DN[v.diff]}</b> · ${T(np)[v.diff]} misiones<br>Esperando al anfitrión…</p>`}<button class="g" onclick="quit()">Salir</button></div>`;return}
+ const my=v.st=='play'&&v.turn==v.me,sc=sel!=null?v.hand[sel]:null;
+ a.innerHTML=`<div class="top"><div class="dks">${bk(v.mleft,'Misiones','tg')}${bk(v.draw,'Robar','rb')}</div>
+ <div class="st"><div class="bar"><span>Cumplidas ${v.done}/${v.target}</span>${my?'<span class="me">TU TURNO</span>':'<span>Turno de '+v.players[v.turn].name+'</span>'}</div>
+ ${avs(v.players,v.st=='play'?v.turn:-1,v.me)}</div></div>
+ <div class="cols">${[0,1,2,3].map(i=>`<div class="c1">${v.missions[i]!=null?mcard(v.missions[i]).replace('class="ms"',`class="ms" onclick="mc(${i})"`):'<div class="ms emp"></div>'}
+ ${card(v.piles[i].top,'pile'+(sc&&(sc.c==v.piles[i].top.c||sc.n==v.piles[i].top.n)?' ok':''),`onclick="pc(${i})"`)}</div>`).join('')}</div>
+ <div class="log">${v.log.slice(-3).map(l=>esc(l)).join('<br>')}</div>
+ <div class="sg">${SG.map((s,i)=>`<button ${v.sg||v.st!='play'?'disabled':''} class="${pend&&pend.x==s[2]?'on':''}" onclick="sg(${i})">${sv(s[3])} ${s[0]}</button>`).join('')}</div>
+ ${v.sg?'<div style="text-align:center;color:#9fb2cc">Ya has usado tu señal en este turno</div>':''}${pend?`<div style="text-align:center;color:#f5a623">Toca ${pend.k=='p'?'una pila':'una misión'} para enviar la señal</div>`:''}
+ <div style="margin-top:auto"><div class="lb">Tus cartas</div><div class="g4 hand" style="padding-top:10px">${v.hand.map((c,i)=>card(c,i==sel?'sel':'',`onclick="hc(${i})"`)).join('')}${Array(Math.max(0,4-v.hand.length)).fill('<div class="cd emp"></div>').join('')}</div><button class="ex" onclick="bye()">Salir</button></div>
+ ${v.st!='play'?`<div class="ov"><div><h1>${v.st=='won'?'¡MISIÓN CUMPLIDA!':'DERROTA'}</h1><p>${v.st=='won'?'Habéis superado la prueba del robot BZ1.':esc(v.why)}</p>
+ ${v.me==0?`<button onclick="go({t:'again'})">Volver a la sala</button>`:'<p>Esperando al anfitrión…</p>'}</div></div>`:''}`;
+}
+(function(){try{const x=JSON.parse(localStorage.mcSess||'null');if(x&&Date.now()-x.t<108e5){code=x.code;SN=x.name;ever=true;
+ if(x.r=='c'){host=false;wait('Reconectando…');toRoom();return}
+ const sv=JSON.parse(localStorage.mcS||'null');if(sv&&sv.players&&sv.players[0].cid==CID){host=true;S=sv;S.players.forEach((p,i)=>{if(i)p.off=true});if(S.st=='lobby')S.players.splice(1);wait('Reabriendo sala…');startHost();return}}}catch(e){}
+ sto('mcSess');render(null)})();
+</script></body></html>
