@@ -8,6 +8,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{touch-action:manipulation;overscroll-behavior:none;-webkit-text-size-adjust:100%;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 input{-webkit-user-select:text;user-select:text}
+html,body,*{touch-action:manipulation;-webkit-tap-highlight-color:transparent}.cd,.ms,button,.lb,.hint,.log{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 button:active{filter:brightness(1.2);transform:scale(.97)}
 #rot{display:none;position:fixed;inset:0;z-index:99;background:#17222f;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;font-size:22px;padding:30px}
 @media (orientation:landscape) and (max-height:520px){#rot{display:flex}#app{display:none}}
@@ -41,6 +42,7 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .cols,.hand{width:calc(var(--cw,21vw)*4 + 18px);max-width:100%;margin:0 auto;box-sizing:content-box}.hand{padding-top:4px;display:flex;flex-wrap:nowrap;justify-content:center;gap:6px;width:100%;max-width:100%;overflow:visible}.hand>.cd{flex:0 1 var(--cw,21vw);width:var(--cw,21vw);min-width:0;max-width:calc((100% - 18px)/4)}
 #ph{min-height:1.25em}#ph:empty{visibility:hidden}
 .c1{display:flex;flex-direction:column;gap:6px}
+#r_cols{margin-top:16px}
 .ms{container-type:inline-size;aspect-ratio:2/3;background:#fff;color:#1b2430;border-radius:9px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 5px #0006}
 .ms small{font-size:9cqw;color:#8a96a6;padding:6cqw 8cqw 0;letter-spacing:.6px;font-weight:800;line-height:1}
 .ms p{margin:0;padding:3cqw 8cqw 2cqw;font-size:16cqw;line-height:1;font-weight:700;flex:1;min-height:0;overflow:hidden}
@@ -379,6 +381,7 @@ const my=v.st=='play'&&v.turn==v.me,tk=evs(v),nw=performance.now(),busy=GH.some(
 document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
 let lt=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lt<350&&!/INPUT|TEXTAREA/.test(e.target.tagName))e.preventDefault();lt=n},{passive:false});
 document.addEventListener('touchstart',()=>{},{passive:true});
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
 const rfit=()=>{cancelAnimationFrame(fq);fq=requestAnimationFrame(fit)};
 addEventListener('resize',rfit);addEventListener('orientationchange',rfit);if(window.visualViewport)visualViewport.addEventListener('resize',rfit);
 try{screen.orientation.lock('portrait').catch(()=>{})}catch(e){}
