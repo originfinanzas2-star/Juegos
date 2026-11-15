@@ -67,7 +67,7 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .lb{font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9fb2cc;margin:0 0 2px;text-align:center;position:relative;top:1px}
 .ex{display:block;margin:8px auto 0;background:none;color:#9fb2cc;font-size:13px;padding:4px 16px;border-radius:8px}
 .log{font-size:15px;color:#7f93ad;line-height:1.2;background:#0000002e;border-radius:10px;padding:6px 10px;min-height:calc(3.6em + 12px)}
-.log div{overflow-wrap:anywhere}.log div:last-child{color:#fff}
+.log div{overflow-wrap:anywhere;color:#c3d0e2;opacity:.55}.log div:last-child{opacity:1}.log .lp{color:#7fb8ff}.log .ls{color:#ffc94d}.log .lm{color:#5fd47e}
 .hint{text-align:center;color:#9fb2cc;font-size:15px;line-height:1.2}.hint.hl{color:#ffd54a;font-weight:700}
 .mw{position:relative}
 .ms.dn::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(160deg,#fff 30%,#ffefb0);opacity:0;animation:fin .4s ease var(--d,0s) both;pointer-events:none}
@@ -96,7 +96,7 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .cd.hid{visibility:hidden}
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .sg button:disabled{opacity:.35}.sg button{padding:7px 4px;font-size:14px;line-height:1.1;background:#2a3d58}.sg button.on{background:#f5a623}
-.mi{display:inline-flex;align-items:center;justify-content:center;width:1.2em;height:1.2em;border-radius:50%;background:var(--g);vertical-align:-.25em;margin-right:.28em;flex:none}.mi svg{width:82%;height:82%}
+.mi{display:inline-flex;align-items:center;justify-content:center;width:1.2em;height:1.2em;border-radius:50%;background:var(--g);vertical-align:middle;position:relative;top:-.1em;margin-right:.28em;flex:none}.mi svg{width:82%;height:82%}
 .sgb{position:absolute;top:3px;right:3px;z-index:8;display:flex;flex-direction:row-reverse;gap:2px;pointer-events:none}
 .sgb .bg{width:clamp(16px,calc(var(--cw,21vw)*.23),26px);aspect-ratio:1;border-radius:50%;background:var(--g);border:2px solid #fff;box-shadow:0 1px 4px #000b;display:flex;align-items:center;justify-content:center}
 .sgb .bg svg{width:82%;height:82%}
@@ -450,7 +450,7 @@ const my=v.st=='play'&&v.turn==v.me,tk=evs(v),nw=performance.now(),busy=GH.some(
  const sk=i=>{GH[i]=GH[i].filter(g=>g.t0+DT>nw);const g=GH[i][0];return g?'g'+g.id+'_'+Math.round(g.t0):(v.missions[i]==null?'-':v.missions[i])+(ENT[i]&&nw-ENT[i]<800?'e'+Math.round(ENT[i]):'')};
  rg('r_top',[v.mleft,v.draw,v.done,v.target,v.st,v.turn,v.me,v.players],()=>`<div class="dks">${bk(v.mleft,'Misiones','tg')}${bk(v.draw,'Robar','rb')}</div><div class="st"><div class="bar"><span>Cumplidas ${v.done}/${v.target}</span>${my?'<span class="me">TU TURNO</span>':'<span>Turno de '+mini(v.turn)+v.players[v.turn].name+'</span>'}</div>${avs(v.players,v.st=='play'?v.turn:-1,v.me)}</div>`);
  rg('r_cols',[0,1,2,3].map(i=>sk(i)+'/'+pt(i).c+pt(i).n).join(',')+'|'+JSON.stringify(v.sigs||[]),()=>[0,1,2,3].map(i=>`<div class="c1">${slot(i)}<div class="mw">${card(pt(i),'pile',`onpointerdown="pc(${i})"`)}${sgb(v,'p',i)}</div></div>`).join(''));
- rg('r_log',v.log.slice(-3).join('\n'),()=>v.log.slice(-3).map(l=>'<div>'+tx(l,v.players)+'</div>').join(''));
+ rg('r_log',v.log.slice(-3).join('\n'),()=>v.log.slice(-3).map(l=>'<div class="'+(/^Misión cumplida:/.test(l)?'lm':/^\u0001\d\u0002: /.test(l)?'ls':/ juega en la pila/.test(l)?'lp':'')+'">'+tx(l,v.players)+'</div>').join(''));
  rg('r_sg',[v.sg,v.st],()=>SG.map((s,i)=>`<button ${v.sg||v.st!='play'?'disabled':''} onpointerdown="sg(${i})">${sv(s[3])} ${s[0]}</button>`).join(''));
  rg('r_hand',[v.hand,DRW>0],()=>v.hand.map((c,i)=>card(c,DRW&&i==v.hand.length-1?'hid':'',`onpointerdown="hc(${i})"`)).join('')+Array(Math.max(0,4-v.hand.length)).fill('<div class="cd emp"></div>').join(''));
  rg('r_ov',[v.st,busy,v.why,v.me],()=>{if(v.st=='play'||busy)return'';const w=v.st=='won';sfx(w?'win':'lose',w?.05:.15);const mx=Math.max(0,...v.players.map(p=>p.m||0)),cc=['#d3473d','#5ba35e','#e9a944','#4a9ade','#ffffff'];
