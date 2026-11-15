@@ -37,8 +37,8 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .dks{display:flex;gap:9px;padding-right:6px}
 .bk{width:50px;aspect-ratio:2/3;background:#1f2a38;border:2px solid #fff;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:3px 3px 0 #33465e,6px 6px 0 #26354a}
 .bk svg{width:22px;height:22px}.bk b{font-size:22px;line-height:1}.bk small{font-size:9px;color:#9fb2cc;text-transform:uppercase}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px}.g4,.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.cols,.hand{width:calc(var(--cw,21vw)*4 + 18px);max-width:100%;margin:0 auto}.hand{padding-top:4px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px}.g4,.cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;justify-content:center}
+.cols,.hand{width:calc(var(--cw,21vw)*4 + 18px);max-width:100%;margin:0 auto;box-sizing:content-box}.hand{padding-top:4px;display:flex;flex-wrap:nowrap;justify-content:center;gap:6px;width:100%;max-width:100%;overflow:visible}.hand>.cd{flex:0 1 var(--cw,21vw);width:var(--cw,21vw);min-width:0;max-width:calc((100% - 18px)/4)}
 #ph{min-height:1.25em}#ph:empty{visibility:hidden}
 .c1{display:flex;flex-direction:column;gap:6px}
 .ms{container-type:inline-size;aspect-ratio:2/3;background:#fff;color:#1b2430;border-radius:9px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 5px #0006}
@@ -93,7 +93,7 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .cd.hid{visibility:hidden}
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .sg button:disabled{opacity:.35}.sg button{padding:7px 4px;font-size:14px;line-height:1.1;background:#2a3d58}.sg button.on{background:#f5a623}
-.pn{display:flex;flex-direction:column;gap:8px}
+.pn{display:flex;flex-direction:column;gap:8px}button.go{background:#2fa866}
 .bx{width:min(320px,100%);margin:0 auto}
 .hm{flex:1;display:flex;flex-direction:column;gap:10px;padding:46px 14px 18px;min-height:calc(100dvh - 20px)}
 .hm .mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px}
@@ -108,6 +108,7 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 <script>
 const R=0,B=1,O=2,G=3;
 const CN=['rojas','azules','naranja','verdes'],CS=['rojo','azul','naranja','verde'],CC=['#e53935','#1e9be0','#f5a623','#3aa655'];
+let rd=null,lst='';
 const DN=['Principiante','Normal','Experto','Locura'];
 const T=np=>np==2||np==3?[15,18,21,24]:[12,15,18,21];
 /* ---------- MISIONES ---------- */
@@ -168,6 +169,7 @@ function act(i,m){
  if(m.t=='diff'&&S.st=='lobby'&&i==0)S.diff=m.d;
  else if(m.t=='start'&&i==0&&S.st=='lobby')newGame();
  else if(m.t=='again'&&i==0&&(S.st=='won'||S.st=='lost')){const keep=[],nc={};S.players.forEach((p,k)=>{if(!p.off){if(conns[k]){conns[k]._i=keep.length;nc[keep.length]=conns[k]}keep.push(p)}});S.players=keep;conns=nc;S.hands=null;S.st='lobby'}
+ else if(m.t=='replay'&&i==0&&(S.st=='won'||S.st=='lost')){const keep=[],nc={};S.players.forEach((p,k)=>{if(!p.off){if(conns[k]){conns[k]._i=keep.length;nc[keep.length]=conns[k]}keep.push(p)}});S.players=keep;conns=nc;if(m.d>=0&&m.d<4)S.diff=m.d;newGame()}
  else if(m.t=='sig'&&S.st=='play'&&!S.sigs.includes(i)){S.sigs.push(i);S.log.push(S.players[i].name+': '+m.x)}
  else if(m.t=='play'&&S.st=='play'&&S.turn==i)play(i,m.h,m.p);
  push();
@@ -175,7 +177,7 @@ function act(i,m){
 function view(i){
  const pl=S.players.map((p,k)=>({name:p.name,off:!!p.off,n:S.hands&&S.hands[k]?S.hands[k].length:0}));
  if(S.st=='lobby')return{st:'lobby',players:pl,diff:S.diff,me:i};
- return{st:S.st,why:S.why,players:pl,turn:S.turn,me:i,sg:S.sigs.includes(i),hand:S.hands[i],piles:S.piles.map(p=>({top:tp(p),n:p.length})),
+ return{st:S.st,diff:S.diff,why:S.why,players:pl,turn:S.turn,me:i,sg:S.sigs.includes(i),hand:S.hands[i],piles:S.piles.map(p=>({top:tp(p),n:p.length})),
   missions:[0,1,2,3].map(i=>S.active[i]==null?null:S.active[i]),evs:S.evs||[],done:S.done,target:S.target,draw:S.draw.length,mleft:S.mdeck.length,log:S.log.slice(-4)};
 }
 let svt=0;
@@ -349,14 +351,15 @@ function render(v){
  if(!v){let n=nmv;try{n=n||localStorage.mcname||''}catch(e){}
   const nin=`<input id="nm" placeholder="Tu nombre" maxlength="12" value="${esc(n)}">`;
   a.innerHTML=`<div class="hm">${ttl()}<div class="mid"><p style="text-align:center;color:#9fb2cc;margin:0 0 4px">1 a 4 jugadores</p>
-  <button onclick="mm('c')">Crear sala</button>${menu=='c'?`<div class="pn">${nin}<button onclick="create()">Empezar</button></div>`:''}
-  <button class="g" onclick="mm('j')">Unirme a sala</button>${menu=='j'?`<div class="pn">${nin}<input id="cd" placeholder="Código de 4 números" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="this.value=this.value.replace(/\\D/g,'')"><button onclick="join()">Entrar</button></div>`:''}</div>${fan()}</div>`;return}
+  ${menu!='j'?`<button onclick="mm('c')">Crear sala</button>`:''}${menu=='c'?`<div class="pn">${nin}<button class="go" onclick="create()">Empezar</button><button class="g" onclick="mm('c')">← Volver</button></div>`:''}
+  ${menu!='c'?`<button class="${menu=='j'?'':'g'}" onclick="mm('j')">Unirme a sala</button>`:''}${menu=='j'?`<div class="pn">${nin}<input id="cd" placeholder="CÓDIGO" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="this.value=this.value.replace(/\\D/g,'')"><button class="go" onclick="join()">Entrar</button><button class="g" onclick="mm('j')">← Volver</button></div>`:''}</div>${fan()}</div>`;return}
  if(v.turn!=v.me)sel=null;
  if(v.st=='lobby'){sn=null;GH=[[],[],[],[]];PLY={};DRW=0;ENT={};const np=v.players.length;
-  a.innerHTML=`<div class="col" style="text-align:center"><h1>SALA</h1><div>Código</div><div class="code">${code}</div>
+  a.innerHTML=`<div class="col" style="text-align:center"><h1>SALA</h1><div class="code">${code}</div>
   ${avs(v.players,-1,v.me)}
   ${v.me==0?`<div class="g2">${DN.map((d,i)=>`<button class="${v.diff==i?'on':'g'}" onclick="go({t:'diff',d:${i}})">${d}<br>${T(np)[i]} misiones</button>`).join('')}</div>
   <button onclick="go({t:'start'})">Empezar (${np} jugador${np>1?'es':''})</button>`:`<p>Dificultad: <b>${DN[v.diff]}</b> · ${T(np)[v.diff]} misiones<br>Esperando al anfitrión…</p>`}<button class="g" onclick="quit()">Salir</button></div>`;return}
+if(v.st=='play'&&lst&&lst!='play'){GH=[[],[],[],[]];PLY={};DRW=0;ENT={}}lst=v.st;
 const my=v.st=='play'&&v.turn==v.me,tk=evs(v),nw=performance.now(),busy=GH.some(q=>q.some(g=>g.t0+5000>nw)),pt=i=>PLY[i]?PLY[i].pv:v.piles[i].top;
  if(sel!=null&&sel>=v.hand.length)sel=null;
  if(a.dataset.m!='g'){a.dataset.m='g';RK={};a.innerHTML='<div id="r_top" class="top"></div><div id="r_cols" class="cols"></div><div id="r_log" class="log"></div><div id="r_sg" class="sg"></div><div id="ph" class="hint"></div><div style="margin-top:auto"><div class="lb">Tus cartas</div><div id="r_hand" class="g4 hand"></div><button class="ex" onclick="bye()">Salir</button></div><div id="r_ov"></div>'}
@@ -367,8 +370,8 @@ const my=v.st=='play'&&v.turn==v.me,tk=evs(v),nw=performance.now(),busy=GH.some(
  rg('r_log',v.log.slice(-3).join('\n'),()=>v.log.slice(-3).map(l=>'<div>'+esc(l)+'</div>').join(''));
  rg('r_sg',[v.sg,v.st],()=>SG.map((s,i)=>`<button ${v.sg||v.st!='play'?'disabled':''} onpointerdown="sg(${i})">${sv(s[3])} ${s[0]}</button>`).join(''));
  rg('r_hand',[v.hand,DRW>0],()=>v.hand.map((c,i)=>card(c,DRW&&i==v.hand.length-1?'hid':'',`onpointerdown="hc(${i})"`)).join('')+Array(Math.max(0,4-v.hand.length)).fill('<div class="cd emp"></div>').join(''));
- rg('r_ov',[v.st,busy,v.why,v.me],()=>v.st!='play'&&!busy?`<div class="ov"><div><h1>${v.st=='won'?'¡MISIÓN CUMPLIDA!':'DERROTA'}</h1><p>${v.st=='won'?'Habéis superado la prueba del robot BZ1.':esc(v.why)}</p>
- ${v.me==0?`<button onclick="go({t:'again'})">Volver a la sala</button>`:'<p>Esperando al anfitrión…</p>'}</div></div>`:'');
+ rg('r_ov',[v.st,busy,v.why,v.me,rd,v.diff],()=>v.st!='play'&&!busy?`<div class="ov"><div><h1>${v.st=='won'?'¡MISIÓN CUMPLIDA!':'DERROTA'}</h1><p>${v.st=='won'?'Habéis superado la prueba del robot BZ1.':esc(v.why)}</p>
+ ${v.me==0?`<span style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${DN.map((d,i)=>`<button class="${(rd==null?v.diff:rd)==i?'on':'g'}" onclick="rd=${i};render(V)">${d}<br>${T(v.players.filter(p=>!p.off).length)[i]} misiones</button>`).join('')}</span><button class="go" onclick="go({t:'replay',d:${rd==null?v.diff:rd}});rd=null">Jugar otra vez</button><button class="g" onclick="rd=null;go({t:'again'})">Volver a la sala</button>`:'<p>Esperando al anfitrión…</p>'}</div></div>`:'');
  hl();hs();if(dirty){dirty=0;fit()}
  tk.forEach(t=>{try{t()}catch(e){}});
 }
