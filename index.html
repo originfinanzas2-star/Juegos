@@ -70,9 +70,9 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .hint{text-align:center;color:#9fb2cc;font-size:15px;line-height:1.2}.hint.hl{color:#ffd54a;font-weight:700}
 .mw{position:relative}
 .ms.dn::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(160deg,#fff 30%,#ffefb0);opacity:0;animation:fin .4s ease var(--d,0s) both;pointer-events:none}
-.ms.dn::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(115deg,transparent 35%,#fffc 50%,transparent 65%);background-size:250% 100%;background-position:150% 0;animation-name:sh;animation-duration:1.5s;animation-timing-function:linear;animation-delay:calc(var(--d,0s) + .3s);animation-iteration-count:3;animation-fill-mode:both;pointer-events:none}
+.ms.dn::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(115deg,transparent 35%,#fffc 50%,transparent 65%);background-size:250% 100%;background-position:150% 0;animation-name:sh;animation-duration:.6s;animation-timing-function:linear;animation-delay:calc(var(--d,0s) + .2s);animation-iteration-count:3;animation-fill-mode:both;pointer-events:none}
 .ms.dn>small,.ms.dn>p,.ms.dn>.dk{position:relative;z-index:1}
-.ms.dn{animation:mdone 5s linear var(--d,0s) both,gl 1.2s ease-in-out var(--d,0s) infinite}
+.ms.dn{animation:mdone 2s linear var(--d,0s) both,gl 1.2s ease-in-out var(--d,0s) infinite}
 .ms.dn small .l1{animation:fout .3s ease var(--d,0s) both}
 .ms.dn small .l2{position:absolute;left:8cqw;top:6cqw;white-space:nowrap;color:#b07d00;opacity:0;animation:fin .3s ease var(--d,0s) both}
 .stamp{position:absolute;left:50%;top:50%;z-index:3;transform:translate(-50%,-50%) rotate(-12deg) scale(2.4);opacity:0;border:1cqw solid #2e9c4a;color:#2e9c4a;background:#ffffffe6;border-radius:3cqw;padding:2cqw 4cqw;font-size:14cqw;font-weight:800;letter-spacing:.5px;white-space:nowrap;animation:stamp .5s cubic-bezier(.2,1.5,.4,1) calc(var(--d,0s) + .35s) forwards}
@@ -104,13 +104,47 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .bx .fan{position:relative;width:100%;aspect-ratio:1/.66}
 .bx .fc{position:absolute;width:37%;bottom:0;filter:drop-shadow(0 4px 6px #0007)}
 .bx .fc .cd{width:100%}
-.ov{position:fixed;inset:0;background:#000c;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
-.ov div{background:#1b2a3f;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;max-width:320px}
+.ov{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto;background:#000c;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:e_ov .6s ease both}
+.ov.win{background:radial-gradient(circle at 50% 40%,#3d3208dd,#050a12f0 72%)}
+.ov.lose{background:radial-gradient(circle at 50% 40%,#3d0d10dd,#050a12f5 72%)}
+.zf{position:fixed;inset:0;pointer-events:none;opacity:0}
+.ov.win .zf{background:radial-gradient(circle at 50% 45%,#fff7cf,#ffd54a99 35%,transparent 70%);animation:e_fxw 1s ease-out both}
+.ov.lose .zf{background:radial-gradient(circle at 50% 50%,transparent 30%,#e5303799 100%);animation:e_fxl 1.1s ease-out both}
+.zc{position:fixed;top:-24px;left:var(--x);width:9px;height:15px;background:var(--c);border-radius:2px;opacity:0;pointer-events:none;animation:e_cf var(--t) linear var(--dl) infinite}
+.zp{position:relative;width:min(340px,100%);margin:auto;background:linear-gradient(#24364f,#16233a);border:2px solid #ffffff22;border-radius:24px;padding:24px 18px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 24px 60px #000a;opacity:0;animation:e_pin .7s cubic-bezier(.2,1.4,.4,1) 1s both}
+.ov.win .zp{border-color:#ffd54a99;box-shadow:0 0 0 1px #ffd54a44,0 0 60px #ffc10740,0 24px 60px #000a}
+.ov.lose .zp{border-color:#e5484d77;animation:e_slam .65s cubic-bezier(.3,1.5,.5,1) 1s both}
+.zi{font-size:54px;line-height:1;opacity:0;animation:e_ic .7s cubic-bezier(.2,1.7,.4,1) 1.2s both}
+.zp h2{margin:0;font-size:40px;line-height:1;font-style:italic;font-weight:800;letter-spacing:1px}
+.ov.win h2{background:linear-gradient(100deg,#ffc83a 30%,#fff 50%,#ffc83a 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:e_tsh 2.2s linear 1.8s infinite}
+.ov.lose h2{color:#ff6b70;animation:e_shk .5s ease 1.5s both}
+.zs{margin:0;color:#c3d0e2;font-size:17px;line-height:1.2}
+.zl{width:100%;display:flex;flex-direction:column;gap:8px;margin:6px 0 2px}
+.zr{display:flex;align-items:center;gap:12px;background:#ffffff0f;border-radius:16px;padding:8px 14px 8px 10px;opacity:0;animation:e_row .5s cubic-bezier(.2,1.2,.4,1) calc(1.6s + var(--i)*.16s) both}
+.zr.off{opacity:.45!important}
+.zr .ci{width:44px;height:44px;flex:none}
+.zr .nm{flex:1;text-align:left;font-size:21px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.zr .zn{font-size:30px;font-weight:800;line-height:1;color:#ffd54a;text-align:right}
+.zr .zn small{display:block;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9fb2cc;margin-top:2px}
+.zr.top{background:#ffd54a22;box-shadow:inset 0 0 0 1.5px #ffd54a88}
+.zt{font-size:16px;color:#9fb2cc;letter-spacing:.5px;opacity:0;animation:e_row .5s ease 2.1s both}
+.zt b{color:#fff;font-size:20px}
+.zb{width:100%;opacity:0;animation:e_row .5s ease 2.3s both}
+@keyframes e_ov{from{opacity:0}to{opacity:1}}
+@keyframes e_fxw{0%{opacity:0;transform:scale(.3)}25%{opacity:1}100%{opacity:0;transform:scale(1.7)}}
+@keyframes e_fxl{0%{opacity:0}12%{opacity:1}28%{opacity:.25}42%{opacity:.95}100%{opacity:0}}
+@keyframes e_cf{0%{opacity:1;transform:translateY(0) rotate(var(--r))}100%{opacity:1;transform:translateY(110vh) rotate(calc(var(--r) + 720deg))}}
+@keyframes e_pin{from{opacity:0;transform:translateY(50px) scale(.7)}to{opacity:1;transform:none}}
+@keyframes e_slam{0%{opacity:0;transform:translateY(-140px) scale(1.25)}55%{opacity:1;transform:translateY(8px) scale(.98)}78%{transform:translateY(-4px)}100%{opacity:1;transform:none}}
+@keyframes e_ic{from{opacity:0;transform:scale(.2) rotate(-30deg)}to{opacity:1;transform:none}}
+@keyframes e_tsh{from{background-position:150% 0}to{background-position:-100% 0}}
+@keyframes e_shk{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes e_row{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 </style></head><body><div id="app"></div><div id="rot"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9fb2cc" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg>Pon el móvil en vertical</div>
 <script>
 const R=0,B=1,O=2,G=3;
 const CN=['rojas','azules','naranja','verdes'],CS=['rojo','azul','naranja','verde'],CC=['#e53935','#1e9be0','#f5a623','#3aa655'];
-let rd=null,lst='';
+const DT=2000;let lst='';
 const DN=['Principiante','Normal','Experto','Locura'];
 const T=np=>np==2||np==3?[15,18,21,24]:[12,15,18,21];
 /* ---------- MISIONES ---------- */
@@ -147,7 +181,7 @@ function newGame(){
  const np=S.players.length;let d=[];for(let c=0;c<4;c++)for(let n=1;n<=7;n++)d.push({c,n},{c,n});shuf(d);
  S.hands=S.players.map(()=>d.splice(0,4));S.piles=[0,1,2,3].map(()=>d.splice(0,1));S.draw=d;
  S.target=T(np)[S.diff];S.mdeck=shuf([...M.keys()]).slice(0,S.target);S.active=[null,null,null,null];S.evs=[];S.done=0;S.turn=0;S.st='play';S.why='';
- S.sigs=[];S.log=['Empieza la partida. ¡Suerte!'];refill();resolve();settle(false);
+ S.sigs=[];S.sc=S.players.map(()=>0);S.log=['Empieza la partida. ¡Suerte!'];refill();resolve();settle(false);
 }
 function refill(){for(let i=0;i<4;i++)if(S.active[i]==null&&S.mdeck.length)S.active[i]=S.mdeck.pop()}
 function ev(o){S.seq=(S.seq||0)+1;o.n=S.seq;S.evs=(S.evs||[]).concat(o).slice(-12)}
@@ -157,6 +191,7 @@ function settle(adv){
  if(S.done>=S.target){S.st='won';return}
  const np=S.players.length,ok=i=>!S.players[i].off&&S.hands[i].length;
  if(S.players.every(p=>p.off))return;
+ { const e=S.players.findIndex((p,k)=>!p.off&&!S.hands[k].length); if(e>=0){lose(S.players[e].name+' se ha quedado sin cartas.');return} }
  if(adv)S.turn=(S.turn+1)%np;
  for(let k=0;k<np&&!ok(S.turn);k++)S.turn=(S.turn+1)%np;
  if(!ok(S.turn)){lose('Os habéis quedado sin cartas.');return}
@@ -165,21 +200,20 @@ function settle(adv){
 function play(i,h,p){
  const c=S.hands[i][h];if(!c||!S.piles[p]||!okp(c,S.piles[p]))return;
  const pv=tp(S.piles[p]);S.hands[i].splice(h,1);S.piles[p].push(c);S.log.push(S.players[i].name+' juega en la pila '+(p+1));ev({k:'play',by:i,h,p,c,pv});
- const k=resolve();if(S.draw.length){S.hands[i].push(S.draw.pop());ev({k:'draw',by:i})}S.log=S.log.slice(-30);S.sigs=[];settle(!k);
+ const k=resolve();if(S.draw.length){S.hands[i].push(S.draw.pop());ev({k:'draw',by:i})}S.log=S.log.slice(-30);S.sigs=[];S.sc=S.sc||S.players.map(()=>0);S.sc[i]=(S.sc[i]||0)+k;settle(true);
 }
 function act(i,m){
  if(m.t=='diff'&&S.st=='lobby'&&i==0)S.diff=m.d;
  else if(m.t=='start'&&i==0&&S.st=='lobby')newGame();
  else if(m.t=='again'&&i==0&&(S.st=='won'||S.st=='lost')){const keep=[],nc={};S.players.forEach((p,k)=>{if(!p.off){if(conns[k]){conns[k]._i=keep.length;nc[keep.length]=conns[k]}keep.push(p)}});S.players=keep;conns=nc;S.hands=null;S.st='lobby'}
- else if(m.t=='replay'&&i==0&&(S.st=='won'||S.st=='lost')){const keep=[],nc={};S.players.forEach((p,k)=>{if(!p.off){if(conns[k]){conns[k]._i=keep.length;nc[keep.length]=conns[k]}keep.push(p)}});S.players=keep;conns=nc;if(m.d>=0&&m.d<4)S.diff=m.d;newGame()}
  else if(m.t=='sig'&&S.st=='play'&&!S.sigs.includes(i)){S.sigs.push(i);S.log.push(S.players[i].name+': '+m.x)}
  else if(m.t=='play'&&S.st=='play'&&S.turn==i)play(i,m.h,m.p);
  push();
 }
 function view(i){
- const pl=S.players.map((p,k)=>({name:p.name,off:!!p.off,n:S.hands&&S.hands[k]?S.hands[k].length:0}));
+ const pl=S.players.map((p,k)=>({name:p.name,off:!!p.off,n:S.hands&&S.hands[k]?S.hands[k].length:0,m:(S.sc&&S.sc[k])||0}));
  if(S.st=='lobby')return{st:'lobby',players:pl,diff:S.diff,me:i};
- return{st:S.st,diff:S.diff,why:S.why,players:pl,turn:S.turn,me:i,sg:S.sigs.includes(i),hand:S.hands[i],piles:S.piles.map(p=>({top:tp(p),n:p.length})),
+ return{st:S.st,why:S.why,players:pl,turn:S.turn,me:i,sg:S.sigs.includes(i),hand:S.hands[i],piles:S.piles.map(p=>({top:tp(p),n:p.length})),
   missions:[0,1,2,3].map(i=>S.active[i]==null?null:S.active[i]),evs:S.evs||[],done:S.done,target:S.target,draw:S.draw.length,mleft:S.mdeck.length,log:S.log.slice(-4)};
 }
 let svt=0;
@@ -335,12 +369,12 @@ function evs(v){
  v.evs.filter(e=>e.n>sn).forEach(e=>{
   if(e.k=='play'){if(e.by==v.me&&OPT&&OPT.p==e.p){OPT=null}else{PLY[e.p]={pv:e.pv};setTimeout(()=>{delete PLY[e.p];if(V){render(V);pulse(e.p)}},520);tk.push(()=>flyPlay(e,v))}}
   else if(e.k=='draw'){tk.push(()=>flyDraw(e,v));if(e.by==v.me){DRW++;setTimeout(()=>{DRW--;if(V)render(V)},1000)}}
-  else if(e.k=='done'){const q=GH[e.s]=GH[e.s].filter(g=>g.t0+5000>now),t0=q.length?q[q.length-1].t0+5000:now+650;q.push({id:e.id,t0});setTimeout(()=>{ENT[e.s]=performance.now();if(V)render(V)},t0+5000-now+30)}
+  else if(e.k=='done'){const q=GH[e.s]=GH[e.s].filter(g=>g.t0+DT>now),t0=q.length?q[q.length-1].t0+DT:now+650;q.push({id:e.id,t0});setTimeout(()=>{ENT[e.s]=performance.now();if(V)render(V)},t0+DT-now+30)}
  });
  sn=mx;return tk;
 }
 function slot(i){
- const now=performance.now();GH[i]=GH[i].filter(g=>g.t0+5000>now);const g=GH[i][0],oc=`onpointerdown="mc(${i})"`;
+ const now=performance.now();GH[i]=GH[i].filter(g=>g.t0+DT>now);const g=GH[i][0],oc=`onpointerdown="mc(${i})"`;
  if(g)return mcard(g.id,oc,{k:'done',d:((g.t0-now)/1000).toFixed(3)});
  if(V.missions[i]==null)return '<div class="mw"><div class="ms emp"></div></div>';
  return mcard(V.missions[i],oc,ENT[i]&&now-ENT[i]<800?{k:'enter',d:(-(now-ENT[i])/1000).toFixed(3)}:null);
@@ -362,18 +396,20 @@ function render(v){
   ${v.me==0?`<div class="g2">${DN.map((d,i)=>`<button class="${v.diff==i?'on':'g'}" onclick="go({t:'diff',d:${i}})">${d}<br>${T(np)[i]} misiones</button>`).join('')}</div>
   <button onclick="go({t:'start'})">Empezar (${np} jugador${np>1?'es':''})</button>`:`<p>Dificultad: <b>${DN[v.diff]}</b> · ${T(np)[v.diff]} misiones<br>Esperando al anfitrión…</p>`}<button class="g" onclick="quit()">Salir</button></div>`;return}
 if(v.st=='play'&&lst&&lst!='play'){GH=[[],[],[],[]];PLY={};DRW=0;ENT={}}lst=v.st;
-const my=v.st=='play'&&v.turn==v.me,tk=evs(v),nw=performance.now(),busy=GH.some(q=>q.some(g=>g.t0+5000>nw)),pt=i=>PLY[i]?PLY[i].pv:v.piles[i].top;
+const my=v.st=='play'&&v.turn==v.me,tk=evs(v),nw=performance.now(),busy=GH.some(q=>q.some(g=>g.t0+DT>nw)),pt=i=>PLY[i]?PLY[i].pv:v.piles[i].top;
  if(sel!=null&&sel>=v.hand.length)sel=null;
  if(a.dataset.m!='g'){a.dataset.m='g';RK={};a.innerHTML='<div id="r_top" class="top"></div><div id="r_cols" class="cols"></div><div id="r_log" class="log"></div><div id="r_sg" class="sg"></div><div id="ph" class="hint"></div><div style="margin-top:auto"><div class="lb">Tus cartas</div><div id="r_hand" class="g4 hand"></div><button class="ex" onclick="bye()">Salir</button></div><div id="r_ov"></div>'}
  const rg=(id,key,fn)=>{key=typeof key=='string'?key:JSON.stringify(key);if(RK[id]!==key){RK[id]=key;$(id).innerHTML=fn();dirty=1}};
- const sk=i=>{GH[i]=GH[i].filter(g=>g.t0+5000>nw);const g=GH[i][0];return g?'g'+g.id+'_'+Math.round(g.t0):(v.missions[i]==null?'-':v.missions[i])+(ENT[i]&&nw-ENT[i]<800?'e'+Math.round(ENT[i]):'')};
+ const sk=i=>{GH[i]=GH[i].filter(g=>g.t0+DT>nw);const g=GH[i][0];return g?'g'+g.id+'_'+Math.round(g.t0):(v.missions[i]==null?'-':v.missions[i])+(ENT[i]&&nw-ENT[i]<800?'e'+Math.round(ENT[i]):'')};
  rg('r_top',[v.mleft,v.draw,v.done,v.target,v.st,v.turn,v.me,v.players],()=>`<div class="dks">${bk(v.mleft,'Misiones','tg')}${bk(v.draw,'Robar','rb')}</div><div class="st"><div class="bar"><span>Cumplidas ${v.done}/${v.target}</span>${my?'<span class="me">TU TURNO</span>':'<span>Turno de '+v.players[v.turn].name+'</span>'}</div>${avs(v.players,v.st=='play'?v.turn:-1,v.me)}</div>`);
  rg('r_cols',[0,1,2,3].map(i=>sk(i)+'/'+pt(i).c+pt(i).n).join(','),()=>[0,1,2,3].map(i=>`<div class="c1">${slot(i)}${card(pt(i),'pile',`onpointerdown="pc(${i})"`)}</div>`).join(''));
  rg('r_log',v.log.slice(-3).join('\n'),()=>v.log.slice(-3).map(l=>'<div>'+esc(l)+'</div>').join(''));
  rg('r_sg',[v.sg,v.st],()=>SG.map((s,i)=>`<button ${v.sg||v.st!='play'?'disabled':''} onpointerdown="sg(${i})">${sv(s[3])} ${s[0]}</button>`).join(''));
  rg('r_hand',[v.hand,DRW>0],()=>v.hand.map((c,i)=>card(c,DRW&&i==v.hand.length-1?'hid':'',`onpointerdown="hc(${i})"`)).join('')+Array(Math.max(0,4-v.hand.length)).fill('<div class="cd emp"></div>').join(''));
- rg('r_ov',[v.st,busy,v.why,v.me,rd,v.diff],()=>v.st!='play'&&!busy?`<div class="ov"><div><h1>${v.st=='won'?'¡MISIÓN CUMPLIDA!':'DERROTA'}</h1><p>${v.st=='won'?'Habéis superado la prueba del robot BZ1.':esc(v.why)}</p>
- ${v.me==0?`<span style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${DN.map((d,i)=>`<button class="${(rd==null?v.diff:rd)==i?'on':'g'}" onclick="rd=${i};render(V)">${d}<br>${T(v.players.filter(p=>!p.off).length)[i]} misiones</button>`).join('')}</span><button class="go" onclick="go({t:'replay',d:${rd==null?v.diff:rd}});rd=null">Jugar otra vez</button><button class="g" onclick="rd=null;go({t:'again'})">Volver a la sala</button>`:'<p>Esperando al anfitrión…</p>'}</div></div>`:'');
+ rg('r_ov',[v.st,busy,v.why,v.me],()=>{if(v.st=='play'||busy)return'';const w=v.st=='won',mx=Math.max(0,...v.players.map(p=>p.m||0)),cc=['#d3473d','#5ba35e','#e9a944','#4a9ade','#ffffff'];
+  const cf=w?Array.from({length:44},(_,k)=>`<i class="zc" style="--x:${(Math.random()*100).toFixed(1)}%;--c:${cc[k%5]};--t:${(2.4+Math.random()*2).toFixed(2)}s;--dl:${(.25+Math.random()*2.2).toFixed(2)}s;--r:${Math.round(Math.random()*360)}deg"></i>`).join(''):'';
+  const rows=v.players.map((p,k)=>`<div class="zr${p.off?' off':''}${w&&mx>0&&v.players.length>1&&(p.m||0)==mx?' top':''}" style="--i:${k}"><div class="ci" style="--g:${PC[k]}">${rb(k+1)}</div><span class="nm">${esc(p.name)}</span><span class="zn">${p.m||0}<small>${(p.m||0)==1?'misión':'misiones'}</small></span></div>`).join('');
+  return `<div class="ov ${w?'win':'lose'}"><div class="zf"></div>${cf}<div class="zp"><div class="zi">${w?'🏆':'💥'}</div><h2>${w?'¡MISIÓN CUMPLIDA!':'DERROTA'}</h2><p class="zs">${w?'Habéis superado la prueba del robot BZ1.':esc(v.why)}</p><div class="zl">${rows}</div><div class="zt">Misiones cumplidas <b>${v.done}/${v.target}</b></div>${v.me==0?`<button class="go zb" onclick="go({t:'again'})">Volver a la sala</button>`:'<p class="zs zb">Esperando al anfitrión…</p>'}</div></div>`});
  hl();hs();if(dirty){dirty=0;fit()}
  tk.forEach(t=>{try{t()}catch(e){}});
 }
