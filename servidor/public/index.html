@@ -165,7 +165,7 @@ const CN=['rojas','azules','naranja','verdes'],CS=['rojo','azul','naranja','verd
  La partida se conecta mediante el servidor de Cloudflare (worker.js).
  SERVER vacío = misma dirección que esta web (si el Worker está en la ruta /ws/* de tu dominio).
  Si el Worker está en workers.dev, pon aquí su dirección, por ejemplo: 'wss://mision-cumplida-server.TU-USUARIO.workers.dev' */
-const SERVER='wss://mision-cumplida-server.misioncumplida.workers.dev';
+const SERVER='';
 /* ---------- SONIDO (todo a 5% de volumen) ---------- */
 const VOL=.05;let AC=null,MG=null,NB=null,ltm=false,lpn=0;
 function ac(){try{if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C();MG=AC.createGain();MG.gain.value=VOL;MG.connect(AC.destination);NB=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}if(AC.state!='running')AC.resume();return AC}catch(e){return null}}
