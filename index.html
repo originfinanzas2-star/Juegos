@@ -67,17 +67,14 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .sg button:disabled{opacity:.35}.sg button{padding:7px 4px;font-size:14px;line-height:1.1;background:#2a3d58}.sg button.on{background:#f5a623}
 .pn{display:flex;flex-direction:column;gap:8px}
-.bx{position:relative;width:min(300px,100%);aspect-ratio:5/7;margin:6px auto 4px;background:#f4f2ed;background-image:repeating-linear-gradient(90deg,#0000000b 0 1px,transparent 1px 3px);border-radius:8px;box-shadow:0 8px 24px #0008,0 0 0 1px #0004;overflow:hidden;transition:width .2s}
-.bx .tp{position:absolute;left:3%;right:3%;top:1.5%;height:43%;background:#3f3f42;background-image:repeating-linear-gradient(90deg,#ffffff0a 0 1px,transparent 1px 3px),repeating-linear-gradient(0deg,#0000001c 0 1px,transparent 1px 4px);border-radius:10px 10px 0 0;clip-path:polygon(0 0,100% 0,100% 100%,60% 94%,0 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 4% 4%}
-.bx .tp svg{width:100%;display:block}
-.bx .tp text{font-family:"Roboto Slab",Rockwell,Georgia,serif;font-weight:800;font-style:italic;fill:#f6f4ef;stroke:#f6f4ef;stroke-width:1.6;stroke-linejoin:round}
-.bx .fan{position:absolute;left:0;right:0;top:47%;height:41%}
-.bx .fc{position:absolute;width:37%;bottom:0;filter:drop-shadow(0 2px 3px #0005)}
+.bx{width:min(320px,100%);margin:0 auto}
+.hm{flex:1;display:flex;flex-direction:column;gap:10px;padding:14px 14px 18px;min-height:calc(100dvh - 20px)}
+.hm .mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.bx>svg{width:100%;display:block}
+.bx text{font-family:"Roboto Slab",Rockwell,Georgia,serif;font-weight:800;font-style:italic;fill:#f6f4ef;stroke:#f6f4ef;stroke-width:1.6;stroke-linejoin:round}
+.bx .fan{position:relative;width:100%;aspect-ratio:1/.66}
+.bx .fc{position:absolute;width:37%;bottom:0;filter:drop-shadow(0 4px 6px #0007)}
 .bx .fc .cd{width:100%}
-.bx .rob{position:absolute;left:10%;bottom:12%;width:17%;z-index:4}
-.bx .rob svg{width:100%;display:block}
-.bx .bars{position:absolute;left:11.5%;bottom:7.5%;width:14%;display:flex;justify-content:space-between;z-index:4}
-.bx .bars i{width:5%;height:min(2.6vw,10px);background:#2a2a2d;border-radius:1px}
 .ov{position:fixed;inset:0;background:#000c;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
 .ov div{background:#1b2a3f;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;max-width:320px}
 </style></head><body><div id="app"></div>
@@ -231,10 +228,8 @@ function chip(t){
  if(t[0]=='/')return `<u style="background:linear-gradient(135deg,${CC[CK[t[1]]]} 50%,${CC[CK[t[2]]]} 50%)"></u>`;
  const k=CK[t[0]];return `<u style="background:${k!=null?CC[k]:'#fff'};color:${k!=null?'#fff':'#1b2430'}">${t.slice(1)}</u>`;
 }
-const robD=`<svg viewBox="0 0 24 24"><path d="M12 4.5V2.6" stroke="#2a2a2d" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="1.8" r="1.4" fill="#2a2a2d"/><path d="M2.5 20v-8a9.5 8 0 0 1 19 0v8a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2z" transform="translate(0 -0.5)" fill="#2a2a2d"/><ellipse cx="8.8" cy="13.2" rx="1.5" ry="2.4" fill="#fff"/><ellipse cx="15.2" cy="13.2" rx="1.5" ry="2.4" fill="#fff"/></svg>`;
-const box=()=>`<div class="bx"><div class="tp"><svg viewBox="0 0 300 132"><text x="150" y="60" text-anchor="middle" font-size="66" textLength="290" lengthAdjust="spacing">MISIÓN</text><text x="150" y="106" text-anchor="middle" font-size="41" textLength="290" lengthAdjust="spacing">CUMPLIDA</text><text x="150" y="126" text-anchor="middle" font-size="10.5" textLength="150" lengthAdjust="spacing" style="stroke-width:.4">EL JUEGO COOPERATIVO</text></svg></div>
-<div class="fan"><div class="fc" style="left:5%;transform:rotate(-2deg);z-index:1">${card({c:B,n:1})}</div><div class="fc" style="left:29.5%;z-index:2">${card({c:G,n:2})}</div><div class="fc" style="left:53%;transform:rotate(7deg);transform-origin:bottom left;z-index:3">${card({c:O,n:3})}</div></div>
-<div class="rob">${robD}</div><div class="bars"><i></i><i></i><i></i><i></i><i></i></div></div>`;
+const ttl=()=>`<div class="bx"><svg viewBox="0 0 300 132"><text x="150" y="60" text-anchor="middle" font-size="66" textLength="290" lengthAdjust="spacing">MISIÓN</text><text x="150" y="106" text-anchor="middle" font-size="41" textLength="290" lengthAdjust="spacing">CUMPLIDA</text><text x="150" y="126" text-anchor="middle" font-size="10.5" textLength="150" lengthAdjust="spacing" style="stroke-width:.4">EL JUEGO COOPERATIVO</text></svg></div>`;
+const fan=()=>`<div class="bx"><div class="fan"><div class="fc" style="left:5%;transform:rotate(-2deg);z-index:1">${card({c:B,n:1})}</div><div class="fc" style="left:31.5%;z-index:2">${card({c:G,n:2})}</div><div class="fc" style="left:55%;transform:rotate(7deg);transform-origin:bottom left;z-index:3">${card({c:O,n:3})}</div></div></div>`;
 const PC=['#9b6bff','#ff6fb5','#c9d3dd','#b9824f'];
 const avs=(pl,t,me)=>`<div class="avs ${t<0?'all':''}">${pl.map((p,i)=>`<div class="av ${i==t?'on':''} ${p.off?'off':''}"><div class="ci" style="--g:${PC[i]}">${rb(i+1)}</div><span class="${i==me?'m':''}">${p.name}</span></div>`).join(`<i class="ar">${sv('chev','12px',3.5)}</i>`)}</div>`;
 const mcard=(id,r,x='')=>`<div class="ms${r?' rdy':''}" ${x}><small>${r?'✓ COMPLETADA':'MISIÓN:'}</small><p>${mt(M[id].t)}</p><div class="dk">${rb(id)}<span class="ch">${M[id].p.split(' ').map(chip).join('')}</span></div></div>`;
@@ -253,9 +248,9 @@ function render(v){
  V=v;const a=$('app');bn('');if(v&&code)sess(host?'h':'c');
  if(!v){let n=nmv;try{n=n||localStorage.mcname||''}catch(e){}
   const nin=`<input id="nm" placeholder="Tu nombre" maxlength="12" value="${esc(n)}">`;
-  a.innerHTML=`<div class="col">${box()}<p style="text-align:center;color:#9fb2cc;margin:0 0 6px">1 a 4 jugadores</p>
+  a.innerHTML=`<div class="hm">${ttl()}<div class="mid"><p style="text-align:center;color:#9fb2cc;margin:0 0 4px">1 a 4 jugadores</p>
   <button onclick="mm('c')">Crear sala</button>${menu=='c'?`<div class="pn">${nin}<button onclick="create()">Empezar</button></div>`:''}
-  <button class="g" onclick="mm('j')">Unirme a sala</button>${menu=='j'?`<div class="pn">${nin}<input id="cd" placeholder="Código de 4 números" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="this.value=this.value.replace(/\\D/g,'')"><button onclick="join()">Entrar</button></div>`:''}</div>`;return}
+  <button class="g" onclick="mm('j')">Unirme a sala</button>${menu=='j'?`<div class="pn">${nin}<input id="cd" placeholder="Código de 4 números" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="this.value=this.value.replace(/\\D/g,'')"><button onclick="join()">Entrar</button></div>`:''}</div>${fan()}</div>`;return}
  if(v.turn!=v.me)sel=null;
  if(v.st=='lobby'){const np=v.players.length;
   a.innerHTML=`<div class="col" style="text-align:center"><h1>SALA</h1><div>Código</div><div class="code">${code}</div>
