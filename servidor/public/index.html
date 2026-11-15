@@ -132,7 +132,7 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .ov.win .zp{border-color:#ffd54a99;box-shadow:0 0 0 1px #ffd54a44,0 0 60px #ffc10740,0 24px 60px #000a}
 .ov.lose .zp{border-color:#e5484d77;animation:e_slam .65s cubic-bezier(.3,1.5,.5,1) 1s both}
 .zi{font-size:54px;line-height:1;opacity:0;animation:e_ic .7s cubic-bezier(.2,1.7,.4,1) 1.2s both}
-.zp h2{margin:0;font-size:40px;line-height:1;font-style:italic;font-weight:800;letter-spacing:1px}
+.zp h2{margin:0;font-size:36px;line-height:1.1;font-style:italic;font-weight:800;letter-spacing:1px;padding:0 .2em 0 .1em;white-space:nowrap}
 .ov.win h2{background:linear-gradient(100deg,#ffc83a 30%,#fff 50%,#ffc83a 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:e_tsh 2.2s linear 1.8s infinite}
 .ov.lose h2{color:#ff6b70;animation:e_shk .5s ease 1.5s both}
 .zs{margin:0;color:#c3d0e2;font-size:17px;line-height:1.2}
@@ -143,7 +143,8 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .zr .nm{flex:1;text-align:left;font-size:21px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .zr .zn{font-size:30px;font-weight:800;line-height:1;color:#ffd54a;text-align:right}
 .zr .zn small{display:block;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9fb2cc;margin-top:2px}
-.zr.top{background:#ffd54a22;box-shadow:inset 0 0 0 1.5px #ffd54a88}
+.zr.me{background:#ffd54a22;box-shadow:inset 0 0 0 1.5px #ffd54a88}
+.zr .tu{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.8px;color:#16233a;background:#ffd54a;border-radius:6px;padding:2px 6px;margin-left:8px;vertical-align:middle}
 .zt{font-size:16px;color:#9fb2cc;letter-spacing:.5px;opacity:0;animation:e_row .5s ease 2.1s both}
 .zt b{color:#fff;font-size:20px}
 .zb{width:100%;opacity:0;animation:e_row .5s ease 2.3s both}
@@ -343,7 +344,7 @@ function retry(why){if(rt)return;if(tries++>(ever?60:5)){alert(ever?'No se pudo 
 /* ---------- UI ---------- */
 const P={0:'<path d="M5 5l14 14M19 5L5 19" stroke-width="4"/>',1:'<g stroke-width="2.9" stroke-linecap="butt" stroke-linejoin="round"><path d="M12 3.7V22.5"/><path d="M5.5 13.8V22.5"/><path d="M12 20.2L18.5 14.8V9.8"/></g><circle cx="12" cy="3.7" r="3.1" fill="currentColor" stroke="none"/><circle cx="5.5" cy="13.8" r="3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="9.8" r="3" fill="currentColor" stroke="none"/>',
 2:'<path d="M13.5 1.5L5 13.5h6l-1.5 9L19 10h-6.5z" fill="currentColor" stroke-width="1.2"/>',3:'<circle cx="12" cy="12" r="6" stroke-width="4"/><path d="M12 1.5v5M12 17.5v5M1.5 12h5M17.5 12h5M4.6 4.6l3.2 3.2M16.2 16.2l3.2 3.2M19.4 4.6l-3.2 3.2M7.8 16.2l-3.2 3.2" stroke-width="3.4" stroke-linecap="butt"/>',
-chev:'<path d="M9 5l7 7-7 7"/>',ban:'<circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/>',ok:'<path d="M4 13l5 5L20 6"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/>',flag:'<path d="M6 21V4M6 5h12l-3 4 3 4H6"/>',card:'<rect x="6" y="3" width="12" height="18" rx="2"/>',tg:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>'};
+chev:'<path d="M9 5l7 7-7 7"/>',ban:'<circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/>',ok:'<path d="M4 13l5 5L20 6"/>',swap:'<path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/>',flag:'<path d="M6 21V4M6 5h12l-3 4 3 4H6"/>',card:'<rect x="6" y="3" width="12" height="18" rx="2"/>',tg:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>'};
 const sv=(k,s='1em',w=3)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em">${P[k]}</svg>`;
 const MO=['<path d="M8 16.5h8"/>','<path d="M8 16l2 1.6 2-1.6 2 1.6 2-1.6"/>','<path d="M8 16.5h.01M11 16.5h.01M14 16.5h.01M17 16.5h.01" stroke-width="2.2"/>','<path d="M8.5 15.5q3.5 3 7 0"/>','<path d="M8 15.5v2.5M10.7 15.5v2.5M13.3 15.5v2.5M16 15.5v2.5"/>','<path d="M8.5 17.5q3.5-3 7 0"/>'];
 const EY=['<ellipse cx="9" cy="11" rx="1.3" ry="2.2" fill="#1f2a38"/><ellipse cx="15" cy="11" rx="1.3" ry="2.2" fill="#1f2a38"/>','<circle cx="9" cy="11" r="1.8" fill="#1f2a38"/><circle cx="15" cy="11" r="1.8" fill="#1f2a38"/>','<path d="M7 9.5l4 2M17 9.5l-4 2"/>'];
@@ -371,7 +372,7 @@ const burst=o=>Array.from({length:10},(_,k)=>{const a=k*36*Math.PI/180,d=55+(k%3
 const mcard=(id,x='',f=null,bd='')=>{const dn=f&&f.k=='done';return `<div class="mw" ${f?`style="--d:${f.d}s"`:''}><div class="ms${dn?' dn':''}${f&&f.k=='enter'?' en':''}" ${x}><small><span class="l1">MISIÓN:</span>${dn?'<span class="l2">✓ COMPLETADA</span>':''}</small><p>${mt(M[id].t)}</p><div class="dk">${rb(id)}<span class="ch">${M[id].p.split(' ').map(chip).join('')}</span></div>${dn?'<div class="stamp">¡CUMPLIDA!</div>':''}</div>${bd}${dn?burst(.3)+burst(4.2):''}</div>`};
 const bk=(n,l,i)=>`<div class="bk">${i=='rb'?RB:sv('tg','22px',2.2)}<b>${n}</b><small>${l}</small></div>`;
 const card=(c,cl='',x='')=>`<div class="cd ${cl}" ${x} style="--c:${CC[c.c]}"><div class="bd"><b>${c.n}</b></div><i>${c.n}</i><s>${sv(c.c)}</s><u>${c.n}</u><em>${sv(c.c)}</em></div>`;
-const SG=[['No juegues en la pila','p','No juegues en la pila','ban'],['Buena carta para la pila','p','Tengo una buena carta para la pila','ok'],['Puedo ayudar en misión','m','Puedo ayudar con la misión','help'],['Yo cumplo la misión','m','Yo puedo cumplir la misión','flag']];
+const SG=[['No juegues en la pila','p','No juegues en la pila','ban'],['Petición cambio número','p','Pide un cambio de número en la pila','swap'],['Puedo ayudar en misión','m','Puedo ayudar con la misión','help'],['Yo cumplo la misión','m','Yo puedo cumplir la misión','flag']];
 let RK={},OPT=null,ls=0,dirty=0,fq=0;
 function hl(){const v=V;if(!v||!v.hand)return;const sc=sel!=null?v.hand[sel]:null;
  document.querySelectorAll('#r_hand>.cd').forEach((el,i)=>el.classList.toggle('sel',i==sel));
@@ -481,7 +482,7 @@ const my=v.st=='play'&&v.turn==v.me,tk=evs(v),nw=performance.now(),busy=GH.some(
  rg('r_hand',[v.hand,DRW>0],()=>v.hand.map((c,i)=>card(c,DRW&&i==v.hand.length-1?'hid':'',`onpointerdown="hc(${i})"`)).join('')+Array(Math.max(0,4-v.hand.length)).fill('<div class="cd emp"></div>').join(''));
  rg('r_ov',[v.st,busy,v.why,v.me],()=>{if(v.st=='play'||busy)return'';const w=v.st=='won';sfx(w?'win':'lose',w?.05:.15);const mx=Math.max(0,...v.players.map(p=>p.m||0)),cc=['#d3473d','#5ba35e','#e9a944','#4a9ade','#ffffff'];
   const cf=w?Array.from({length:44},(_,k)=>`<i class="zc" style="--x:${(Math.random()*100).toFixed(1)}%;--c:${cc[k%5]};--t:${(2.4+Math.random()*2).toFixed(2)}s;--dl:${(.25+Math.random()*2.2).toFixed(2)}s;--r:${Math.round(Math.random()*360)}deg"></i>`).join(''):'';
-  const rows=v.players.map((p,k)=>`<div class="zr${p.off?' off':''}${w&&mx>0&&v.players.length>1&&(p.m||0)==mx?' top':''}" style="--i:${k}"><div class="ci" style="--g:${PC[k]}">${rb(k+1)}</div><span class="nm">${esc(p.name)}</span><span class="zn">${p.m||0}<small>${(p.m||0)==1?'misión':'misiones'}</small></span></div>`).join('');
+  const rows=v.players.map((p,k)=>({p,k})).sort((a,b)=>(b.p.m||0)-(a.p.m||0)||a.k-b.k).map(({p,k},o)=>`<div class="zr${p.off?' off':''}${k==v.me?' me':''}" style="--i:${o}"><div class="ci" style="--g:${PC[k]}">${rb(k+1)}</div><span class="nm">${esc(p.name)}${k==v.me?'<em class="tu">TÚ</em>':''}</span><span class="zn">${p.m||0}<small>${(p.m||0)==1?'misión':'misiones'}</small></span></div>`).join('');
   return `<div class="ov ${w?'win':'lose'}"><div class="zf"></div>${cf}<div class="zp"><div class="zi">${w?'🏆':'💥'}</div><h2>${w?'¡MISIÓN CUMPLIDA!':'DERROTA'}</h2><p class="zs">${w?'Habéis superado la prueba del robot BZ1.':tx(v.why,v.players)}</p><div class="zl">${rows}</div><div class="zt">Misiones cumplidas <b>${v.done}/${v.target}</b></div>${v.me==0?`<button class="go zb" onclick="go({t:'again'})">Volver a la sala</button>`:'<p class="zs zb">Esperando al anfitrión…</p>'}</div></div>`});
  hl();hs();if(dirty){dirty=0;fit()}
  tk.forEach(t=>{try{t()}catch(e){}});
