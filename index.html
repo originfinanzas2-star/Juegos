@@ -374,7 +374,7 @@ function pc(p){
  }
 }
 function mc(i){if(V.lock)return;if(pend&&pend.k=='m'){go({t:'sig',x:pend.x,k:'m',n:i});pend=null;V.sg=true;render(V)}}
-let sn=null,GH=[[],[],[],[]],PLY={},DRW=0,ENT={};
+let FR=false,sn=null,GH=[[],[],[],[]],PLY={},DRW=0,ENT={};
 const cen=r=>[r.left+r.width/2,r.top+r.height/2];
 function flier(front,sz,from,to,o){
  const f=document.createElement('div');f.className='fl';
@@ -409,7 +409,7 @@ function flyDraw(e,v){
 function evs(v){
  const tk=[];if(!v.evs)return tk;
  const mx=v.evs.reduce((a,e)=>Math.max(a,e.n),0);
- if(sn==null||mx<sn){sn=mx;return tk}
+ const fr=FR;FR=false;if((sn==null&&!fr)||mx<sn){sn=mx;return tk}if(sn==null)sn=0;
  const now=performance.now();
  v.evs.filter(e=>e.n>sn).forEach(e=>{
   if(e.k=='play'){if(e.by==v.me&&OPT&&OPT.p==e.p){OPT=null}else{PLY[e.p]={pv:e.pv};setTimeout(()=>{delete PLY[e.p];if(V){render(V);pulse(e.p)}},520);tk.push(()=>flyPlay(e,v))}}
@@ -440,7 +440,7 @@ function render(v){
   ${avs(v.players,-1,v.me)}
   ${v.me==0?`<div class="g2">${DN.map((d,i)=>`<button class="${v.diff==i?'on':'g'}" onclick="go({t:'diff',d:${i}})">${d}<br>${T(np)[i]} misiones</button>`).join('')}</div>
   <button onclick="go({t:'start'})">Empezar (${np} jugador${np>1?'es':''})</button>`:`<p>Dificultad: <b>${DN[v.diff]}</b> · ${T(np)[v.diff]} misiones<br>Esperando al anfitrión…</p>`}<button class="g" onclick="quit()">Salir</button></div>`;return}
-{const pv=lst;if(v.st=='play'&&pv!='play'){if(pv){GH=[[],[],[],[]];PLY={};DRW=0;ENT={}}}lst=v.st;lpn=0;const mt=v.st=='play'&&v.turn==v.me;if(mt&&!ltm&&pv=='play')sfx('turn',.6);ltm=mt}
+{const pv=lst;if(v.st=='play'&&pv=='lobby')FR=true;if(v.st=='play'&&pv!='play'){if(pv){GH=[[],[],[],[]];PLY={};DRW=0;ENT={}}}lst=v.st;lpn=0;const mt=v.st=='play'&&v.turn==v.me;if(mt&&!ltm&&pv=='play')sfx('turn',.6);ltm=mt}
 const my=v.st=='play'&&v.turn==v.me,tk=evs(v),nw=performance.now(),busy=GH.some(q=>q.some(g=>g.t0+DT>nw)),pt=i=>PLY[i]?PLY[i].pv:v.piles[i].top;
  sgs(v);
  if(sel!=null&&sel>=v.hand.length)sel=null;
