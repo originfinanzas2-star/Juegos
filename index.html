@@ -72,7 +72,7 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .ms.dn::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(160deg,#fff 30%,#ffefb0);opacity:0;animation:fin .4s ease var(--d,0s) both;pointer-events:none}
 .ms.dn::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(115deg,transparent 35%,#fffc 50%,transparent 65%);background-size:250% 100%;background-position:150% 0;animation-name:sh;animation-duration:.6s;animation-timing-function:linear;animation-delay:calc(var(--d,0s) + .2s);animation-iteration-count:3;animation-fill-mode:both;pointer-events:none}
 .ms.dn>small,.ms.dn>p,.ms.dn>.dk{position:relative;z-index:1}
-.ms.dn{animation:mdone 2s linear var(--d,0s) both,gl 1.2s ease-in-out var(--d,0s) infinite}
+.ms.dn{animation:mdone 2s linear var(--d,0s) both;box-shadow:0 0 0 3px #ffd54a,0 0 22px 6px #ffc107cc;will-change:transform,opacity;backface-visibility:hidden;-webkit-backface-visibility:hidden;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
 .ms.dn small .l1{animation:fout .3s ease var(--d,0s) both}
 .ms.dn small .l2{position:absolute;left:8cqw;top:6cqw;white-space:nowrap;color:#b07d00;opacity:0;animation:fin .3s ease var(--d,0s) both}
 .stamp{position:absolute;left:50%;top:50%;z-index:3;transform:translate(-50%,-50%) rotate(-12deg) scale(2.4);opacity:0;border:1cqw solid #2e9c4a;color:#2e9c4a;background:#ffffffe6;border-radius:3cqw;padding:2cqw 4cqw;font-size:14cqw;font-weight:800;letter-spacing:.5px;white-space:nowrap;animation:stamp .5s cubic-bezier(.2,1.5,.4,1) calc(var(--d,0s) + .35s) forwards}
@@ -83,7 +83,7 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 @keyframes fin{from{opacity:0}to{opacity:1}}
 @keyframes fout{to{opacity:0}}
 @keyframes stamp{to{opacity:1;transform:translate(-50%,-50%) rotate(-12deg) scale(1)}}
-@keyframes mdone{0%{transform:none;opacity:1;filter:none}5%{transform:scale(1.09)}10%{transform:scale(1)}80%{transform:scale(1);opacity:1;filter:none}88%{transform:scale(1.07) translateY(-4px);opacity:1;filter:brightness(1.15)}100%{transform:translateY(-36px) scale(.5) rotate(-9deg);opacity:0;filter:blur(2px)}}
+@keyframes mdone{0%{transform:none;opacity:1}5%{transform:scale(1.09)}10%{transform:scale(1)}80%{transform:scale(1);opacity:1}88%{transform:scale(1.07) translateY(-4px);opacity:1}100%{transform:translateY(-36px) scale(.5) rotate(-9deg);opacity:0}}
 @keyframes men{from{opacity:0;transform:translateY(-26px) scale(.8) rotate(4deg)}to{opacity:1;transform:none}}
 @keyframes pt{0%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.3) rotate(300deg)}}
 .fl{position:fixed;z-index:60;pointer-events:none;perspective:800px;filter:drop-shadow(0 10px 10px #000a)}
@@ -156,9 +156,9 @@ const L='rbog';
 [[R,O],[O,G],[B,R],[B,O],[G,R],[G,B]].forEach(([x,y])=>add(`Las cartas {${x}} suman igual que las {${y}}`,a=>ct(a,x)&&ct(a,y)&&sm(a,x)==sm(a,y),`${L[x]} = ${L[y]}`));
 [[R,O],[B,R],[G,B],[O,G],[R,G],[O,B]].forEach(([x,y])=>add(`Las cartas {${x}} suman el doble que las {${y}}`,a=>ct(a,x)&&ct(a,y)&&sm(a,x)==2*sm(a,y),`${L[x]}×2 ${L[y]}`));
 [R,G,B,O].forEach(c=>add(`Hay tres cartas {${c}}`,a=>ct(a,c)==3,`${L[c]} ${L[c]} w ${L[c]}`));
-[G,B,O,R].forEach(c=>add(`Hay dos cartas {${c}} adyacentes`,a=>{let p=ps(a,c);return p.length==2&&p[1]-p[0]==1},`${L[c]} ${L[c]} w w`));
-[B,R,O,G].forEach(c=>add(`Hay dos cartas {${c}} no adyacentes`,a=>{let p=ps(a,c);return p.length==2&&p[1]-p[0]>1},`${L[c]} w w ${L[c]}`));
-[G,B,R,O].forEach(c=>add(`Dos cartas alternas son de color [${c}]`,a=>{let p=ps(a,c);return p.length==2&&p[1]-p[0]==2},`${L[c]} w ${L[c]} w`));
+[G,B,O,R].forEach(c=>add(`Hay dos cartas {${c}} adyacentes`,a=>[0,1,2].some(i=>a[i].c==c&&a[i+1].c==c),`${L[c]} ${L[c]} w w`));
+[B,R,O,G].forEach(c=>add(`Hay dos cartas {${c}} no adyacentes`,a=>{let p=ps(a,c);return p.length>=2&&p[p.length-1]-p[0]>1},`${L[c]} w w ${L[c]}`));
+[G,B,R,O].forEach(c=>add(`Dos cartas alternas son de color [${c}]`,a=>(a[0].c==c&&a[2].c==c)||(a[1].c==c&&a[3].c==c),`${L[c]} w ${L[c]} w`));
 [[B,O],[R,G],[G,O],[B,R]].forEach(([x,y])=>add(`Todas las cartas son {${x}} y/o {${y}}`,a=>a.every(k=>k.c==x||k.c==y),Array(4).fill('/'+L[x]+L[y]).join(' ')));
 const dn=a=>new Set(a.map(x=>x.n)).size==4,dc=a=>new Set(a.map(x=>x.c)).size==4;
 add('Todas las cartas son menores de 4',a=>a.every(x=>x.n<4),'w3 w2 w1 w2');
