@@ -109,7 +109,7 @@ function rmDisc(c){const k=S.disc.findIndex(x=>x.id==c.id);if(k>=0){S.disc.splic
 function pull(){if(!S.draw.length&&S.disc.length){S.draw=shuf(S.disc);S.disc=[];S.dv++;lg('Se baraja el mazo de descartes');ev({k:'resh'})}return S.draw.pop()||null}
 function deal(){const n=S.players.length,k=n<4?5:4;S.draw=mkDeck(n);S.disc=[];S.dv=0;S.sid=0;
  S.players.forEach(p=>{p.s=[];p.q=[];p.rv=[];p.pk=null;p.nb=0;for(let i=0;i<k;i++)p.s.push({id:++S.sid,c:S.draw.pop(),lk:null})});
- S.turn=Math.random()*n|0;S.ph='draw';S.dr=null;S.kh=null;S.fl=null;S.st='peek';S.pe=Date.now()+5000;S.res=null;S.tt=Date.now();
+ S.turn=Math.random()*n|0;S.ph='draw';S.dr=null;S.kh=null;S.fl=null;S.st='peek';S.pe=Date.now()+10000;S.res=null;S.tt=Date.now();
  S.log=['¡CARTAS VISTA! Mira 2 de tus cartas'];S.evs=[];S.evn=S.evn||0;ev({k:'deal'})}
 function deposit(i,c,from,q){toDisc(c);ev({k:'disc',i,t:c.t,f:from||'dr',q:q?1:0});lg(NM(i)+' deja '+cname(c.t));
  if(isSp(c.t)){const p=S.players[i];if(c.t=='bu'&&p.nb>0)lg(NM(i)+' no puede usar el Buda ahora');else p.q.push({t:c.t,c})}}
@@ -311,7 +311,7 @@ function pickP(v,j){const q=v.q[0];if(!q)return false;
 const slot=(v,j,s,z)=>`<div class="cd ${z} ${hlS(v,j,s)?'hl':''}" data-k="s${s.id}" data-j="${j}" onclick="tapS(event,${j},${s.id})">${s.f?face(s.f):back()}${s.lk?'<b class="lkb">🔒</b>':''}</div>`;
 function pnl(v,p,j){const hd=v.hold==j;return `<div data-k="p${j}" class="pl ${hd?'hd':''} ${v.turn==j&&v.st!='peek'?'on':''} ${pickP(v,j)?'hl':''}" onclick="tapP(${j})"><div class="nm">${p.n}${p.off?' ⚠️':''}${v.kh==j?' 🔔':''}${v.turn==j&&v.st!='peek'?' ◂':''}</div>${hd?`<div class="cd sm held" data-k="h${j}">${back()}</div>`:''}<div class="row">${p.s.map(s=>slot(v,j,s,'sm')).join('')||'<i class="emp">sin cartas</i>'}</div></div>`}
 function actHtml(v){const q=v.q[0],mt=v.turn==v.i;
- if(v.st=='peek')return `<div><b>¡CARTAS VISTA!</b> <span class="chip" id="cdw">${Math.ceil(v.pe/1000)}s</span></div><p>Toca 2 de tus cartas para verlas. Luego se vuelven a tapar.</p>`;
+ if(v.st=='peek')return `<div><b>¡CARTAS VISTA!</b> <span class="chip" id="cdw">${Math.ceil(v.pe/1000)}s</span></div><p>Toca 2 de tus cartas para verlas. Al acabar el tiempo se giran solas.</p>`;
  if(q)return `<div><b>${cname(q)}</b></div><p>${AT[q]}${sl&&sl.a!=null&&q=='bu'?' · elegido: '+v.P[sl.a].n:''}</p><button class="b g" onclick="A({t:'ab',k:'skip'})">No usar la habilidad</button>`;
  if(v.st=='ending')return '<p>Esperando a que terminen las habilidades…</p>';
  const kn=v.kh!=null?`<p>🔔 ${v.P[v.kh].n} dijo ¡KHARMA! · último turno</p>`:'';
@@ -363,6 +363,14 @@ function fly(o){const f=o.from,t=o.to;if(!f||!t||!document.body.animate)return;
  if(sr!=er)fi.animate([{transform:'rotateY('+sr+'deg)'},{transform:'rotateY('+er+'deg)'}],{duration:dur*.85,delay:dl+dur*.1,easing:'ease-in-out',fill:'both'});else fi.style.transform='rotateY('+sr+'deg)';
  let done=0;const fin=()=>{if(done)return;done=1;el.remove();if(o.hide)unhide(o.hide);if(o.land)ping(o.land,o.lc||'ping-land');if(o.txt)floatTxt(t,o.txt,0,o.tc)};
  a.onfinish=fin;setTimeout(fin,dur+dl+500)}
+let PF={m:{},st:null};
+function peekAnim(v,C){
+ const cur={};(v.P[v.i].s||[]).forEach(s=>{if(s.f)cur[s.id]=s.f});
+ if(v.st!='end'&&v.st!='lobby'){
+  let n=0;
+  Object.keys(cur).forEach(id=>{if(!PF.m[id]&&C['s'+id])fly({from:C['s'+id],to:C['s'+id],t:cur[id],s:'b',e:'f',dur:720,hide:'s'+id,gl:'#ffd27a',land:'s'+id,lc:'ping-land'})});
+  Object.keys(PF.m).forEach(id=>{if(!cur[id]&&C['s'+id])fly({from:C['s'+id],to:C['s'+id],t:PF.m[id],s:'f',e:'b',delay:(n++)*140,dur:720,hide:'s'+id,gl:'#8a7bff',land:'s'+id,lc:'ping-eye'})})}
+ PF={m:cur,st:v.st}}
 function playEv(v,P,C){
  if(lastEv==null){lastEv=v.evn||0;return}
  const es=(v.ev||[]).filter(e=>e.n>lastEv);lastEv=v.evn||0;
@@ -393,7 +401,7 @@ function R(){const v=V;if(!v)return;if(v!==curV){PV=curV;curV=v}
  const d0=q1('disc');if(d0&&!HID.disc)DH.old=d0.innerHTML;
  const P=snap();R0();const C=snap();
  const d1=q1('disc');if(d1)DH.cur=d1.innerHTML;
- applyHides();applyPings();playEv(v,P,C)}
+ applyHides();applyPings();playEv(v,P,C);peekAnim(v,C)}
 /* ---------- TOQUES ---------- */
 function tapS(e,j,id){e&&e.stopPropagation();const v=V,q=v.q[0];
  if(v.st=='peek'){if(j==v.i)A({t:'pk',s:id});return}
@@ -413,7 +421,7 @@ function khm(){if(confirm('¿Decir KHARMA? Después jugaréis un último turno c
 function rules(){const rg=(t,pt,tx)=>`<div class="rg"><div class="cd lg">${face(t)}</div><div><b>${cname(t)}</b> · ${pt} pts<br>${tx}</div></div>`;
  $('ov2').innerHTML=`<div class="ov" onclick="this.parentNode.innerHTML=''"><div class="pop" onclick="event.stopPropagation()"><h3>Cómo se juega</h3>
  <p><b>Objetivo:</b> acabar la ronda con menos puntos Kharma. Se juega <b>una sola ronda</b>.</p>
- <ul><li>Cada uno tiene sus cartas boca abajo (5 con 2-3 jugadores, 4 con 4 o más). Al empezar puedes ver solo 2 durante 5 segundos.</li>
+ <ul><li>Cada uno tiene sus cartas boca abajo (5 con 2-3 jugadores, 4 con 4 o más). Al empezar puedes ver solo 2 durante 10 segundos; después se vuelven a girar.</li>
  <li><b>Tu turno:</b> roba una carta y descártala, o cámbiala por una de las tuyas (la que sale se descarta). Si la carta que descartas es especial, puedes usar su habilidad.</li>
  <li><b>¡KHARMA!</b> Al inicio de tu turno, antes de robar. Todos juegan un último turno (tú el primero) y se acaba la ronda. Si tienes menos puntos que todos: -20. Si pierdes: +10 para ti y -10 para quien menos tenga. Si empatas en lo más bajo: -10 cada uno. Con 2 jugadores, la mitad.</li>
  <li><b>⚡ Descarte rápido (en cualquier momento):</b> si crees que una de tus cartas es igual a la última de descartes, tírala. Si aciertas, te quedas con una carta menos (y puedes usar su habilidad). Si fallas, coges tu carta y 2 más, y no puedes usar el Buda en tu siguiente turno. Candado y Llave no se pueden tirar así.</li></ul>
