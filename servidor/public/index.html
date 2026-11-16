@@ -140,6 +140,7 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .zr{display:flex;align-items:center;gap:12px;background:#ffffff0f;border-radius:16px;padding:8px 14px 8px 10px;opacity:0;animation:e_row .5s cubic-bezier(.2,1.2,.4,1) calc(1.6s + var(--i)*.16s) both}
 .zr.off{opacity:.45!important}
 .zr .ci{width:44px;height:44px;flex:none}
+.bar .cmp{display:inline-flex;align-items:center;gap:6px;color:#5fd47e}
 .zr .nm{flex:1;text-align:left;font-size:21px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .zr .zn{font-size:30px;font-weight:800;line-height:1;color:#ffd54a;text-align:right}
 .zr .zn small{display:block;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9fb2cc;margin-top:2px}
@@ -238,7 +239,6 @@ function settle(adv){
  if(S.done>=S.target){S.st='won';return}
  const np=S.players.length,ok=i=>!S.players[i].off&&S.hands[i].length;
  if(S.players.every(p=>p.off))return;
- { const e=S.players.findIndex((p,k)=>!p.off&&!S.hands[k].length); if(e>=0){lose(NM(e)+' se ha quedado sin cartas.');return} }
  if(adv)S.turn=(S.turn+1)%np;
  for(let k=0;k<np&&!ok(S.turn);k++)S.turn=(S.turn+1)%np;
  if(!ok(S.turn)){lose('Os habéis quedado sin cartas.');return}
@@ -344,7 +344,7 @@ function retry(why){if(rt)return;if(tries++>(ever?60:5)){alert(ever?'No se pudo 
 /* ---------- UI ---------- */
 const P={0:'<path d="M5 5l14 14M19 5L5 19" stroke-width="4"/>',1:'<g stroke-width="2.9" stroke-linecap="butt" stroke-linejoin="round"><path d="M12 3.7V22.5"/><path d="M5.5 13.8V22.5"/><path d="M12 20.2L18.5 14.8V9.8"/></g><circle cx="12" cy="3.7" r="3.1" fill="currentColor" stroke="none"/><circle cx="5.5" cy="13.8" r="3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="9.8" r="3" fill="currentColor" stroke="none"/>',
 2:'<path d="M13.5 1.5L5 13.5h6l-1.5 9L19 10h-6.5z" fill="currentColor" stroke-width="1.2"/>',3:'<circle cx="12" cy="12" r="6" stroke-width="4"/><path d="M12 1.5v5M12 17.5v5M1.5 12h5M17.5 12h5M4.6 4.6l3.2 3.2M16.2 16.2l3.2 3.2M19.4 4.6l-3.2 3.2M7.8 16.2l-3.2 3.2" stroke-width="3.4" stroke-linecap="butt"/>',
-chev:'<path d="M9 5l7 7-7 7"/>',ban:'<circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/>',ok:'<path d="M4 13l5 5L20 6"/>',swap:'<path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/>',flag:'<path d="M6 21V4M6 5h12l-3 4 3 4H6"/>',card:'<rect x="6" y="3" width="12" height="18" rx="2"/>',tg:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>'};
+chev:'<path d="M9 5l7 7-7 7"/>',ban:'<circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/>',ok:'<path d="M4 13l5 5L20 6"/>',drop:'<path d="M12 3.5s6 6.2 6 10.8a6 6 0 0 1-12 0C6 9.700 12 3.5 12 3.5z"/>',minus:'<circle cx="12" cy="12" r="9"/><path d="M7.500 12h9"/>',swap:'<path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/>',flag:'<path d="M6 21V4M6 5h12l-3 4 3 4H6"/>',card:'<rect x="6" y="3" width="12" height="18" rx="2"/>',tg:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>'};
 const sv=(k,s='1em',w=3)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em">${P[k]}</svg>`;
 const MO=['<path d="M8 16.5h8"/>','<path d="M8 16l2 1.6 2-1.6 2 1.6 2-1.6"/>','<path d="M8 16.5h.01M11 16.5h.01M14 16.5h.01M17 16.5h.01" stroke-width="2.2"/>','<path d="M8.5 15.5q3.5 3 7 0"/>','<path d="M8 15.5v2.5M10.7 15.5v2.5M13.3 15.5v2.5M16 15.5v2.5"/>','<path d="M8.5 17.5q3.5-3 7 0"/>'];
 const EY=['<ellipse cx="9" cy="11" rx="1.3" ry="2.2" fill="#1f2a38"/><ellipse cx="15" cy="11" rx="1.3" ry="2.2" fill="#1f2a38"/>','<circle cx="9" cy="11" r="1.8" fill="#1f2a38"/><circle cx="15" cy="11" r="1.8" fill="#1f2a38"/>','<path d="M7 9.5l4 2M17 9.5l-4 2"/>'];
@@ -365,14 +365,14 @@ const tx=(s,pl)=>String(s).split(/\u0001(\d)\u0002/).map((t,k)=>k%2?(pl[t]?mini(
 const sgb=(v,k,n)=>{const all=v.sigs||[],a=all.filter(s=>s.k==k&&s.n==n);if(!a.length)return'';const nw=Math.max(...all.map(s=>s.s||0));return `<div class="sgb${a.length>2?' m3':''}">${a.map(s=>`<span class="bg${s.s==nw?' nw':''}" style="--g:${PC[s.i%4]}">${rb(s.i+1)}</span>`).join('')}</div>`};
 let lsg=null;
 function sgs(v){const a=v.sigs||[],mx=a.reduce((m,s)=>Math.max(m,s.s||0),0);if(lsg==null){lsg=mx;return}
- a.filter(s=>s.s>lsg).forEach((s,k)=>sfx(['sgn','sgy','sgh','sgf'][s.q]||'sgh',k*.18));if(mx>lsg)lsg=mx}
+ a.filter(s=>s.s>lsg).forEach((s,k)=>sfx(['sgn','sgy','sgh','sgy','sgn','sgf'][s.q]||'sgh',k*.18));if(mx>lsg)lsg=mx}
 const avs=(pl,t,me)=>`<div class="avs ${t<0?'all':''}">${pl.map((p,i)=>`<div class="av ${i==t?'on':''} ${p.off?'off':''}"><div class="ci" style="--g:${PC[i]}">${rb(i+1)}</div><span class="${i==me?'m':''}">${p.name}</span></div>`).join(`<i class="ar">${sv('chev','12px',3.5)}</i>`)}</div>`;
 const BC=['#ffd54a','#fff','#3aa655','#ffb300','#fff'];
 const burst=o=>Array.from({length:10},(_,k)=>{const a=k*36*Math.PI/180,d=55+(k%3)*22;return `<i class="pt" style="--x:${Math.round(Math.cos(a)*d)}px;--y:${Math.round(Math.sin(a)*d)}px;--c:${BC[k%5]};--o:${o}s"></i>`}).join('');
 const mcard=(id,x='',f=null,bd='')=>{const dn=f&&f.k=='done';return `<div class="mw" ${f?`style="--d:${f.d}s"`:''}><div class="ms${dn?' dn':''}${f&&f.k=='enter'?' en':''}" ${x}><small><span class="l1">MISIÓN:</span>${dn?'<span class="l2">✓ COMPLETADA</span>':''}</small><p>${mt(M[id].t)}</p><div class="dk">${rb(id)}<span class="ch">${M[id].p.split(' ').map(chip).join('')}</span></div>${dn?'<div class="stamp">¡CUMPLIDA!</div>':''}</div>${bd}${dn?burst(.3)+burst(4.2):''}</div>`};
 const bk=(n,l,i)=>`<div class="bk">${i=='rb'?RB:sv('tg','22px',2.2)}<b>${n}</b><small>${l}</small></div>`;
 const card=(c,cl='',x='')=>`<div class="cd ${cl}" ${x} style="--c:${CC[c.c]}"><div class="bd"><b>${c.n}</b></div><i>${c.n}</i><s>${sv(c.c)}</s><u>${c.n}</u><em>${sv(c.c)}</em></div>`;
-const SG=[['No juegues en la pila','p','No juegues en la pila','ban'],['Petición cambio número','p','Pide un cambio de número en la pila','swap'],['Puedo ayudar en misión','m','Puedo ayudar con la misión','help'],['Yo cumplo la misión','m','Yo puedo cumplir la misión','flag']];
+const SG=[['No juegues en la pila','p','No juegues en la pila','ban'],['Petición cambio número','p','Pide un cambio de número en la pila','swap'],['Puedo ayudar en misión','m','Puedo ayudar con la misión','help'],['Petición cambio color','p','Pide un cambio de color en la pila','drop'],['No puedo ayudar en misión','m','No puedo ayudar con la misión','minus'],['Yo cumplo la misión','m','Yo puedo cumplir la misión','flag']];
 let RK={},OPT=null,ls=0,dirty=0,fq=0;
 function hl(){const v=V;if(!v||!v.hand)return;const sc=sel!=null?v.hand[sel]:null;
  document.querySelectorAll('#r_hand>.cd').forEach((el,i)=>el.classList.toggle('sel',i==sel));
@@ -463,7 +463,7 @@ function render(v){
   ${menu!='j'?`<button onclick="mm('c')">Crear sala</button>`:''}${menu=='c'?`<div class="pn">${nin}<button class="go" onclick="create()">Empezar</button><button class="g" onclick="mm('c')">← Volver</button></div>`:''}
   ${menu!='c'?`<button class="${menu=='j'?'':'g'}" onclick="mm('j')">Unirme a sala</button>`:''}${menu=='j'?`<div class="pn">${nin}<input id="cd" placeholder="CÓDIGO" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="this.value=this.value.replace(/\\D/g,'')"><button class="go" onclick="join()">Entrar</button><button class="g" onclick="mm('j')">← Volver</button></div>`:''}</div>${fan()}</div>`;return}
  if(v.turn!=v.me)sel=null;
- if(v.st=='lobby'){lsg=null;if(lpn&&v.players.length>lpn)sfx('join');lpn=v.players.length;ltm=false;sn=null;GH=[[],[],[],[]];PLY={};DRW=0;ENT={};const np=v.players.length;
+ if(v.st=='lobby'){lst='lobby';lsg=null;if(lpn&&v.players.length>lpn)sfx('join');lpn=v.players.length;ltm=false;sn=null;GH=[[],[],[],[]];PLY={};DRW=0;ENT={};const np=v.players.length;
   a.innerHTML=`<div class="col" style="text-align:center"><h1>SALA</h1><div class="code">${code}</div>
   ${avs(v.players,-1,v.me)}
   ${v.me==0?`<div class="g2">${DN.map((d,i)=>`<button class="${v.diff==i?'on':'g'}" onclick="go({t:'diff',d:${i}})">${d}<br>${T(np)[i]} misiones</button>`).join('')}</div>
@@ -475,7 +475,7 @@ const my=v.st=='play'&&v.turn==v.me,tk=evs(v),nw=performance.now(),busy=GH.some(
  if(a.dataset.m!='g'){a.dataset.m='g';RK={};a.innerHTML='<div id="r_top" class="top"></div><div id="r_cols" class="cols"></div><div id="r_log" class="log"></div><div id="r_sg" class="sg"></div><div id="ph" class="hint"></div><div style="margin-top:auto"><div class="lb">Tus cartas</div><div id="r_hand" class="g4 hand"></div><button class="ex" onclick="bye()">Salir</button></div><div id="r_ov"></div>'}
  const rg=(id,key,fn)=>{key=typeof key=='string'?key:JSON.stringify(key);if(RK[id]!==key){RK[id]=key;$(id).innerHTML=fn();dirty=1}};
  const sk=i=>{GH[i]=GH[i].filter(g=>g.t0+DT>nw);const g=GH[i][0];return g?'g'+g.id+'_'+Math.round(g.t0):(v.missions[i]==null?'-':v.missions[i])+(ENT[i]&&nw-ENT[i]<800?'e'+Math.round(ENT[i]):'')};
- rg('r_top',[v.mleft,v.draw,v.done,v.target,v.st,v.turn,v.me,v.players],()=>`<div class="dks">${bk(v.mleft,'Misiones','tg')}${bk(v.draw,'Robar','rb')}</div><div class="st"><div class="bar"><span>Cumplidas ${v.done}/${v.target}</span>${my?'<span class="me">TU TURNO</span>':'<span>Turno de '+mini(v.turn)+v.players[v.turn].name+'</span>'}</div>${avs(v.players,v.st=='play'?v.turn:-1,v.me)}</div>`);
+ rg('r_top',[v.mleft,v.draw,v.done,v.target,v.st,v.turn,v.me,v.players],()=>`<div class="dks">${bk(v.mleft,'Misiones','tg')}${bk(v.draw,'Robar','rb')}</div><div class="st"><div class="bar"><span class="cmp">${sv('ok','.9em',3.5)} ${v.done}/${v.target}</span>${my?'<span class="me">TU TURNO</span>':''}</div>${avs(v.players,v.st=='play'?v.turn:-1,v.me)}</div>`);
  rg('r_cols',[0,1,2,3].map(i=>sk(i)+'/'+pt(i).c+pt(i).n).join(',')+'|'+JSON.stringify(v.sigs||[]),()=>[0,1,2,3].map(i=>`<div class="c1">${slot(i)}<div class="mw">${card(pt(i),'pile',`onpointerdown="pc(${i})"`)}${sgb(v,'p',i)}</div></div>`).join(''));
  rg('r_log',v.log.slice(-3).join('\n'),()=>v.log.slice(-3).map(l=>'<div class="'+(/^Misión cumplida:/.test(l)?'lm':/^\u0001\d\u0002: /.test(l)?'ls':/ juega en la pila/.test(l)?'lp':'')+'">'+tx(l,v.players)+'</div>').join(''));
  rg('r_sg',[v.sg,v.st],()=>SG.map((s,i)=>`<button ${v.sg||v.st!='play'?'disabled':''} onpointerdown="sg(${i})">${sv(s[3])} ${s[0]}</button>`).join(''));
