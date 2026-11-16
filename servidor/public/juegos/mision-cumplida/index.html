@@ -507,7 +507,7 @@ function render(v){
  if(!v||v.st=='lobby'){a.dataset.m='';RK={};a.style.height='';a.style.minHeight=''}
  if(!v){lsg=null;lpn=0;ltm=false;let n=nmv;try{n=n||localStorage.mcname||''}catch(e){}
   const nin=`<input id="nm" placeholder="Tu nombre" maxlength="12" value="${esc(n)}">`;
-  a.innerHTML=`<a href="../../" style="position:fixed;top:max(12px,env(safe-area-inset-top));left:14px;z-index:5;color:#9fb2cc;font-size:19px;text-decoration:none;padding:6px 4px">‹ Juegos</a><div class="hm">${ttl()}<p style="text-align:center;color:#9fb2cc;margin:-2px 0 0;font-size:18px">1 a 4 jugadores</p><div class="mid">
+  a.innerHTML=`<a href="../../" style="position:fixed;top:max(12px,env(safe-area-inset-top));left:14px;z-index:5;color:#9fb2cc;font-size:19px;text-decoration:none;padding:6px 4px">‹ GamesTrackerz</a><div class="hm">${ttl()}<p style="text-align:center;color:#9fb2cc;margin:-2px 0 0;font-size:18px">1 a 4 jugadores</p><div class="mid">
   ${menu!='j'?`<button onclick="mm('c')">Crear sala</button>`:''}${menu=='c'?`<div class="pn">${nin}<button class="go" onclick="create()">Empezar</button><button class="g" onclick="mm('c')">← Volver</button></div>`:''}
   ${menu!='c'?`<button class="${menu=='j'?'':'g'}" onclick="mm('j')">Unirme a sala</button>`:''}${menu=='j'?`<div class="pn">${nin}<input id="cd" placeholder="CÓDIGO" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="this.value=this.value.replace(/\\D/g,'')"><button class="go" onclick="join()">Entrar</button><button class="g" onclick="mm('j')">← Volver</button></div>`:''}</div>${fan()}</div>`;return}
  if(v.turn!=v.me)sel=null;
