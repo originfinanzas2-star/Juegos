@@ -32,7 +32,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1.5px solid #3a3560;back
 .row{display:flex;flex-wrap:wrap;gap:4px;min-height:42px}.emp{color:#6f679a;font-size:12px}
 .cd{position:relative;flex:none;border-radius:6px;transition:transform .12s}
 .cd svg{display:block;width:100%;height:100%;filter:drop-shadow(0 2px 3px #0008)}
-.cd.sm{width:28px;height:40px}.cd.lg{width:62px;height:88px}.cd.xl{width:84px;height:119px}
+.big{display:flex;flex-direction:column;align-items:center;gap:12px}.big .b{width:100%}.cd.xxl{width:116px;height:165px}.cd.sm{width:28px;height:40px}.cd.lg{width:62px;height:88px}.cd.xl{width:84px;height:119px}
 .cd.hl{outline:2px solid #ffd27a;outline-offset:1px;border-radius:7px;animation:pl .8s ease-in-out infinite alternate}
 @keyframes pl{to{transform:translateY(-3px);box-shadow:0 0 12px #ffd27a}}
 .lkb{position:absolute;right:-3px;bottom:-3px;font-size:13px;line-height:1}.cd.sm .lkb{font-size:10px}
@@ -317,7 +317,7 @@ function actHtml(v){const q=v.q[0],mt=v.turn==v.i;
  const kn=v.kh!=null?`<p>🔔 ${v.P[v.kh].n} dijo ¡KHARMA! · último turno</p>`:'';
  if(mt){
   if(v.ph=='draw')return `<div class="rw"><button class="b" onclick="A({t:'draw'})">Robar carta</button>${v.kh==null?'<button class="b g" onclick="khm()">¡KHARMA!</button>':''}</div>${kn}`;
-  if(v.ph=='place')return `<div class="dr"><div class="cd lg" data-k="h${v.i}">${face(v.dr)}</div><div><b>${cn2(v.dr)}</b><p>Descártala o toca una de tus cartas para cambiarla</p><button class="b" onclick="A({t:'disc'})">Descartar</button></div></div>`;
+  if(v.ph=='place')return `<div class="big"><div class="cd xxl" data-k="h${v.i}">${face(v.dr)}</div><button class="b" onclick="A({t:'disc'})">Jugar</button></div>`;
   return '<p>Resolviendo…</p>'}
  return `<div>Turno de <b>${v.P[v.turn].n}</b></div>${kn}`}
 function board(v){const me=v.P[v.i],mt=v.turn==v.i&&v.st=='play',canQ=v.st=='play'&&v.top&&v.top!='lk'&&v.top!='ky';
@@ -380,11 +380,11 @@ function playEv(v,P,C){
   if(e.k=='deal'){const g={};Object.keys(C).forEach(k=>{if(/^s\d+$/.test(k))(g[C[k].j]=g[C[k].j]||[]).push(k)});
    const ks=Object.keys(g),mx=Math.max(0,...ks.map(j=>g[j].length));let n=0;
    for(let x=0;x<mx;x++)ks.forEach(j=>{const k=g[j][x];if(k){fly({from:C.deck,to:C[k],s:'b',e:'b',delay:n*28,dur:380,hide:k});n++}})}
-  else if(e.k=='draw')fly({from:C.deck||P.deck,to:K('h'+e.i,'p'+e.i),t:e.i==me?v.dr:null,s:'b',e:e.i==me?'f':'b',dur:620,hide:'h'+e.i,gl:'#7ed957',land:'h'+e.i,lc:'ping-in',txt:'＋ Roba',tc:'g'});
-  else if(e.k=='swap')fly({from:S0('h'+e.i,'p'+e.i),to:K('s'+e.s),t:e.i==me&&PV?PV.dr:null,s:e.i==me?'f':'b',e:'b',delay:520,dur:600,hide:'s'+e.s,gl:'#7ed957',land:'s'+e.s,lc:'ping-in',txt:'⬇ Entra',tc:'g'});
+  else if(e.k=='draw')fly({from:C.deck||P.deck,to:K('h'+e.i,'p'+e.i),t:e.i==me?v.dr:null,s:'b',e:e.i==me?'f':'b',dur:620,hide:'h'+e.i,gl:'#7ed957',land:'h'+e.i,lc:'ping-in'});
+  else if(e.k=='swap')fly({from:S0('h'+e.i,'p'+e.i),to:K('s'+e.s),t:e.i==me&&PV?PV.dr:null,s:e.i==me?'f':'b',e:'b',delay:520,dur:600,hide:'s'+e.s,gl:'#7ed957',land:'s'+e.s,lc:'ping-in'});
   else if(e.k=='disc'){const fk=e.f=='dr'?'h'+e.i:e.f,tx=e.q?('⚡ ¡Rápido!'+(isSp(e.t)?' '+NMS[e.t]:'')):('⬆ Suelta'+(isSp(e.t)?' '+NMS[e.t]:''));
-   fly({from:S0(fk,'p'+e.i),to:K('disc'),t:e.t,s:(e.f=='dr'&&e.i==me)?'f':'b',e:'f',dur:620,hide:'disc',gl:'#ff9a3d',land:'disc',lc:'ping-out',txt:tx,tc:'o'})}
-  else if(e.k=='take'){e.ids.forEach((id,x)=>fly({from:S0('disc'),to:K('s'+id),s:'b',e:'b',delay:x*170,dur:540,hide:'s'+id,land:'s'+id,lc:'ping-bad',gl:'#ff4d5e',txt:x==0?'＋ Coge':null,tc:'r'}));floatTxt(K('p'+e.i),'✖ ¡Fallo!',0,'r')}
+   fly({from:S0(fk,'p'+e.i),to:K('disc'),t:e.t,s:(e.f=='dr'&&e.i==me)?'f':'b',e:'f',dur:620,hide:'disc',gl:'#ff9a3d',land:'disc',lc:'ping-out'})}
+  else if(e.k=='take'){e.ids.forEach((id,x)=>fly({from:S0('disc'),to:K('s'+id),s:'b',e:'b',delay:x*170,dur:540,hide:'s'+id,land:'s'+id,lc:'ping-bad',gl:'#ff4d5e'}));floatTxt(K('p'+e.i),'✖ ¡Fallo!')}
   else if(e.k=='lock')fly({from:S0('disc'),to:K('s'+e.s),t:'lk',s:'f',e:'f',dur:620,land:'s'+e.s,txt:'🔒'});
   else if(e.k=='unlock'){ping('s'+e.s,'ping-ok');floatTxt(K('s'+e.s),'🔓')}
   else if(e.k=='bu'){const A=K('p'+e.a),B=K('p'+e.b);if(A&&B){for(let x=0;x<4;x++){fly({from:cenR(A,42,60),to:cenR(B,42,60),s:'b',e:'b',delay:x*90,dur:600});fly({from:cenR(B,42,60),to:cenR(A,42,60),s:'b',e:'b',delay:x*90,dur:600})}
