@@ -29,7 +29,8 @@ input,button{font:inherit;font-size:17px;border-radius:10px;border:0;padding:11p
 input{width:100%;background:#1f2e42;color:#fff;text-align:center}
 button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58}button.on{background:#f5a623;color:#111}
 .col{display:flex;flex-direction:column;gap:10px;padding:14px}
-.code{font-size:40px;letter-spacing:6px;color:#f5a623}
+.code{font-size:40px;letter-spacing:6px;color:#f5a623;cursor:pointer;align-self:center;width:fit-content;padding:2px 10px 2px 16px;border-radius:12px;border:1.5px dashed #f5a62366}.code:active{background:#f5a62322}
+.cph{font-size:14px;color:#9fb2cc;margin:-2px 0 4px;min-height:1.2em}.cph.ok{color:#5fd47e;font-weight:700}
 .top{display:flex;gap:10px;align-items:center}.st{flex:1;display:flex;flex-direction:column;gap:6px}
 .bar{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:700}
 .me{background:#f5a623;color:#111;border-radius:12px;padding:1px 10px}
@@ -48,7 +49,7 @@ button{background:#3b8fd6;color:#fff;font-weight:700}button.g{background:#2a3d58
 .bk{width:50px;aspect-ratio:2/3;background:#1f2a38;border:2px solid #fff;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:3px 3px 0 #33465e,6px 6px 0 #26354a}
 .bk svg{width:22px;height:22px}.bk b{font-size:22px;line-height:1}.bk small{font-size:9px;color:#9fb2cc;text-transform:uppercase}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:6px}.g4,.cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;justify-content:center}
-.cols,.hand{width:calc(var(--cw,21vw)*4 + 18px);max-width:100%;margin:0 auto;box-sizing:content-box}.hand{padding-top:4px;display:flex;flex-wrap:nowrap;justify-content:center;gap:6px;width:100%;max-width:100%;overflow:visible}.hand>.cd{flex:0 1 var(--cw,21vw);width:var(--cw,21vw);min-width:0;max-width:calc((100% - 18px)/4)}
+.cols,.hand{width:calc(var(--cw,21vw)*4 + 18px);max-width:100%;margin:0 auto;box-sizing:content-box}.hand{padding-top:24px;display:flex;flex-wrap:nowrap;justify-content:center;gap:6px;width:100%;max-width:100%;overflow:visible}.hand>.cd{flex:0 1 var(--cw,21vw);width:var(--cw,21vw);min-width:0;max-width:calc((100% - 18px)/4)}
 #ph{min-height:1.25em}#ph:empty{visibility:hidden}
 .c1{display:flex;flex-direction:column;gap:6px}
 #r_cols{margin-top:16px}
@@ -365,7 +366,7 @@ function chip(t){
  if(t[0]=='/')return `<u style="background:linear-gradient(135deg,${CC[CK[t[1]]]} 50%,${CC[CK[t[2]]]} 50%)"></u>`;
  const k=CK[t[0]];return `<u style="background:${k!=null?CC[k]:'#fff'};color:${k!=null?'#fff':'#1b2430'}">${t.slice(1)}</u>`;
 }
-const ttl=()=>`<div class="bx"><svg viewBox="0 0 300 132"><text x="150" y="60" text-anchor="middle" font-size="66" textLength="290" lengthAdjust="spacing">MISIÓN</text><text x="150" y="106" text-anchor="middle" font-size="41" textLength="290" lengthAdjust="spacing">CUMPLIDA</text><text x="150" y="126" text-anchor="middle" font-size="10.5" textLength="150" lengthAdjust="spacing" style="stroke-width:.4">EL JUEGO COOPERATIVO</text></svg></div>`;
+const ttl=()=>`<div class="bx"><svg viewBox="0 0 300 132" style="overflow:visible"><text x="147" y="60" text-anchor="middle" font-size="66" textLength="272" lengthAdjust="spacing">MISIÓN</text><text x="147" y="106" text-anchor="middle" font-size="41" textLength="272" lengthAdjust="spacing">CUMPLIDA</text><text x="150" y="126" text-anchor="middle" font-size="10.5" textLength="150" lengthAdjust="spacing" style="stroke-width:.4">EL JUEGO COOPERATIVO</text></svg></div>`;
 const fan=()=>`<div class="bx"><div class="fan"><div class="fc" style="left:5%;transform:rotate(-2deg);z-index:1">${card({c:B,n:1})}</div><div class="fc" style="left:31.5%;z-index:2">${card({c:G,n:2})}</div><div class="fc" style="left:55%;transform:rotate(7deg);transform-origin:bottom left;z-index:3">${card({c:O,n:3})}</div></div></div>`;
 const PC=['#9b6bff','#ff6fb5','#c9d3dd','#b9824f'];
 const mini=i=>`<span class="mi" style="--g:${PC[i%4]}">${rb(i+1)}</span>`;
@@ -442,6 +443,8 @@ function flyDraw(e,v){
   flier('',dr,from,cen(c.getBoundingClientRect()),{d:600,delay:260,hold:40,back:1,ease:'ease-in',kf:(dx,dy)=>[{transform:'translate(0,0) scale(1) rotate(0deg)',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.35) rotate(25deg)`,opacity:.1}]});
  }
 }
+function cpc(){const t=String(code),done=ok=>{const h=$('cph');if(!h)return;h.textContent=ok?'¡Código copiado!':'No se pudo copiar';h.classList.toggle('ok',ok);setTimeout(()=>{const x=$('cph');if(x){x.textContent='Toca el código para copiarlo';x.classList.remove('ok')}},1800)},fb=()=>{try{const a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.cssText='position:fixed;top:0;left:0;opacity:0;font-size:16px';document.body.appendChild(a);a.focus();a.select();a.setSelectionRange(0,t.length);const r=document.execCommand('copy');a.remove();done(r)}catch(e){done(false)}};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>done(true),fb);else fb()}
 const RXE=['🙂','😡','🥲','😂','🤩','🤔'];let rxc=0;
 function rxo(ev){if(ev)ev.stopPropagation();const p=$('rxp'),b=$('rxb');if(!p||!b||Date.now()<rxc)return;if(!p.innerHTML)p.innerHTML=RXE.map((e,i)=>`<button onpointerdown="rxs(event,${i})">${e}</button>`).join('');const on=!p.classList.contains('on');p.classList.toggle('on',on);b.classList.toggle('on',on)}
 function rxc0(){const p=$('rxp'),b=$('rxb');if(p)p.classList.remove('on');if(b)b.classList.remove('on')}
@@ -486,7 +489,7 @@ function render(v){
   ${menu!='c'?`<button class="${menu=='j'?'':'g'}" onclick="mm('j')">Unirme a sala</button>`:''}${menu=='j'?`<div class="pn">${nin}<input id="cd" placeholder="CÓDIGO" inputmode="numeric" pattern="[0-9]*" maxlength="4" oninput="this.value=this.value.replace(/\\D/g,'')"><button class="go" onclick="join()">Entrar</button><button class="g" onclick="mm('j')">← Volver</button></div>`:''}</div>${fan()}</div>`;return}
  if(v.turn!=v.me)sel=null;
  if(v.st=='lobby'){lst='lobby';lsg=null;if(lpn&&v.players.length>lpn)sfx('join');lpn=v.players.length;ltm=false;sn=null;GH=[[],[],[],[]];PLY={};DRW=0;ENT={};const np=v.players.length;
-  a.innerHTML=`<div class="col" style="text-align:center"><h1>SALA</h1><div class="code">${code}</div>
+  a.innerHTML=`<div class="col" style="text-align:center"><h1>SALA</h1><div class="code" onclick="cpc()">${code}</div><div class="cph" id="cph">Toca el código para copiarlo</div>
   ${avs(v.players,-1,v.me)}
   ${v.me==0?`<div class="g2">${DN.map((d,i)=>`<button class="${v.diff==i?'on':'g'}" onclick="go({t:'diff',d:${i}})">${d}<br>${T(np)[i]} misiones</button>`).join('')}</div>
   <button onclick="go({t:'start'})">Empezar (${np} jugador${np>1?'es':''})</button>`:`<p>Dificultad: <b>${DN[v.diff]}</b> · ${T(np)[v.diff]} misiones<br>Esperando al anfitrión…</p>`}<button class="g" onclick="quit()">Salir</button></div>`;return}
