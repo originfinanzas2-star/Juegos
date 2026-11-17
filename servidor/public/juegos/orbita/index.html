@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="apple-mobile-web-app-title" content="Órbita">
+<meta name="apple-mobile-web-app-title" content="SpaceShot">
+<link rel="apple-touch-icon" href="logo.jpg">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#15171e">
-<title>ÓRBITA</title>
+<title>SpaceShot</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#15171e;--card:#222630;--tx:#eceae4;--mu:#8e94a3;--y0:500px;--tc:#8fd0f0;--top:max(12px,env(safe-area-inset-top))}
@@ -60,7 +62,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 .res .ans{display:block;font-size:34px;font-weight:600;margin-top:10px}
 .res .pt{font-size:21px;font-weight:600;margin-top:6px;color:var(--tc)}.res .pt span{color:var(--mu);font-weight:500}
 .res .fl{font-size:21px;color:#aab0be;margin-top:14px}.res small{letter-spacing:.2em;color:var(--mu);font-weight:700;font-size:12px}
-.res .hp{margin:0 auto 2px;width:112px;height:112px}.res.hm{top:calc(var(--top) + 60px)}.res.hm h3{text-transform:none;font-size:56px}.res.hm .fl{font-size:16px;margin-top:8px}
+.res .hp{margin:0 auto 2px;width:112px;height:112px}.res .lg{display:block;margin:0 auto 10px;width:88px;height:88px;border-radius:50%;object-fit:cover;box-shadow:0 0 22px #8f6fe055,0 0 0 2px #ffffff22}.res.hm{top:calc(var(--top) + 60px)}.res.hm h3{text-transform:none;font-size:56px}.res.hm .fl{font-size:16px;margin-top:8px}
 #bot{position:absolute;left:16px;right:16px;bottom:max(18px,env(safe-area-inset-bottom));z-index:7}
 .pill{margin:auto;width:fit-content;background:#22262fee;border-radius:30px;padding:16px 30px;font-size:19px}
 .inp{display:flex;align-items:center;gap:10px;border:2.5px solid #9fd0f0;border-radius:44px;background:#1b1e27f2;padding:6px}
@@ -186,7 +188,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
    <path d="M57.5 113Q56 128 63 142Q70 128 68.5 113Z" fill="url(#fo)"/><path d="M60 113Q60 124 63 133Q66 124 66 113Z" fill="url(#fi)"/>
   </g></svg>
   <div class="halo"></div><div class="smoke"><i style="--w:0.0s;--x:-6px"></i><i style="--w:0.1s;--x:8px"></i><i style="--w:0.2s;--x:-10px"></i><i style="--w:0.3s;--x:4px"></i><i style="--w:0.4s;--x:-4px"></i><i style="--w:0.5s;--x:10px"></i><i style="--w:0.6s;--x:-8px"></i><i style="--w:0.7s;--x:6px"></i><i style="--w:0.8s;--x:-12px"></i><i style="--w:0.9s;--x:12px"></i><i style="--w:1.0s;--x:-2px"></i><i style="--w:1.1s;--x:2px"></i></div></div>
- <div class="bar"><a href="../../">‹ ÓRBITA</a><button class="rb" id="mute" aria-label="Sonido"></button><div class="dots" id="dots"></div><div class="alt"><b class="an" id="av">0</b><small>m</small></div></div>
+ <div class="bar"><a href="../../">‹ SPACESHOT</a><button class="rb" id="mute" aria-label="Sonido"></button><div class="dots" id="dots"></div><div class="alt"><b class="an" id="av">0</b><small>m</small></div></div>
  <div class="card off" id="card"><small id="qn"></small><h2 class="an" id="q"></h2></div>
  <div class="res" id="res"></div>
  <div id="bot"></div>
@@ -618,10 +620,10 @@ const card=on=>$("card").classList.toggle("off",!on),rs=h=>{$("res").classList.r
 const bot=h=>{$("bot").innerHTML=h};
 function home(){
  DC.length=0;dots(-1);card(false);$("dash").classList.remove("on");fxOff();buildWorld();setAlt(S.d*STEP,0);
- if(S.d>=P.length){rs('<h3 class="an" style="color:#ffbf5a">Todos los planetas</h3><p class="fl">Has descubierto todos los planetas.</p>');bot('<button class="big gh" id="mp">Ver mapa</button>');$("mp").onclick=openMap;return}
+ if(S.d>=P.length){rs('<h3 class="an" style="color:#ffbf5a">Todos los planetas</h3><p class="fl">Has descubierto todos los planetas.</p>');bot('<button class="big gh" id="mp">PLANETARIO</button>');$("mp").onclick=openMap;return}
  const p=P[S.d],played=S.last===today()&&S.res;
- rs(`<div class="hp">${pl(S.d,112,true)}</div><small>PRÓXIMO DESTINO</small><h3 class="an" style="color:#eceae4">${p.t} m</h3><p class="fl">Sales desde ${cpName(S.d)} (${S.d*STEP} m). Un intento al día.</p>`);$("res").classList.add("hm");
- bot(played?`<p class="mu">Ya has despegado hoy. Vuelve mañana.</p><div class="two"><button class="big" id="go">Resultado</button><button class="big gh" id="mp">Mapa</button></div>`:`<div class="two"><button class="big" id="go">Despegar</button><button class="big gh" id="mp">Mapa</button></div>`);
+ rs(`<img class="lg" src="logo.jpg" alt="SpaceShot" onerror="this.remove()"><div class="hp">${pl(S.d,112,true)}</div><small>PRÓXIMO DESTINO</small><h3 class="an" style="color:#eceae4">${p.t} m</h3><p class="fl">Sales desde ${cpName(S.d)} (${S.d*STEP} m). Un intento al día.</p>`);$("res").classList.add("hm");
+ bot(played?`<p class="mu">Ya lo has intentado hoy. Vuelve mañana.</p><div class="two"><button class="big" id="go">Resultado</button><button class="big gh" id="mp">PLANETARIO</button></div>`:`<div class="two"><button class="big" id="go">Despegar</button><button class="big gh" id="mp">PLANETARIO</button></div>`);
  $("go").onclick=start;$("mp").onclick=openMap}
 let qs,qi,pts,log,tmr,ft;
 function start(){if(S.last===today()&&S.res)return showEnd(S.res,false);beep(260,.2);qs=dailyQs();qi=0;pts=0;log=[];DC.length=0;rs("");next()}
@@ -648,15 +650,15 @@ function result(ti,txt){clearInterval(tmr);document.activeElement&&document.acti
  bot(`<button class="big" id="nx"${fly?' disabled style="opacity:.35"':""}>${qi>=6?"Ver resultado":"Seguir subiendo"}</button>`);$("nx").onclick=()=>{if(qi>=6)finish();else{qi++;next()}};
  setAlt(tgt,1.8,()=>{if(lv>0){fxOff();cool()}const n=$("nx");if(n){n.disabled=false;n.style.opacity=""}})}
 function finish(){const from=S.d,base=from*STEP,to=Math.min(P.length,Math.floor((base+pts)/STEP)),ok=to>from,idx=ok?to-1:from,p=P[idx],
- r={pts,ok,target:p.n,idx,from,to,need:P[from].t-base,log,day:dayNum()};S.last=today();S.res=r;S.d=to;save();showEnd(r,true)}
+ r={pts,ok,target:p.n,idx,from,to,need:P[from].t-base,log,day:dayNum()};S.n=(S.n||0)+1;r.n=S.n;S.last=today();S.res=r;S.d=to;save();showEnd(r,true)}
 function showEnd(r,anim){card(false);$("dash").classList.remove("on");fxOff();
  const from=r.from!==undefined?r.from:r.idx,to=r.to!==undefined?r.to:(r.ok?r.idx+1:from),base=from*STEP;
  buildWorld();dots(-1);setAlt(r.ok||anim?base+r.pts:base,0);
  const p=P[r.idx],c=p.tc||p.c1,also=to-from>1?`<br>Antes sobrevolaste ${P.slice(from,to-1).map(x=>x.n).join(" y ")}.`:"";
  rs(r.ok?`<div class="hp">${pl(r.idx,112)}</div><h3 class="an" style="color:${c}">${p.n}</h3><p class="pt" style="color:${c}">¡Planeta descubierto!</p><p class="fl">${p.d}<br>Sumaste ${r.pts} · hacían falta ${r.need}.${also}<br>Checkpoint: ${p.n} (${p.t} m)</p>`
- :`<h3 class="an" style="color:#ff6b5e">Misión fracasada</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.</p>`);
- bot('<div class="two"><button class="big" id="sh">Compartir</button><button class="big gh" id="mp">Mapa</button></div><button class="lnk" id="hm">Volver al inicio</button>');
- $("sh").onclick=()=>share(r);$("mp").onclick=openMap;$("hm").onclick=home;if(r.ok)beep(660,.5,"triangle",.1);
+ :`<h3 class="an" style="color:#ff6b5e">Misión ${r.n||S.n||1}</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.</p>`);
+ bot('<div class="two"><button class="big gh" id="mp" style="grid-column:1/-1;flex:1 1 100%">PLANETARIO</button></div><button class="lnk" id="hm">Volver al inicio</button>');
+ $("mp").onclick=openMap;$("hm").onclick=home;if(r.ok)beep(660,.5,"triangle",.1);
  if(!r.ok&&anim)setTimeout(()=>setAlt(base,1.4),900)}
 function share(r){const t="ÓRBITA #"+r.day+"\n"+r.log.map(x=>x?EMO[x-1]:"⬛").join("")+"\n"+r.pts+" m · "+(r.ok?"¡"+r.target+" descubierto! 🚀":"Misión fracasada 💥");
  if(navigator.share)navigator.share({text:t}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>{$("sh").textContent="¡Copiado!"})}
