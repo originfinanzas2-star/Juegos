@@ -18,7 +18,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 .an{font-family:Anton,Impact,"Arial Narrow",sans-serif;font-weight:400}
 #stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(120% 60% at 50% 0,#1d212c,#15171e 70%)}
 #stars{position:absolute;left:0;top:0;width:2px;height:2px;border-radius:50%}
-#world{position:absolute;left:0;right:0;top:0;height:0}
+#world{position:absolute;left:0;right:0;top:0;height:0;will-change:transform}
 #earth{position:absolute;left:-70vw;width:240vw;height:240vw;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 2%,#7cc4ff 0,#3f8be0 5%,#2358ae 12%,#173b7e 22%,#0f2559 34%,#0a1635 55%,#070b1a 80%);box-shadow:0 -2px 6px #cfe8ffcc,0 -8px 28px #5aa8ff99,0 -20px 64px #3b7fe055,inset 0 6px 18px #9fd2ff66;border-top:2px solid #c5e3ffcc}
 #earth svg{position:absolute;left:0;top:0;width:100%;height:34%}
 .tk{position:absolute;right:14px;width:9px;border-top:2px solid #ffffff22}.tk.bg{width:18px;border-color:#ffffff44}
@@ -139,11 +139,10 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 /* rebobinado y aterrizaje */
 #rw{position:absolute;inset:0;pointer-events:none;z-index:7;opacity:0;transition:opacity .2s;overflow:hidden;background:repeating-linear-gradient(to bottom,#ffffff0d 0 1px,transparent 1px 3px);box-shadow:inset 0 0 90px #4a7dff40}
 #rw.on{opacity:1}
-#rw::before{content:"";position:absolute;left:0;right:0;height:16%;top:-20%;background:linear-gradient(to bottom,transparent,#bcd4ff2e 50%,transparent);animation:rwb .55s linear infinite}
-#rw::after{content:"";position:absolute;left:0;right:0;height:3%;top:-10%;background:#ffffff1f;animation:rwb .9s linear infinite reverse}
-@keyframes rwb{to{top:110%}}
-#rw b{position:absolute;left:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 118px);font:700 13px ui-monospace,Menlo,monospace;letter-spacing:.2em;color:#cfe0ff;text-shadow:2px 0 #ff2a6a88,-2px 0 #2ae0ff88;animation:rwk .5s steps(2) infinite}
-@keyframes rwk{50%{opacity:.35}}
+#rw::before{content:"";position:absolute;left:0;right:0;height:16%;top:-20%;background:linear-gradient(to bottom,transparent,#bcd4ff2e 50%,transparent)}
+#rw::after{content:"";position:absolute;left:0;right:0;height:3%;top:-10%;background:#ffffff1f}
+#rw.on::before{animation:rwb .55s linear infinite}#rw.on::after{animation:rwb .9s linear infinite reverse}
+@keyframes rwb{to{transform:translateY(700%)}}
 #stage.rw #sk i{animation-direction:reverse}
 #stage.rw #cap{filter:drop-shadow(2px 0 0 #ff2a6a99) drop-shadow(-2px 0 0 #2ae0ff99)}
 .wsm{position:absolute;border-radius:50%;pointer-events:none;z-index:4;background:radial-gradient(circle,#fff 0,#ffffffd9 38%,#ffffff00 72%);filter:blur(2px)}
@@ -607,17 +606,18 @@ function planetFx(i,k){const mk=$("world").querySelector(`.mk[data-i="${i}"]`);i
 function reveal(i){const mk=$("world").querySelector(`.mk[data-i="${i}"]`);if(!mk||mk.dataset.rv)return;mk.dataset.rv=1;const p=P[i];
  mk.querySelector(".mp").innerHTML=pl(i,58,false);const b=mk.querySelector(".mt b");b.textContent=p.n;b.style.color=p.tc||p.c1}
 function passes(from,to){return to>from?P.map((p,i)=>i).filter(i=>P[i].t>from&&P[i].t<=to):[]}
-var brkT=0,rwT=0;function setAlt(a,sec,done){cancelAnimationFrame(raf);clearTimeout(brkT);clearTimeout(rwT);rwStop();$("cap").classList.remove("brk");
+var brkT=0,rwT=0,wdT=0;function setAlt(a,sec,done){cancelAnimationFrame(raf);clearTimeout(brkT);clearTimeout(rwT);clearTimeout(wdT);rwStop();$("cap").classList.remove("brk");
  if(!sec){touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1;put(a);return}
  const from=cur,dist=Math.abs(a-from);if(!dist){done&&done();return}
  const up=a>from,pls=up?passes(from,a):[],v0=(pls.length?60:Math.min(70,Math.max(16,dist/1.4)))*SLOW;
+ wdT=setTimeout(()=>{cancelAnimationFrame(raf);put(a);try{touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1}catch(e){}done&&done()},Math.max(7000,dist*450+5000));/* si el móvil va muy lento, el vuelo termina igualmente */
  let x=from,last=performance.now(),brk=0;const peak=new Set();
  (function f(now){
-  const dt=Math.max(0,Math.min(.05,((now||performance.now())-last)/1000));last=now||performance.now();
+  const dt=Math.max(0,Math.min(.12,((now||performance.now())-last)/1000));last=now||performance.now();
   const u=Math.min(1,Math.max(0,(x-from)/(a-from))),ease=(.3+1.9*u)*(u>.8?Math.max(.14,Math.pow((1-u)/.2,1.15)):1);/* acelera con la distancia recorrida; frena solo al final */
   if(up&&dist>25&&u>.8&&!brk){brk=1;$("cap").classList.add("brk");brakeSnd()}
   let best=-1,bk=0,mult=1;
-  pls.forEach(i=>{const d=Math.abs(x-P[i].t),p1=bell(d,R1),k=bell(d,R2);
+  try{pls.forEach(i=>{const d=Math.abs(x-P[i].t),p1=bell(d,R1),k=bell(d,R2);
    if(p1>0){mult=Math.min(mult,.07+.93*Math.pow(1-p1,2));reveal(i);if(!touched.has(i)){touched.add(i);flySwell()}}
    if(k>0){planetFx(i,k);if(k>bk){bk=k;best=i}}
    else if(touched.has(i)){planetFx(i,0);touched.delete(i)}
@@ -625,9 +625,9 @@ var brkT=0,rwT=0;function setAlt(a,sec,done){cancelAnimationFrame(raf);clearTime
   if(best>=0){const p=P[best],c=p.tc||p.c1;
    if(flyI!==best){flyI=best;$("fly").innerHTML=`<small>SOBREVOLANDO</small><b class="an" style="color:${c}">${p.n}</b><span>${p.t} m</span>`;$("vg").style.setProperty("--pc",c+"55")}
    $("fly").style.opacity=Math.min(1,bk*1.6).toFixed(2);$("vg").style.opacity=Math.min(1,bk*1.2).toFixed(2)}
-  else if(flyI>=0){flyOff();flyI=-1}
-  engineMod(Math.min(1,ease/1.5)*mult);x+=(up?1:-1)*v0*ease*mult*dt;
-  if(up?x>=a:x<=a){put(a);brkT=setTimeout(()=>$("cap").classList.remove("brk"),1500);touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1;done&&done();return}
+  else if(flyI>=0){flyOff();flyI=-1}}catch(e){}
+  try{engineMod(Math.min(1,ease/1.5)*mult)}catch(e){}x+=(up?1:-1)*v0*ease*mult*dt;
+  if(up?x>=a:x<=a){clearTimeout(wdT);put(a);brkT=setTimeout(()=>$("cap").classList.remove("brk"),1500);touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1;done&&done();return}
   put(x);raf=requestAnimationFrame(f)})(last)}
 function layout(){Y0=Math.round(innerHeight*.6);document.documentElement.style.setProperty("--y0",Y0+"px");buildWorld();
  let s="";for(let i=0;i<70;i++)s+=`${Math.random()*innerWidth|0}px ${Math.random()*innerHeight|0}px 0 ${Math.random()<.2?1:0}px rgba(255,255,255,${(.15+Math.random()*.5).toFixed(2)}),`;$("stars").style.boxShadow=s.slice(0,-1)}
