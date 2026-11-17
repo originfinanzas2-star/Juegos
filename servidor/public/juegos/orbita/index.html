@@ -468,7 +468,7 @@ function setAlt(a,sec,done){cancelAnimationFrame(raf);
  let x=from,last=performance.now();const peak=new Set();
  (function f(now){
   const dt=Math.min(.05,(now-last)/1000);last=now;
-  const u=Math.min(1,Math.max(0,(x-from)/(a-from))),ease=.3+.7*Math.sin(Math.PI*u);
+  const u=Math.min(1,Math.max(0,(x-from)/(a-from))),ease=(.3+1.9*u)*(u>.9?Math.max(.45,(1-u)/.1):1);/* acelera con la distancia recorrida; frena solo al final */
   let best=-1,bk=0,mult=1;
   pls.forEach(i=>{const d=Math.abs(x-P[i].t),p1=bell(d,R1),k=bell(d,R2);
    if(p1>0){mult=Math.min(mult,.07+.93*Math.pow(1-p1,2));reveal(i);if(!touched.has(i)){touched.add(i);flySwell()}}
@@ -479,7 +479,7 @@ function setAlt(a,sec,done){cancelAnimationFrame(raf);
    if(flyI!==best){flyI=best;$("fly").innerHTML=`<small>SOBREVOLANDO</small><b class="an" style="color:${c}">${p.n}</b><span>${p.t} m</span>`;$("vg").style.setProperty("--pc",c+"55")}
    $("fly").style.opacity=Math.min(1,bk*1.6).toFixed(2);$("vg").style.opacity=Math.min(1,bk*1.2).toFixed(2)}
   else if(flyI>=0){flyOff();flyI=-1}
-  engineMod(ease*mult);x+=(up?1:-1)*v0*ease*mult*dt;
+  engineMod(Math.min(1,ease/1.5)*mult);x+=(up?1:-1)*v0*ease*mult*dt;
   if(up?x>=a:x<=a){put(a);touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1;done&&done();return}
   put(x);raf=requestAnimationFrame(f)})(last)}
 function layout(){Y0=Math.round(innerHeight*.6);document.documentElement.style.setProperty("--y0",Y0+"px");buildWorld();
@@ -650,7 +650,7 @@ function showEnd(r,anim){card(false);$("dash").classList.remove("on");fxOff();
  buildWorld();dots(-1);setAlt(r.ok||anim?base+r.pts:base,0);
  const p=P[r.idx],c=p.tc||p.c1,also=to-from>1?`<br>Antes sobrevolaste ${P.slice(from,to-1).map(x=>x.n).join(" y ")}.`:"";
  rs(r.ok?`<div class="hp">${pl(r.idx,112)}</div><h3 class="an" style="color:${c}">${p.n}</h3><p class="pt" style="color:${c}">¡Planeta descubierto!</p><p class="fl">${p.d}<br>Sumaste ${r.pts} · hacían falta ${r.need}.${also}<br>Checkpoint: ${p.n} (${p.t} m)</p>`
- :`<h3 class="an" style="color:#ff6b5e">Misión fracasada</h3><p class="pt" style="color:#ff6b5e">+${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.</p>`);
+ :`<h3 class="an" style="color:#ff6b5e">Misión fracasada</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.</p>`);
  bot('<div class="two"><button class="big" id="sh">Compartir</button><button class="big gh" id="mp">Mapa</button></div><button class="lnk" id="hm">Volver al inicio</button>');
  $("sh").onclick=()=>share(r);$("mp").onclick=openMap;$("hm").onclick=home;if(r.ok)beep(660,.5,"triangle",.1);
  if(!r.ok&&anim)setTimeout(()=>setAlt(base,1.4),900)}
