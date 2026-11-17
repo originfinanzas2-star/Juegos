@@ -50,9 +50,9 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 #cap.fire .smoke i{animation:pf 1.3s ease-out infinite;animation-delay:var(--w)}
 @keyframes pf{0%{transform:translate(0,0) scale(.5);opacity:.6}100%{transform:translate(var(--x),150px) scale(1.8);opacity:0}}
 .bar{position:absolute;left:16px;right:16px;top:var(--top);display:flex;align-items:center;gap:9px;z-index:6;height:44px}
-.bar a{color:var(--tx);text-decoration:none;font-weight:300;letter-spacing:.1em;font-size:18px;white-space:nowrap}
-.rb{width:38px;height:38px;border-radius:50%;border:1.5px solid #3a4050;display:grid;place-items:center;flex:none}
-.dots{display:flex;gap:6px;flex:1;justify-content:center}.dots i{width:11px;height:11px;border-radius:50%;background:#2c3140;transition:background .3s}
+.bar a{color:var(--tx);text-decoration:none;font-weight:300;letter-spacing:.1em;font-size:12px;white-space:nowrap}
+#mute{display:none!important}.rb{width:38px;height:38px;border-radius:50%;border:1.5px solid #3a4050;display:grid;place-items:center;flex:none}
+.dots{display:flex;gap:6px;flex:1;justify-content:flex-start;margin-left:6px}.dots i{width:11px;height:11px;border-radius:50%;background:#2c3140;transition:background .3s}
 .alt{display:flex;align-items:baseline;gap:4px;min-width:62px;justify-content:flex-end}.alt b{font-size:40px;line-height:1}.alt small{font-size:14px;color:var(--mu)}
 .card{position:absolute;left:16px;right:16px;top:calc(var(--top) + 58px);background:var(--card);border-radius:28px;padding:20px 24px 24px;z-index:5;transition:opacity .35s}
 .card small{display:block;letter-spacing:.22em;color:var(--mu);font-weight:700;font-size:13px}
@@ -67,8 +67,13 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 #bot{position:absolute;left:16px;right:16px;bottom:max(18px,env(safe-area-inset-bottom));z-index:7}
 .pill{margin:auto;width:fit-content;background:#22262fee;border-radius:30px;padding:16px 30px;font-size:19px}
 .inp{display:flex;align-items:center;gap:10px;border:2.5px solid #9fd0f0;border-radius:44px;background:#1b1e27f2;padding:6px}
-.tm{--p:0;width:56px;height:56px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(#3b4150 calc(var(--p)*1%),var(--tx) 0)}
-.tm b{width:46px;height:46px;border-radius:50%;background:var(--tx);color:#15171e;display:grid;place-items:center;font-size:21px;font-weight:800}
+.tm{--f:100;--fc:#6fd3ff;--fc2:#2a8fd0;position:relative;overflow:hidden;width:58px;height:58px;border-radius:50%;flex:none;display:grid;place-items:center;background:#0e1118;box-shadow:inset 0 0 0 2px #3b4150}
+.tm::before{content:"";position:absolute;left:0;right:0;bottom:0;height:calc(var(--f)*1%);background:linear-gradient(var(--fc),var(--fc2));transition:height .12s linear}
+.tm::after{content:"";position:absolute;left:-25%;width:150%;height:9px;border-radius:50%;bottom:calc(var(--f)*1% - 4.5px);background:var(--fc);opacity:.9;transition:bottom .12s linear;animation:wv 1.1s ease-in-out infinite alternate}
+@keyframes wv{from{transform:translateX(-5px)}to{transform:translateX(5px)}}
+.tm.lo{--fc:#ffd36a;--fc2:#e08a1e}.tm.cr{--fc:#ff8a7a;--fc2:#d63a2a;animation:bl .5s steps(2) infinite}
+@keyframes bl{50%{opacity:.6}}
+.tm b{position:relative;z-index:1;color:#fff;font-size:21px;font-weight:800;text-shadow:0 1px 4px #000c}
 .inp input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--tx);font:500 20px -apple-system,system-ui,sans-serif;-webkit-user-select:text;user-select:text}
 .inp input::placeholder{color:#6f7686}
 .lz{background:var(--tx);color:#15171e;font-weight:800;font-size:19px;border-radius:30px;padding:0 24px;height:56px;flex:none}
@@ -498,6 +503,12 @@ Una especialidad medica|medico general,medicina general|pediatra,cardiologo,derm
 Un tipo de té o infusión|te con leche,cafe descafeinado|te de limon,te de frutas,infusion de frutas,anis,boldo|ortiga,diente de leon,tomillo,salvia,te de canela,romero|camomila,tulsi,te de rosas,agua de jamaica,te de frutos rojos,te bancha,te sencha,gyokuro|te lapsang,te keemun,te nilgiri,te yunnan,te tieguanyin,te da hong pao,te de bubble,chicoria,te de cebada,mate cocido`;
 Z.split("\n").forEach(l=>{const p=l.split("|"),q=Q.find(x=>x[0]===p[0]);if(q)for(let i=1;i<6;i++)if(p[i])q[1][i-1]+=","+p[i]});
 
+// ── Seguridad: el sonido y los efectos nunca deben bloquear el vuelo (fallos de audio en algunos Android) ──
+(function(){const sf=f=>function(){try{return f.apply(this,arguments)}catch(e){}};
+ beep=sf(beep);burst=sf(burst);ac=sf(ac);out=sf(out);sweep=sf(sweep);engineStart=sf(engineStart);engineStop=sf(engineStop);engineMod=sf(engineMod);
+ maxq=sf(maxq);stageSnd=sf(stageSnd);ignite=sf(ignite);sputter=sf(sputter);cool=sf(cool);flySwell=sf(flySwell);flyPass=sf(flyPass);
+ chime=sf(chime);tickSnd=sf(tickSnd);goSnd=sf(goSnd);radioSnd=sf(radioSnd)})();
+
 // ── Utilidades ──
 const $=id=>document.getElementById(id);
 const norm=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zñ0-9 ]/g," ").replace(/\s+/g," ").trim().replace(/^(el|la|los|las|un|una) /,"");
@@ -588,7 +599,7 @@ function setAlt(a,sec,done){cancelAnimationFrame(raf);
  const up=a>from,pls=up?passes(from,a):[],v0=(pls.length?60:Math.min(70,Math.max(16,dist/1.4)))*SLOW;
  let x=from,last=performance.now();const peak=new Set();
  (function f(now){
-  const dt=Math.min(.05,(now-last)/1000);last=now;
+  const dt=Math.max(0,Math.min(.05,((now||performance.now())-last)/1000));last=now||performance.now();
   const u=Math.min(1,Math.max(0,(x-from)/(a-from))),ease=(.3+1.9*u)*(u>.9?Math.max(.45,(1-u)/.1):1);/* acelera con la distancia recorrida; frena solo al final */
   let best=-1,bk=0,mult=1;
   pls.forEach(i=>{const d=Math.abs(x-P[i].t),p1=bell(d,R1),k=bell(d,R2);
@@ -747,10 +758,10 @@ function next(){clearInterval(tmr);$("dash").classList.remove("on");if(!flying)f
  $("qn").textContent="PREGUNTA "+(qi+1)+" DE 7";$("q").textContent=t;card(true);dots(qi);
  bot('<div class="pill">El reloj empieza en <b id="cd">3</b></div>');const t0=Date.now();let lr=0;
  tmr=setInterval(()=>{const r=3-Math.floor((Date.now()-t0)/1000);if(r>0){if(r!==lr){lr=r;tickSnd()}$("cd").textContent=r;return}clearInterval(tmr);goSnd();answer()},150)}
-function answer(){const T=25000,t0=Date.now();
- bot('<div class="sg" id="sg"></div><div class="inp"><div class="tm" id="tm"><b id="ts">25</b></div><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Tu respuesta" aria-label="Tu respuesta"><button class="lz" id="send">Lanzar</button></div>');
+function answer(){const T=30000,t0=Date.now();
+ bot('<div class="sg" id="sg"></div><div class="inp"><div class="tm" id="tm"><b id="ts">30</b></div><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Tu respuesta" aria-label="Tu respuesta"><button class="lz" id="send">Lanzar</button></div>');
  const i=$("inp");i.focus();i.onkeydown=e=>{if(e.key==="Enter")submit()};$("send").onclick=submit;
- tmr=setInterval(()=>{const l=Math.max(0,T-(Date.now()-t0));$("ts").textContent=Math.ceil(l/1000);$("tm").style.setProperty("--p",(100-l/T*100).toFixed(1));if(l<=0){clearInterval(tmr);result(-1,"")}},100)}
+ tmr=setInterval(()=>{const l=Math.max(0,T-(Date.now()-t0));$("ts").textContent=Math.ceil(l/1000);{const f=l/T*100,tm=$("tm");tm.style.setProperty("--f",f.toFixed(1));tm.classList.toggle("lo",f<40&&f>=20);tm.classList.toggle("cr",f<20)}if(l<=0){clearInterval(tmr);result(-1,"")}},100)}
 function submit(){const raw=$("inp").value.trim(),a0=norm(raw);if(!a0)return;const a=match(a0);
  if(a===null){const sg=suggest(a0),g=$("sg");g.textContent="";
   if(sg){g.append("¿Has querido decir ");const b=document.createElement("button");b.textContent=sg;b.onclick=()=>{$("inp").value=sg;submit()};g.append(b,"?")}else g.textContent="No la acepta. Prueba otra.";
