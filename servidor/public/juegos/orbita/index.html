@@ -1,1 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-title" content="Órbita">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ÓRBITA · El viaje diario por el sistema solar</title>
+<meta name="description" content="Cada día 7 preguntas. Cuanto más rara tu respuesta, más lejos llega tu cohete. ¿Cuántos planetas descubrirás?">
+<meta name="theme-color" content="#0b1222">
+<style>
+:root{--bg:#0b1222;--tx:#e8ecf5;--mu:#8791ab;--ac:#ffb84d;--ko:#ff6b5e;--ok:#6be3a0;--ln:#232a40}
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%}
+body{background:radial-gradient(120% 70% at 12% -8%,#3b5bdb55 0,transparent 60%),radial-gradient(90% 60% at 100% 30%,#7c3aed44 0,transparent 62%),linear-gradient(180deg,#0e1730,#0a1020) fixed,var(--bg);-webkit-user-select:none;user-select:none;touch-action:manipulation;overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%;color:var(--tx);font:500 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;padding:env(safe-area-inset-top) 18px env(safe-area-inset-bottom);display:flex;justify-content:center}
+main{width:100%;max-width:520px;padding:52px 0 40px}
+.bk{position:absolute;top:max(14px,env(safe-area-inset-top));left:16px;color:#9fb2cc;text-decoration:none;font-size:17px;padding:6px 4px}
+h1{font-size:2.2rem;letter-spacing:-.02em;line-height:1}
+.sub{color:var(--mu);margin:6px 0 26px}
+.map{position:relative;height:150px;margin:0 22px 8px}
+.line{position:absolute;left:0;right:0;top:56px;border-top:2px dashed var(--ln)}
+.node{position:absolute;top:56px;transform:translate(-50%,-50%);text-align:center}
+.node i{display:block;border-radius:50%;background:var(--c);margin:auto}
+.node.off i{background:var(--ln)}
+.node span{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);font-size:.6rem;color:var(--mu);white-space:nowrap}
+.node.on span{color:var(--tx)}
+.rocket{position:absolute;top:2px;font-size:1.7rem;transform:translateX(-50%) rotate(90deg);transition:left 2.4s cubic-bezier(.5,0,.2,1)}
+.card{border:1px solid var(--ln);border-radius:14px;padding:18px;margin:22px 0}
+.big{font-size:1.4rem;font-weight:700}
+.mu{color:var(--mu);font-size:.92rem}
+button{font:inherit;font-weight:700;background:var(--ac);color:#1a1200;border:0;border-radius:10px;padding:14px 20px;width:100%;cursor:pointer;margin-top:14px}
+button.g{background:transparent;color:var(--mu);border:1px solid var(--ln);font-weight:400}
+button:focus-visible,input:focus-visible{outline:3px solid var(--tx);outline-offset:2px}
+input{-webkit-user-select:text;user-select:text;font:inherit;width:100%;background:#121830;color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:14px;margin-top:14px}
+input:disabled{opacity:.4}
+.bar{height:6px;background:var(--ln);border-radius:3px;margin:18px 0 6px;overflow:hidden}
+.bar b{display:block;height:100%;width:100%;background:var(--ac);transform-origin:left}
+.q{font-size:1.5rem;font-weight:600;line-height:1.25;margin-top:18px;min-height:3.8em}
+.fb{min-height:1.6em;margin-top:10px;font-weight:600}
+.sug{display:inline;width:auto;margin:0 2px;padding:2px 10px;background:transparent;color:var(--ac);border:1px solid var(--ac);border-radius:8px;font-weight:700}
+.fb.ko{color:var(--ko)}.fb.ok{color:var(--ok)}
+.hud{display:flex;justify-content:space-between;color:var(--mu);font-size:.9rem}
+.res{font-size:3rem;font-weight:700;letter-spacing:-.03em}
+.hide{display:none}
+@media(prefers-reduced-motion:reduce){.rocket{transition:none}}
+</style>
+</head>
+<body>
+<main>
+ <a class="bk" href="../../">‹ GamesTrackerz</a>
+ <h1>ÓRBITA</h1>
+ <p class="sub">7 preguntas al día. Cuanto más rara tu respuesta, más lejos llega el cohete.</p>
+ <div class="map" id="map"></div>
 
+ <section id="home">
+  <div class="card">
+   <div class="big" id="goal"></div>
+   <p class="mu" id="goalsub"></p>
+   <button id="go">Despegar</button>
+  </div>
+  <button class="g" id="reset" style="width:auto;padding:8px 12px;font-size:.8rem">Reiniciar progreso</button>
+ </section>
+
+ <section id="game" class="hide">
+  <div class="hud"><span id="qn"></span><span id="pts"></span></div>
+  <div class="bar"><b id="bar"></b></div>
+  <div class="q" id="q"></div>
+  <input id="inp" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Escribe tu respuesta" aria-label="Tu respuesta">
+  <div class="fb" id="fb" aria-live="polite"></div>
+  <button id="send">Enviar</button>
+ </section>
+
+ <section id="end" class="hide">
+  <div class="card">
+   <div class="res" id="rpts"></div>
+   <div class="big" id="rmsg"></div>
+   <p class="mu" id="rsub"></p>
+   <button id="share">Compartir resultado</button>
+  </div>
+ </section>
+</main>
+
+<script>
+// ── Planetas (orden desde la Tierra; los 4 últimos son inventados) y puntos necesarios ──
+const P=[
+ {n:"Marte",t:300,c:"#d9603b",r:14},
+ {n:"Júpiter",t:350,c:"#d8a76a",r:28},
+ {n:"Saturno",t:400,c:"#e3cf8f",r:24},
+ {n:"Urano",t:450,c:"#8fdde0",r:20},
+ {n:"Neptuno",t:500,c:"#4a6cf0",r:20},
+ {n:"Zafiron",t:550,c:"#b784ff",r:22},
+ {n:"Ignaris",t:600,c:"#ff5a36",r:18},
+ {n:"Aurelia",t:650,c:"#ffd84d",r:26},
+ {n:"Nyxara",t:700,c:"#e84fa8",r:22}
+];
+const TIER=[["Troposfera",10],["Órbita",30],["Espacio profundo",60],["Borde exterior",85],["Supernova",100]];
+const EMO=["🟥","🟧","🟨","🟩","🟦"];
+
+// ── Preguntas: [enunciado, [nivel10, nivel30, nivel60, nivel85, nivel100]] (sin tildes) ──
+const Q=[
+["Un animal marino",["delfin,tiburon,ballena,pez","pulpo,medusa,tortuga,foca,orca,cangrejo,calamar,atun","estrella de mar,caballito de mar,pez luna,morena,manta raya,langosta,nautilo,pez globo","rape,nudibranquio,ofiura,pepino de mar,narval","dugongo,pez vela,lamprea,cachalote"]],
+["Una fruta",["manzana,platano,naranja,fresa,pera,uva","sandia,melon,limon,cereza,melocoton,kiwi,pina,mango","granada,higo,caqui,membrillo,papaya,lichi,mandarina,arandano","carambola,pitaya,guayaba,maracuya","chirimoya,nispero,kumquat,rambutan"]],
+["Un país de África",["egipto,marruecos,sudafrica,nigeria,kenia","argelia,tunez,senegal,etiopia,ghana,camerun,tanzania","angola,mali,zambia,namibia,botswana,uganda,mozambique,madagascar","eritrea,esuatini,lesoto,burkina faso","gabon,yibuti,malaui,comoras"]],
+["Un instrumento musical",["guitarra,piano,bateria,violin,flauta","trompeta,saxofon,bajo,arpa,clarinete,acordeon,ukelele","oboe,fagot,trombon,banjo,mandolina,xilofono,ocarina,violonchelo","theremin,sitar,kalimba,gaita","zampona,didgeridoo,cajon,hurdy gurdy"]],
+["Una capital europea",["madrid,paris,roma,londres,berlin","lisboa,viena,atenas,dublin,amsterdam,bruselas,praga","budapest,varsovia,oslo,estocolmo,helsinki,copenhague,berna","liubliana,tallin,riga,vilna,reikiavik","valeta,tirana,skopie,bratislava"]],
+["Un deporte que se juegue con pelota",["futbol,baloncesto,tenis,balonmano,voleibol","rugby,golf,beisbol,padel,waterpolo,hockey","squash,cricket,badminton,pelota vasca,softbol,frontenis","korfbal,sepak takraw,lacrosse,hurling","bossaball,pickleball,fistball"]],
+["Un elemento químico",["oxigeno,hidrogeno,carbono,oro,hierro,plata","helio,nitrogeno,calcio,sodio,cobre,plomo,uranio","neon,cloro,azufre,zinc,litio,platino,mercurio,silicio","xenon,galio,osmio,francio","tulio,iridio,bismuto,circonio"]],
+["Una verdura",["tomate,patata,cebolla,zanahoria,lechuga","pimiento,calabacin,berenjena,pepino,brocoli,espinaca","puerro,coliflor,remolacha,nabo,apio,alcachofa,esparrago","romanesco,rabano,chirivia,colinabo","hinojo,endibia,acelga,borraja"]],
+["Un personaje de la mitología griega",["zeus,hercules,poseidon,medusa,apolo","atenea,afrodita,hades,ares,aquiles,ulises,perseo","hermes,dionisio,teseo,minotauro,pandora,orfeo,narciso","hefesto,tantalo,sisifo,circe","cerbero,hipnos,nemesis,eris"]],
+["Un río de España",["ebro,tajo,guadalquivir,duero,segura","guadiana,jucar,miño,turia,genil,nalon","tormes,pisuerga,guadalete,llobregat,bidasoa,sil,ter","oria,deva,navia,cares","esla,lozoya,arlanzon,tambre"]],
+["Una ciudad de Latinoamérica",["mexico,buenos aires,bogota,lima,santiago","la habana,caracas,quito,montevideo,sao paulo,medellin","cartagena,guadalajara,cusco,valparaiso,rosario,cordoba,la paz","tegucigalpa,asuncion,san jose,managua","trujillo,cuenca,oaxaca,punta arenas"]],
+["Una herramienta de bricolaje",["martillo,destornillador,taladro,sierra,alicates","llave inglesa,metro,lima,cutter,nivel,tenazas","formon,escuadra,gato,grapadora,cepillo,gubia,soldador","serrucho de costilla,tronzadora,fresadora","remachadora,pie de rey,berbiqui"]],
+["Una flor",["rosa,margarita,tulipan,girasol,clavel","lirio,orquidea,amapola,violeta,jazmin,lavanda","hortensia,camelia,petunia,begonia,gladiolo,peonia","azalea,aciano,dalia,freesia","anemona,loto,edelweiss,magnolia"]],
+["Un animal que viva en la selva",["tigre,mono,serpiente,loro,jaguar","gorila,elefante,tucan,leopardo,boa,tapir,perezoso","okapi,orangutan,pantera,anaconda,capibara,ocelote,quetzal","pangolin,coati,kinkajou,binturong","rana flecha,aye aye,casuario,tarsero"]],
+["Una profesión",["medico,profesor,abogado,policia,camarero,cocinero","enfermero,ingeniero,arquitecto,electricista,panadero,peluquero","fontanero,carpintero,periodista,bombero,piloto,veterinario","cerrajero,notario,sastre,pastelero,forense,cartografo","luthier,herrador,taxidermista,apicultor,vidriero,sumiller"]],
+["Un color",["rojo,azul,verde,amarillo,negro,blanco","naranja,morado,rosa,gris,marron,violeta","turquesa,granate,beige,celeste,dorado,plateado","magenta,cian,ocre,anil,carmesi,lila","fucsia,esmeralda,bermellon,malva,cobalto,ambar"]],
+["Una marca de coches",["seat,renault,ford,toyota,volkswagen,bmw","audi,mercedes,peugeot,citroen,fiat,opel,nissan","volvo,tesla,mazda,honda,kia,hyundai,skoda","porsche,ferrari,lamborghini,jaguar,mini,suzuki","maserati,bugatti,lancia,alfa romeo,pagani,koenigsegg,subaru"]],
+["Un postre",["flan,helado,tarta,natillas,tiramisu,brownie","arroz con leche,tarta de queso,crema catalana,mousse,crepes,donuts","tarta de manzana,panacota,profiteroles,coulant,cuajada,turron","tarta tatin,milhojas,cannoli,baklava,brazo de gitano,leche frita","tocinillo de cielo,semifrio,pestinos,mochi,knafeh,tres leches"]],
+["Un mamífero",["perro,gato,caballo,vaca,leon,elefante","oso,lobo,zorro,cerdo,oveja,conejo,delfin","jirafa,hipopotamo,canguro,koala,nutria,ardilla,murcielago","armadillo,tejon,jabali,mapache,lince,gineta,ornitorrinco","okapi,dugongo,pangolin,quokka,tamandua,lemur,suricata,numbat"]],
+["Un ave",["paloma,aguila,gorrion,loro,gallina,pato","buho,cuervo,golondrina,pinguino,flamenco,cisne,gaviota","halcon,ciguena,avestruz,colibri,tucan,pavo real,pelicano","abubilla,alcotan,somormujo,martin pescador,vencejo,agateador","alcaudon,chochin,carbonero,zarapito,rascon,andarrios,aguilucho,chorlitejo"]],
+["Un videojuego",["mario,zelda,fifa,minecraft,fortnite,pokemon","tetris,pacman,sonic,call of duty,gta,the sims","halo,doom,portal,fallout,skyrim,overwatch,diablo","hollow knight,celeste,hades,stardew valley,undertale,limbo","outer wilds,disco elysium,braid,inside,journey,katamari,shovel knight"]],
+["Una ciudad de España",["madrid,barcelona,valencia,sevilla,bilbao,malaga","zaragoza,granada,murcia,alicante,cordoba,valladolid,vigo","salamanca,leon,burgos,toledo,cadiz,almeria,santander","soria,teruel,cuenca,lugo,huesca,zamora,palencia","ourense,jaen,guadalajara,segovia,albacete,castellon,melilla,ceuta"]],
+["Un animal de granja",["vaca,cerdo,gallina,oveja,caballo,cabra","pato,burro,conejo,pavo,gallo,ganso","llama,ternero,cordero,mula,yegua,buey","alpaca,codorniz,faisan,cobaya,bufalo,perdiz","avestruz,pintada,yak,emu,jabali,cerdo vietnamita"]],
+["Una marca de ropa",["zara,nike,adidas,levis,gucci,mango","puma,lacoste,bershka,pull and bear,desigual,springfield","massimo dutti,uniqlo,calvin klein,tommy hilfiger,h&m,north face","patagonia,columbia,diesel,guess,vans,converse","loewe,kappa,umbro,sandro,pepe jeans,munich,ecoalf,camper"]],
+["Un medio de transporte",["coche,autobus,tren,avion,bicicleta,moto","metro,barco,tranvia,taxi,patinete,camion","helicoptero,globo,furgoneta,ferry,teleferico,funicular","caravana,velero,submarino,hidroavion,carroza,trineo,segway","zeppelin,hovercraft,telesilla,rickshaw,tuk tuk,dirigible,canoa,gondola"]],
+["Una habitación de una casa",["cocina,salon,dormitorio,bano,comedor","terraza,garaje,pasillo,despacho,trastero,balcon","vestibulo,recibidor,lavadero,buhardilla,sotano,porche","despensa,galeria,desvan,vestidor,antesala,patio","cuarto de plancha,biblioteca,sala de juegos,invernadero,mirador,bodega"]],
+["Un cantante o grupo español",["rosalia,alejandro sanz,julio iglesias,joaquin sabina,enrique iglesias","melendi,pablo alboran,david bisbal,manolo garcia,estopa,amaral","vetusta morla,izal,c tangana,rozalen,leiva,fito","macaco,jarabe de palo,los planetas,russian red,lori meyers,sidonie","nacho vegas,quique gonzalez,antonio vega,mala rodriguez,christina rosenvinge,los chunguitos"]],
+["Una película",["titanic,avatar,shrek,el rey leon,matrix,toy story","el padrino,forrest gump,gladiator,up,coco,frozen","psicosis,alien,blade runner,pulp fiction,la vida es bella,amelie","parasitos,el laberinto del fauno,los otros,mar adentro,fargo,zodiac","stalker,solaris,ikiru,metropolis,tokyo story,eraserhead,ran"]],
+["Un hueso del cuerpo humano",["femur,craneo,costilla,tibia,humero,columna vertebral","clavicula,rotula,cubito,radio,perone,esternon","omoplato,sacro,coxis,mandibula,pelvis,vertebra","astragalo,calcaneo,escafoides,esfenoides,etmoides,occipital","hioides,estribo,yunque,martillo,pisiforme,semilunar"]],
+["Un metal",["oro,plata,hierro,cobre,aluminio,acero","plomo,estano,zinc,niquel,titanio,mercurio","platino,cromo,cobalto,magnesio,wolframio,bronce","paladio,iridio,rodio,osmio,galio,indio","tantalo,niobio,hafnio,renio,rutenio,vanadio,germanio"]],
+["Un juego de mesa",["monopoly,parchis,oca,ajedrez,cluedo,risk","trivial,domino,scrabble,uno,jenga,damas","catan,carcassonne,pandemic,dixit,twister,mikado","azul,ticket to ride,7 wonders,codenames,gloomhaven,agricola","go,shogi,mahjong,backgammon,mancala,hive"]],
+["Una especia o hierba aromática",["pimienta,pimenton,oregano,perejil,albahaca,canela","comino,laurel,tomillo,romero,azafran,curcuma,cilantro","menta,hierbabuena,eneldo,jengibre,nuez moscada,clavo","cardamomo,estragon,mejorana,anis,salvia,hinojo,curry","sumac,asafetida,fenogreco,zaatar,galanga,epazote,ajowan"]],
+["Un insecto",["mosca,mosquito,hormiga,abeja,mariposa,avispa","escarabajo,cucaracha,saltamontes,mariquita,libelula,grillo","polilla,luciernaga,termita,pulga,chinche,tijereta","cigarra,mantis,efimera,zapatero,tabano,abejorro","cerambix,hormiga leon,cantaridas,mosca sierra,frigania,notonecta"]],
+["Un mar u océano",["mediterraneo,atlantico,pacifico,indico,cantabrico,artico","caribe,rojo,negro,baltico,mar del norte,antartico","adriatico,egeo,jonico,caspio,muerto,amarillo","tirreno,balear,arabigo,coral,sargazos,mar de china","mar blanco,mar de barents,mar de bering,mar de ross,mar de weddell,mar de timor,mar de java"]],
+["Un monumento famoso",["torre eiffel,coliseo,sagrada familia,alhambra,estatua de la libertad,gran muralla china","taj mahal,machu picchu,big ben,acropolis,partenon,torre de pisa","petra,angkor wat,cristo redentor,chichen itza,stonehenge,kremlin","opera de sidney,burj khalifa,puerta de brandeburgo,mezquita de cordoba,acueducto de segovia,torre del oro","moai,santa sofia,borobudur,alcazaba,templo de karnak,sigiriya,meteora"]],
+["Una bebida sin alcohol",["agua,cocacola,fanta,zumo,cafe,te","sprite,aquarius,nestea,leche,batido,horchata","kas,limonada,tonica,ginger ale,kombucha,mosto","bitter kas,pepsi,red bull,zumo de tomate,chocolate caliente,cola cao","mate,rooibos,kefir,lassi,ayran,tepache"]],
+["Un objeto de cocina",["cuchillo,tenedor,cuchara,plato,vaso,sarten","olla,cazuela,nevera,microondas,horno,tabla de cortar","batidora,tostadora,colador,rallador,abrelatas,cafetera","mortero,espumadera,exprimidor,escurridor,mandolina,pelapatatas","cortapastas,embudo,mazo,rodillo,sifon,cuchillo jamonero"]],
+["Una asignatura del colegio",["matematicas,lengua,ingles,historia,educacion fisica,musica","biologia,fisica,quimica,geografia,plastica,tecnologia","filosofia,latin,religion,frances,dibujo tecnico,economia","griego,literatura,informatica,etica,ciudadania,cultura clasica","geologia,electrotecnia,psicologia,anatomia aplicada,historia del arte,mecanografia"]],
+["Una montaña o cordillera",["everest,pirineos,alpes,teide,himalaya,andes","mont blanc,k2,kilimanjaro,mulhacen,aneto,fuji","matterhorn,aconcagua,denali,monte perdido,picos de europa,sierra nevada","annapurna,elbrus,vesubio,etna,olimpo,ararat","kangchenjunga,cho oyu,huascaran,chimborazo,naranjo de bulnes,almanzor,veleta"]],
+["Una ciudad de Asia",["tokio,pekin,seul,bangkok,dubai,singapur","shanghai,delhi,mumbai,estambul,hong kong,kioto","osaka,yakarta,manila,hanoi,taipei,kuala lumpur","ulan bator,katmandu,tashkent,samarcanda,colombo,kabul,isfahan","vientiane,thimphu,ashgabat,bishkek,dusanbe,naipyido,phnom penh"]],
+["Una pieza de un coche",["rueda,volante,motor,puerta,freno,asiento","maletero,parabrisas,retrovisor,bateria,embrague,cambio","radiador,bujia,amortiguador,escape,acelerador,claxon","alternador,catalizador,ciguenal,carter,tablero,limpiaparabrisas","culata,arbol de levas,diferencial,rotula,bieleta,piston,valvula"]],
+["Un animal prehistórico",["dinosaurio,mamut,tiranosaurio,triceratops,velociraptor","diplodocus,estegosaurio,pterodactilo,brontosaurio,smilodon","megalodon,anquilosaurio,espinosaurio,iguanodon,mastodonte","alosaurio,dilofosaurio,tilacino,gliptodonte,dodo,mosasaurio","dunkleosteus,trilobites,anomalocaris,diplocaulus,quetzalcoatlus,arthropleura,megaterio"]],
+["Una enfermedad",["gripe,covid,resfriado,diabetes,cancer,varicela","sarampion,asma,migrana,alergia,anemia,bronquitis","hepatitis,tuberculosis,gota,artrosis,psoriasis,celiaquia","lupus,esclerosis,parkinson,alzheimer,fibromialgia,rubeola,tetano","pelagra,escorbuto,beriberi,rabia,lepra,colera,difteria"]],
+["Un deporte sin pelota",["natacion,atletismo,ciclismo,esqui,boxeo,gimnasia","judo,karate,remo,vela,surf,escalada","esgrima,tiro con arco,halterofilia,patinaje,triatlon,snowboard","curling,biatlon,skeleton,bobsleigh,pentatlon,lucha libre,salto de trampolin","luge,piraguismo,tiro olimpico,taekwondo,sumo,lanzamiento de martillo,decatlon"]],
+["Un animal nocturno",["buho,murcielago,lechuza,gato,lobo,zorro","erizo,mapache,tejon,rata,polilla,gineta","mochuelo,luciernaga,sapo,serval,ocelote,kiwi","civeta,tarsero,kinkajou,galago,potoo,loris","chotacabras,kakapo,aye aye,solenodonte,fosa,bilby"]],
+["Una marca de tecnología",["apple,samsung,google,microsoft,sony,amazon","huawei,xiaomi,lg,nokia,hp,dell","lenovo,asus,acer,intel,nvidia,motorola","oneplus,oppo,realme,razer,logitech,garmin,fitbit","fairphone,nothing,sonos,bang olufsen,gopro,dji,tp link"]],
+["Un tipo de pasta",["espaguetis,macarrones,lasana,tallarines,canelones,raviolis","penne,fusilli,tortellini,fideos,farfalle,rigatoni","tagliatelle,gnocchi,cappelletti,orecchiette,noquis,linguine","pappardelle,bucatini,orzo,conchiglie,trofie,paccheri","strozzapreti,casarecce,cavatelli,malloreddus,mafalde,tortiglioni,pici"]],
+["Un tipo de queso",["manchego,mozzarella,parmesano,cheddar,gouda,brie","emmental,camembert,roquefort,gorgonzola,queso fresco,cabrales","idiazabal,mahon,tetilla,torta del casar,feta,ricotta","pecorino,provolone,maasdam,comte,raclette,gruyere","stilton,gjetost,halloumi,munster,reblochon,epoisses,mascarpone"]],
+["Un animal de África",["leon,elefante,jirafa,cebra,hiena,rinoceronte","leopardo,guepardo,hipopotamo,gorila,cocodrilo,avestruz","impala,gacela,suricata,mandril,babuino,antilope,bufalo,nu","okapi,kudu,oryx,caracal,mangosta,fenec","aardvark,daman,sitatunga,bongo,ave secretario,galago"]],
+["Un tipo de árbol",["pino,roble,olivo,encina,abeto,palmera","cipres,haya,castano,alamo,sauce,eucalipto","almendro,algarrobo,nogal,fresno,olmo,abedul","tilo,arce,secuoya,baobab,ginkgo,acebo","tejo,madrono,alcornoque,sabina,serbal,carpe,liquidambar"]],
+["Una fiesta o celebración",["navidad,pascua,halloween,carnaval,nochevieja,reyes","san fermin,fallas,semana santa,san juan,cumpleanos,boda","oktoberfest,tomatina,hogueras,feria de abril,thanksgiving,diwali","holi,hanukkah,ramadan,dia de muertos,vendimia,san isidro","obon,songkran,sinterklaas,burning man,correfocs,festival de la linterna,bonfire night"]],
+["Un fenómeno del tiempo",["lluvia,nieve,viento,tormenta,granizo,niebla","tornado,huracan,rayo,trueno,arco iris,rocio","helada,calima,ventisca,tifon,monzon,gota fria","cumulonimbo,cirro,estrato,cumulo,altocumulo,nimbostrato","virga,sirocco,haboob,aurora boreal,fuego de san telmo,tromba marina,mistral"]],
+["Una piedra preciosa",["diamante,esmeralda,rubi,zafiro,perla,amatista","topacio,opalo,jade,turquesa,granate,aguamarina","ambar,cuarzo,onix,circon,turmalina,peridoto","lapislazuli,alejandrita,jaspe,cornalina,tanzanita,morganita","benitoita,rodocrosita,labradorita,piedra de luna,heliodoro"]],
+["Un invento",["telefono,bombilla,rueda,imprenta,brujula,pila","televisor,radio,penicilina,avion,ordenador,microscopio","telescopio,reloj,termometro,pararrayos,locomotora,dinamita","fonografo,paracaidas,sextante,astrolabio,cremallera,velcro","kinetoscopio,teodolito,heliografo,vitascopio,autogiro,sismografo"]],
+["Un pintor o artista",["picasso,dali,goya,velazquez,van gogh,da vinci","miro,monet,rembrandt,miguel angel,frida kahlo,warhol","sorolla,murillo,zurbaran,el greco,rubens,botticelli,magritte","kandinsky,klimt,munch,chagall,hopper,vermeer,cezanne","bosco,arcimboldo,remedios varo,leonora carrington,basquiat,hokusai,kusama,tapies"]]
+];
+
+const X=`Un animal marino|salmon,sardina,merluza,pez payaso|bacalao,almeja,mejillon,sepia,morsa,pez espada|erizo de mar,anemona,raya,barracuda,percebe,bogavante|tiburon martillo,coral,gamba,manati,beluga,anguila|pulpo dumbo,pez linterna,krill,pez remo,esponja de mar
+Una fruta|limon verde,albaricoque,ciruela,coco|frambuesa,mora,pomelo,nectarina,aguacate,lima|datil,zarzamora,grosella,tamarindo,fruta del dragon,mangostan|durian,jaboticaba,feijoa,physalis,yuzu|ackee,salak,noni,cupuacu,longan,pomelo rosa
+Un país de África|libia,sudan,congo,zimbabue|costa de marfil,somalia,togo,benin,niger,ruanda|burundi,chad,sierra leona,liberia,mauritania,guinea|guinea bissau,guinea ecuatorial,sudan del sur,cabo verde,republica centroafricana|santo tome y principe,seychelles,mauricio,sahara occidental,republica del congo
+Un instrumento musical|bongo,tambor,maracas,trompa,percusion|viola,timbales,castanuelas,pandereta,armonica,organo|tuba,bandurria,laud,zanfona,gaita gallega,cornamusa|arpa celta,balalaika,shamisen,erhu,guzheng,cuatro venezolano|armonica de cristal,ondas martenot,nyckelharpa,duduk,hang,charango
+Una capital europea|moscu,kiev,bucarest|belgrado,sofia,zagreb,luxemburgo|minsk,sarajevo,nicosia,monaco|chisinau,san marino,vaduz,andorra la vella|podgorica,pristina,ciudad del vaticano,tiflis
+Un deporte que se juegue con pelota|tenis de mesa,ping pong|bolos,petanca,polo,futbol sala|billar,balonmano playa,baloncesto 3x3,pelota mano|ultimate,floorball,pelota valenciana,rounders|handball gaelico,jai alai,tchoukball,netball,croquet
+Un elemento químico|plutonio,aluminio,potasio|fosforo,estano,niquel,titanio,argon|cobalto,cromo,magnesio,boro,wolframio|yodo,bario,selenio,estroncio,arsenico|disprosio,praseodimio,tecnecio,astato,lantano
+Una verdura|maiz,champinon,ajo,col,guisante,judia verde|repollo,calabaza,rucula,habas|boniato,kale,pak choi,cardo,canonigos,yuca|okra,jicama,salsifi,name,taro,topinambur|daikon,cima di rapa,tatsoi,nopal,wasabi
+Un personaje de la mitología griega|hera,demeter,artemisa,prometeo,helena de troya|edipo,medea,icaro,penelope,jason,pegaso|atlas,gaia,cronos,urano,calipso|hecate,morfeo,eolo,tifon,escila,caribdis|alcmena,andromeda,leda,ixion,cadmo,aracne
+Un río de España|manzanares,tinto,odiel,pas,miera|ara,cinca,segre,jarama,alberche|tietar,cea,porma,nervion,ega,arga|aragon,alagon,guadalhorce,aller,mao|cabriel,huerva,aliste,ulla,eo,tea
+Una ciudad de Latinoamérica|rio de janeiro,panama,cali|brasilia,guayaquil,barranquilla,mendoza,salvador de bahia|arequipa,puebla,monterrey,tijuana,recife,cochabamba|ushuaia,iquique,sucre,maracaibo,granada nicaragua,antigua guatemala|tarija,potosi,ayacucho,chiclayo,villa de leyva,ciudad del este
+Una herramienta de bricolaje|llave allen,cinta metrica,brocha,rodillo|espatula,lijadora,sierra de mano,destornillador electrico,alicates de corte|gato hidraulico,sargento,punzon,escofina,mazo de goma|tornillo de banco,tupi,caladora,pistola de calor,cizalla|ingletadora,garlopa,barrena,escoplo,nivel laser
+Una flor|crisantemo,geranio,narciso,lila|azucena,gardenia,nomeolvides,jacinto,iris|buganvilla,clavelina,cala,adelfa,pensamiento,primavera|gerbera,tagete,loto azul,celosia|ave del paraiso,protea,pasiflora,jacaranda,rafflesia
+Un animal que viva en la selva|gorila,chimpance,mono aullador,rana,iguana|puma,guacamayo,cocodrilo,mariposa morpho,tarantula|dragon de komodo,mono narigudo,tigre de bengala,babirusa|basilisco,piton reticulada,rana de cristal,tamarino|tapir malayo,jaguar negro,mono arana,saki barbudo,calao
+Una profesión|abogado,juez,dentista,psicologo,cajero|carnicero,pescadero,conductor,contable,albanil|fisioterapeuta,traductor,disenador,fotografo,mecanico,farmaceutico|ebanista,soldador,bibliotecario,restaurador,actuario|cetrero,afinador de pianos,esquilador,pirotecnico,gondolero
+Un color|verde lima,azul marino,verde oliva|rojo vino,amarillo limon,azul cielo,crema,salmon|burdeos,mostaza,coral,lavanda,verde menta|indigo,verde botella,azafran,teja|cerulean,sepia,gualda,siena,verdigris
+Una marca de coches|dacia,jeep,chevrolet,mitsubishi|land rover,cupra,smart,lexus,chrysler,dodge|bentley,rolls royce,aston martin,mclaren,lotus,ssangyong|rivian,polestar,lucid,saab,rover,trabant|spyker,tvr,morgan,hispano suiza,delorean,maybach
+Un postre|gelatina,yogur,pastel,fruta|pudin,cheesecake,galletas,magdalenas,churros,torrijas|lemon pie,tarta sacher,macarons,eclair,tarta de zanahoria|pavlova,baba,sufle,cassata,affogato,trifle|dulce de leche,gulab jamun,halva,bienmesabe,pastel de nata
+Un mamífero|burro,cabra,mono,raton|rata,erizo,foca,morsa,hamster|alce,reno,puma,hiena,cebra,camello|oso hormiguero,leon marino,manati,lince iberico,bisonte,capibara|dik dik,aye aye,solenodon,desman,saiga,pudu,coati
+Un ave|pavo,gallo,canario,periquito,petirrojo|tordo,mirlo,urraca,pinzon,jilguero,ruisenor|faisan,perdiz,codorniz,garza,grulla,cormoran|kiwi,emu,condor,quetzal,kookaburra,ave del paraiso|kakapo,hoatzin,tragopan,picozapato,secretario
+Un videojuego|pong,asteroids,street fighter,mortal kombat|counter strike,league of legends,among us,rocket league|god of war,the last of us,red dead redemption,metal gear,resident evil|bloodborne,nier,dead cells,bastion,fez,cuphead|papers please,baba is you,hotline miami,spelunky,return of the obra dinn
+Una ciudad de España|gijon,oviedo,pamplona,logrono,palma|jerez,marbella,tarragona,girona,badajoz,caceres|algeciras,huelva,lleida,ponferrada,ferrol,reus|calatayud,tudela,ronda,gandia,elche,baeza|cervera,sepulveda,albarracin,cangas de onis,cudillero
+Un animal de granja|gallina,pollito,vaca lechera|oca,pavo real,lechon,toro|oveja merina,cerda,gallina ponedora,paloma mensajera|conejo de angora,cabra enana,cerdo iberico,vaca highland|gallo de pelea,oveja karakul,gallina araucana
+Una marca de ropa|bershka,decathlon,reebok,new balance,primark|stradivarius,oysho,lefties,cortefiel,el ganso,scalpers|ralph lauren,hugo boss,armani,versace,prada,burberry|supreme,carhartt,dr martens,fila,champion,gap|bimba y lola,tous,pronovias,hoss intropia,silbon,devota
+Un medio de transporte|autocar,avioneta,limusina,patines|ambulancia,quad,tractor,vagoneta,carro,carreta|cohete,dron,moto de agua,buggy,monorrail|hidrodeslizador,trineo de perros,coche de caballos,velocipedo|aeroplano,balsa,palanquin,vimana
+Una habitación de una casa|aseo,sala de estar,hall,habitacion|cuarto de invitados,estudio,lavanderia,recibidor|cuarto de juegos,solana,sala de estar|gimnasio,sala de cine,cuarto oscuro,capilla|salon de baile,cochera,armeria,establo
+Un cantante o grupo español|mecano,hombres g,los chichos,los del rio,camela|la oreja de van gogh,el canto del loco,m clan,extremoduro,los suaves|dani martin,vanesa martin,buika,miguel rios,raphael,nino bravo|bunbury,los secretos,los ronaldos,la casa azul|ruibal,triana,pata negra,smash,vainica doble,los brincos
+Una película|rocky,los vengadores,star wars,harry potter,spiderman|inception,interstellar,tiburon,jurassic park,cars,buscando a nemo|el resplandor,el silencio de los corderos,seven,her|memento,oldboy,drive,whiplash,mad max fury road|rashomon,persona,el espiritu de la colmena,viridiana,satantango
+Un hueso del cuerpo humano|pelvis,falange,rotula|metacarpo,metatarso,tarso,carpo|vomer,palatino,temporal,parietal,frontal|trapecio,ganchoso,trapezoide,piramidal,cuneiforme|ileon,isquion,pubis,cornete,lagrimal
+Un metal|laton,bronce,hierro fundido|cadmio,antimonio,bismuto,berilio,calcio|uranio,plutonio,torio,radio,bario|escandio,itrio,lantano,cerio,neodimio|rutherfordio,seaborgio,flerovio,moscovio,oganeson
+Un juego de mesa|bingo,cartas,mus,tute,dados|dobble,cuatro en raya,hundir la flota,pictionary,tabu,rummikub|stratego,la vida,quien es quien,mastermind|splendor,terraforming mars,wingspan,root,spirit island|tzolkin,gaia project,twilight struggle,xiangqi,tablut,hnefatafl
+Una especia o hierba aromática|ajo en polvo,pimienta negra|guindilla,cayena,vainilla,mostaza,regaliz|anis estrellado,wasabi,rabano picante,pimenton picante|ras el hanout,garam masala,pimienta de sichuan,pimienta rosa,cubeba|nigella,urfa biber,baharat,achiote,pandan
+Un insecto|cochinilla,pulgon,mosca domestica|chinche de cama,piojo,grillo,abejorro,carcoma|escarabajo rinoceronte,ciervo volante,libelula,pulgon,cigarron|mosca de la fruta,tabano,zangano,hormiga roja,cucaracha americana|escarabajo hercules,mariposa monarca,mosca tse tse,cocinilla,pececillo de plata
+Un mar u océano|atlantico norte,mar muerto,mar del caribe|mar de alboran,mar cantabrico,mar de irlanda,mar de arabia|mar de beaufort,mar de azov,mar de marmara,mar de noruega|mar de coral,mar de tasmania,mar de laptev,mar de kara|mar de siberia oriental,mar de molucas,mar de banda,mar de celebes,mar de flores
+Un monumento famoso|arco del triunfo,torre de londres,cristo de corcovado,puerta de alcala|sagrada familia,golden gate,empire state,torre de pisa,alcazar de segovia|palacio de versalles,castillo de neuschwanstein,mont saint michel,kremlin,teotihuacan|monumento a washington,fontana de trevi,panteon de roma,hermitage,notre dame|templo de abu simbel,puente de rialto,catedral de colonia,torre de belem,giralda
+Una bebida sin alcohol|cafe con leche,coca cola zero,zumo de naranja,chocolate|colacao,te verde,sprite zero,nestea,infusion|agua con gas,granizado,smoothie,te helado,bebida isotonica|cafe frio,limonada casera,sidra sin alcohol,mosto,horchata de chufa|cascara,kvass,agua de coco,kombucha,bubble tea
+Un objeto de cocina|cucharon,vaso,jarra,tazon,fregadero,cubo|espumadera,tapa,molde,cacerola,cuchillo de pan,tijeras|trituradora,bascula,termo,picadora,sartén antiadherente,wok|prensaajos,termometro de cocina,tamiz,cortador de pizza,abridor de botellas|dosificador,pincel de cocina,escudilla,batidor de varillas,mandoline
+Una asignatura del colegio|ciencias naturales,conocimiento del medio,sociales,matematica,gimnasia|historia de espana,cultura general,educacion artistica,religion catolica,francés|valenciano,dibujo,taller,lengua castellana,trabajo social|latin 2,historia del mundo contemporaneo,matematicas aplicadas,fisica y quimica,biologia y geologia|quimica organica,estadistica,programacion,teatro,ajedrez,cultura audiovisual
+Una montaña o cordillera|moncayo,cerro,sierra de gredos,sierra de guadarrama,sistema central|pico veleta,cordillera cantabrica,sierra morena,montes de toledo,monte olimpo|monte ararat,monte kenia,mount rainier,monte sinai,monte athos|cordillera de los andes,macizo central,sistema iberico,montes urales,cadena del atlas|nanga parbat,makalu,lhotse,manaslu,cho oyu,aneto
+Una ciudad de Asia|bombay,calcuta,beijing,riad,doha|abu dabi,jerusalen,bagdad,teheran,damasco,karachi|lahore,chengdu,hangzhou,kuwait,mascate,busan|almaty,bakú,tiflis,erevan,samarkanda,baku|sapporo,nagoya,jaipur,lhasa,luang prabang,bandar seri begawan
+Una pieza de un coche|llanta,neumatico,faro,piloto,matricula|capo,intermitente,depósito,cinturon,airbag,espejo|filtro,correa,tubo de escape,suspension,bomba de agua,direccion|cardan,termostato,inyector,turbo,cremallera,tambor|valvula egr,sonda lambda,silentblock,junta de culata,biela,volante motor
+Un animal prehistórico|tiranosaurio rex,mamut lanudo,pterodactilo,dino|dilofosaurio,braquiosaurio,tigre dientes de sable,gigantosaurio|paraceratherium,deinonychus,plesiosaurio,ictiosaurio,archaeopteryx|gigantopiteco,smilodon fatalis,megaloceros,terror bird,andrewsarchus|helicoprion,hallucigenia,opabinia,tiktaalik,spinosaurio,therizinosaurio
+Una enfermedad|catarro,otitis,conjuntivitis,gastroenteritis,amigdalitis|hipertension,colesterol,artritis,varicela,herpes,neumonia|dermatitis,eczema,epilepsia,osteoporosis,sinusitis,hepatitis b|meningitis,esclerosis multiple,cirrosis,ictus,leucemia,glaucoma|encefalitis,tifus,peste,viruela,ebola,dengue,malaria
+Un deporte sin pelota|equitacion,salto,natacion sincronizada,maraton,pesas|ciclismo en pista,piragua,kayak,skate,patinaje artistico,pilates|escalada deportiva,paracaidismo,windsurf,kitesurf,buceo,parapente|hipica,lucha grecorromana,tiro con arco,karting,salto con pertiga|bobsled,keirin,pentatlon moderno,carreras de trineo,biathlon,caza submarina
+Un animal nocturno|gato montes,rata,mosquito,araña,cucaracha|zorro rojo,raton,lobo gris,lechuza comun,jabali,cangrejo|armadillo,tarantula,mapache comun,serval,lince|civeta,gineta,tarsero filipino,loris lento,galago,potoo comun|kakapo,pez abisal,aye aye,solenodonte,bilby,fosa
+Una marca de tecnología|ibm,hp,sony,lg,asus,nintendo,canon|panasonic,toshiba,philips,epson,sandisk,kingston|oppo,nothing,bose,jbl,sennheiser,marshall|ubiquiti,synology,wacom,elgato,anker,tp link,roku|teenage engineering,framework,pine64,purism,oneplus,bang olufsen
+Un tipo de pasta|spaghetti,macarron,tallarin,lasagna,ravioli,fideo|ziti,fettuccine,cannelloni,tortelloni,rotini,capellini|ditalini,gemelli,spaghettoni,mezze maniche,ravioles,agnolotti|radiatori,rotelle,cavatappi,fregola,garganelli,sagnarelli|croxetti,busiate,culurgiones,anelletti,lagane,maltagliati,corzetti
+Un tipo de queso|tetilla,burgos,cabra,azul,provolone,edam|queso de oveja,havarti,cottage,cream cheese,roncal,queso de burgos|queso azul,manchego curado,idiazabal ahumado,queso de bola,tilsit,limburger|taleggio,asiago,fontina,mahon curado,garrotxa,zamorano|brillat savarin,stracchino,paneer,labneh,casu marzu,san simon da costa,majorero
+Un animal de África|gacela de thomson,cebu,chimpance,babuino|buitre,flamenco,pelicano,kudu,eland,mamba negra|serval,oryx,gerenuk,jineta,nyala,dik dik|pangolin gigante,aardwolf,loris,maribu,hiena parda,avestruz|okapi,bonobo,mono azul,aardvark,pez pulmonado,shoebill,damán
+Un tipo de árbol|ciprés,abeto,pino piñonero,castaño,higuera|nogal,naranjo,limonero,manzano,peral,cerezo|roble albar,melojo,quejigo,fresno,pino carrasco,alcornoque|ciruelo,morera,magnolio,platano de sombra,cedro,cedro del libano|drago,castaño de indias,ahuehuete,ceiba,secuoya gigante,arbol de judas
+Una fiesta o celebración|aniversario,fin de ano,san valentin,dia de la madre,dia del padre|san jorge,san antonio,corpus,navidad,dia de reyes,pilar|semana grande,feria de malaga,san isidro,romeria del rocio,las fallas,moros y cristianos|carnaval de cadiz,carnaval de tenerife,festival de la cerveza,la tomatina,thanksgiving,pascua|dia de los inocentes,holi festival,obon festival,songkran,diwali,inti raymi
+Un fenómeno del tiempo|chubasco,llovizna,aguacero,chaparron,escarcha|nevada,gota fria,sequia,ola de calor,temporal,borrasca|dana,tormenta electrica,tsunami,remolino,mareas,galerna|aurora austral,rayo globular,lluvia acida,halo solar,helada negra,mar de fondo|tromba,ciclon,cellisca,calima,iris lunar,nubes lenticulares,virga
+Una piedra preciosa|rubi,brillante,cuarzo rosa,piedra de luna|esmeralda,zafiro,agata,piedra solar|esmeralda colombiana,tanzanita,coral,perla negra,piedra lunar|alejandrita,benitoita,jade imperial,diamante rojo,grandidierita|musgravita,painita,taaffeita,poudretteita,jeremejevita
+Un invento|tractor,pegamento,bicicleta,motor,camara|ascensor,aspiradora,lavadora,nevera,microondas,cafetera|escaner,tubo de rayos x,telegrafo,fax,megafono,gramofono|barometro,anemometro,pluma estilografica,estetoscopio,hologramas,laser|sismografo,astrolabio,clepsidra,teodolito,calculadora de pascal,mecanismo de anticitera
+Un pintor o artista|rafael,leonardo,caravaggio,renoir,degas|manet,gauguin,seurat,toulouse lautrec,van eyck,durero|el bosco,tiziano,tintoretto,delacroix,courbet,bacon|rothko,duchamp,man ray,balthus,bacon,freud|rousseau,paula rego,modigliani,tamara de lempicka,louise bourgeois,yves tanguy
+Un animal del desierto|camello,serpiente,escorpion,lagarto,dromedario|fenec,zorro del desierto,buitre,lagartija,cobra,tortuga|coyote,jerbo,monstruo de gila,vibora cornuda,oryx,addax|suricata,lagarto cornudo,rata canguro,gacela dorcas,sapo de espuelas|dragon barbudo,escarabajo de namibia,hormiga plateada,camaleon de namaqua,diablo espinoso
+Un animal del polo|oso polar,pinguino,foca,morsa,ballena|zorro artico,reno,lobo artico,buey almizclero,narval|leopardo marino,petrel,skua,beluga,liebre artica,pinguino emperador|pinguino adelia,orca,lemming,eider,gaviota de ross,krill|foca de weddell,pinguino barbijo,albatros errante,charran artico,pez hielo
+Un cantante internacional|michael jackson,madonna,beyonce,shakira,eminem,rihanna|adele,bruno mars,elvis,prince,elton john,taylor swift|bob dylan,david bowie,bjork,amy winehouse,lady gaga,sia|lana del rey,billie eilish,frank ocean,tame impala,fka twigs,jacques brel|nina simone,tom waits,serge gainsbourg,fela kuti,caetano veloso,joni mitchell
+Un plato de comida española|paella,tortilla de patatas,gazpacho,croquetas,jamon,cocido|fabada,salmorejo,pulpo a la gallega,patatas bravas,migas,callos|pisto,marmitako,escalivada,fideua,lacon con grelos,zarangollo|caldereta,sobrasada,ajoblanco,cachopo,gachas,michirones|porra antequerana,cocochas,mojete,fartons,pipirrana,papas arrugadas
+Un idioma|espanol,ingles,frances,aleman,italiano,chino|portugues,ruso,japones,arabe,catalan,gallego|euskera,hindi,turco,coreano,griego,holandes|sueco,polaco,hebreo,rumano,swahili,vietnamita|quechua,guarani,maori,gaelico,esperanto,yiddish,nahuatl
+Una prenda de ropa|camiseta,pantalon,camisa,zapatos,jersey,chaqueta|falda,vestido,abrigo,calcetines,bufanda,gorro|chaleco,bermudas,sudadera,corbata,gabardina,pajarita|mono,poncho,kimono,gorra,pamela,mantilla|bombin,jubon,chilaba,sari,zaragüelles,kilt,cuera
+Un animal que pueda ser mascota|perro,gato,pez,hamster,conejo,canario|tortuga,loro,cobaya,periquito,huron,iguana|gerbo,chinchilla,rata,erizo pigmeo,serpiente,tarantula|axolotl,degu,gecko,rana,mantis,piton|petauro,fennec,coati,tenrec,mono ardilla,camaleon pantera
+Una parte del cuerpo|mano,pie,cabeza,ojo,nariz,boca|brazo,pierna,oreja,dedo,rodilla,codo|cuello,hombro,tobillo,muneca,barbilla,ceja|nuca,ombligo,talon,lobulo,pestana,pulgar|entrecejo,sien,axila,filtrum,tragus,hueco popliteo
+Un tipo de zapato|zapatillas,botas,sandalias,tacones,mocasines,chanclas|zapatos de vestir,deportivas,botines,manoletinas,alpargatas,botas de agua|merceditas,zuecos,nauticos,oxford,derby,crocs|espadrilla,bailarinas,slingback,plataformas,babuchas,zapatos de claque|abarcas,katiuskas,geta,mukluk,brogue,borcegui
+Un animal con cuernos|toro,ciervo,vaca,cabra,rinoceronte,carnero|reno,alce,antilope,bufalo,cabra montes,gacela|bisonte,oryx,kudu,gnu,cebu,rebeco|narval,okapi,sitatunga,addax,saiga,markhor|arrui,bongo,eland,nyala,tur,takin
+Un tipo de baile|salsa,flamenco,tango,vals,break dance,sevillanas|bachata,merengue,jota,sardana,ballet,hip hop|rumba,charleston,swing,twist,paso doble,polka|mambo,cumbia,lambada,zumba,capoeira,haka|danza del vientre,sirtaki,bollywood,lindy hop,kathak,fandango,dabke,kuduro
+Un tipo de sombrero|gorra,sombrero de paja,gorro,boina,casco,pamela|bombin,sombrero de copa,sombrero cordobes,fedora,panama,visera|capucha,turbante,fez,kipa,txapela,tocado|montera,tricornio,casquete,ushanka,shako,bicornio|pillbox,kepi,morion,cloche,tarbush,sombrero de tres picos
+Un lugar de ocio|cine,parque,playa,teatro,museo,discoteca|bolera,zoo,parque de atracciones,piscina,biblioteca,casino|acuario,planetario,circo,karaoke,gimnasio,escape room|salon recreativo,velodromo,mirador,balneario,spa,hipodromo|drive in,observatorio,cuevas turisticas,jardin botanico,teleferico,ludoteca
+Un tipo de pan|baguette,pan de molde,barra,integral,pan de pueblo,tostada|chapata,pan de centeno,pan de pasas,colines,bollo,panecillo|pan de payes,pan de cristal,focaccia,pan pita,naan,pan de maiz|brioche,bagel,pretzel,pan de espelta,pan de masa madre,pan de leche|injera,chapati,lavash,pumpernickel,challah,pan de bono
+Una red social o aplicación|instagram,whatsapp,tiktok,facebook,youtube,twitter|snapchat,telegram,spotify,netflix,linkedin,pinterest|twitch,discord,reddit,tinder,wallapop,duolingo|signal,bereal,tumblr,vinted,strava,mastodon|bluesky,flickr,myspace,nextdoor,goodreads,letterboxd,soundcloud
+Un material de construcción|ladrillo,cemento,madera,hormigon,cristal,acero|arena,grava,yeso,piedra,teja,azulejo|marmol,granito,adobe,escayola,cal,pizarra|travertino,corcho,basalto,tapial,bambu,sillar|fibrocemento,adoquin,tablero osb,zinc ondulado,aerogel,cob
+Un tipo de barco|velero,yate,barco de pesca,ferry,crucero,petrolero|canoa,kayak,lancha,submarino,portaaviones,carguero|transatlantico,balsa,remolcador,goleta,catamaran,patera|galeon,carabela,trirreme,fragata,bergantin,drakkar|junco,dhow,faluca,coracle,piragua,umiak
+Un nombre de mujer|maria,laura,lucia,ana,carmen,paula|sofia,marta,elena,sara,julia,andrea|irene,alba,noa,martina,olivia,emma|jimena,aitana,abril,vera,olaya,nerea|aldara,idoia,minerva,mencia,leire,almudena,yaiza
+Un nombre de hombre|antonio,jose,manuel,david,juan,carlos|javier,daniel,pablo,sergio,alberto,miguel|ivan,raul,adrian,hugo,mario,marcos|gaspar,bruno,aitor,oriol,ismael,eloy,ruben|cayetano,ceferino,ignasi,telmo,lorenzo,aniceto,amadeo
+Un tipo de pescado|merluza,salmon,atun,bacalao,sardina,lubina|dorada,rape,lenguado,trucha,boqueron,pez espada|rodaballo,besugo,caballa,mero,salmonete,anguila|sargo,pargo,bonito,abadejo,palometa,breca|corvina,lucio,lamprea,chicharro,jurel,fogonero
+Un embutido|chorizo,jamon,salchichon,morcilla,lomo,mortadela|fuet,sobrasada,butifarra,chistorra,salami,longaniza|jamon york,pavo,cecina,panceta,lacon,paletilla|morcon,androlla,cantimpalo,zorza,chosco,botifarra negra|salchicha de frankfurt,mettwurst,cabeza de jabali,bisbe,sobrasada de mallorca
+Un tipo de nube|cirro,cumulo,estrato,nimbo,cumulonimbo|altocumulo,altoestrato,nimbostrato,cirroestrato,cirrocumulo,estratocumulo|lenticular,mammatus,noctilucente,arcus,pileus,fractus|virga,cumulus humilis,cumulus congestus,incus,velum,tuba|asperitas,kelvin helmholtz,shelf cloud,wall cloud,undulatus,castellanus
+Un oficio antiguo|herrero,molinero,zapatero,sastre,carpintero,panadero|curtidor,tejedor,alfarero,cantero,aguador,afilador|escribano,juglar,cetrero,vidriero,boticario,tonelero|arriero,pregonero,estanquero,calderero,esquilador,sereno|batanero,cordelero,pergaminero,almazarero,lampista,pellejero
+Una capital de América|washington,ottawa,brasilia,buenos aires,mexico,lima|bogota,santiago,caracas,quito,la habana,montevideo|la paz,asuncion,panama,san jose,guatemala,kingston|managua,tegucigalpa,san salvador,santo domingo,puerto principe,georgetown|paramaribo,belmopan,nassau,bridgetown,castries,roseau,kingstown
+Un río del mundo|nilo,amazonas,misisipi,danubio,rin,sena|tamesis,volga,ganges,yangtse,tigris,eufrates|orinoco,indo,mekong,congo,niger,zambeze|elba,vistula,oder,loira,garona,po|limpopo,irrawaddy,lena,yenisei,obi,amur,paraguay
+Un lago|titicaca,victoria,baikal,garda,como,leman|ness,tahoe,michigan,superior,huron,ontario|constanza,maggiore,balaton,ladoga,onega,tanganica|atitlan,nicaragua,maracaibo,chad,eyre,vanern|vattern,peipus,issyk kul,tonle sap,toba,khovsgol
+Una isla|mallorca,cuba,sicilia,cerdena,tenerife,islandia|ibiza,menorca,creta,chipre,malta,corcega|madagascar,borneo,java,sumatra,bali,hawai|groenlandia,tasmania,terranova,sri lanka,formosa,jamaica|santa helena,pascua,galapagos,feroe,svalbard,tristan da cunha,la reunion
+Un tipo de música|rock,pop,jazz,rap,reggaeton,flamenco|blues,salsa,country,clasica,techno,punk|metal,folk,soul,funk,reggae,house|bossa nova,ska,disco,grunge,trap,gospel|dubstep,krautrock,shoegaze,synthwave,fado,gamelan,canto difonico
+Una herramienta de jardín|pala,rastrillo,azada,regadera,manguera,tijeras de podar|cortacesped,carretilla,desbrozadora,podadera,macetero,guantes|hoz,motosierra,tridente,cultivador,sopladora,serrucho de poda|plantador,aireador,escarificador,laya,pulverizador,almadana|trasplantador,mattock,bieldo,legon,calzador de podar,cavadora
+Una carrera universitaria|medicina,derecho,psicologia,economia,arquitectura,enfermeria|biologia,quimica,fisica,matematicas,historia,periodismo|veterinaria,filologia,geologia,odontologia,farmacia,sociologia|antropologia,arqueologia,musicologia,estadistica,traduccion,criminologia|egiptologia,papirologia,paleografia,etnomusicologia,numismatica,vulcanologia
+Una película de animación|el rey leon,toy story,shrek,frozen,coco,up|buscando a nemo,los increibles,moana,mulan,aladdin,ratatouille|wall e,cars,zootropolis,kung fu panda,madagascar,la sirenita|el viaje de chihiro,mi vecino totoro,princesa mononoke,coraline,spirit,los mitchell|persepolis,anomalisa,la tortuga roja,el castillo ambulante,vals con bashir,las trillizas de belleville
+Un superhéroe|superman,batman,spiderman,hulk,iron man,wonder woman|capitan america,thor,flash,aquaman,wolverine,deadpool|ojo de halcon,pantera negra,doctor strange,ant man,green lantern,daredevil|cyborg,nightwing,shazam,vision,rogue,gambito,starfire|blue beetle,rorschach,mister miracle,swamp thing,elongated man,moon knight,hawkman
+Un deporte olímpico|atletismo,natacion,gimnasia,futbol,baloncesto,tenis|judo,boxeo,remo,esgrima,ciclismo,voleibol|tiro con arco,vela,hockey,halterofilia,triatlon,hipica|pentatlon moderno,waterpolo,lucha,piraguismo,surf,escalada|skeleton,curling,bobsleigh,biatlon,taekwondo,breaking,combinada nordica
+Un alimento de desayuno|tostada,cafe,leche,cereales,zumo,galletas|croissant,magdalena,yogur,huevos,bacon,tortitas|cola cao,mermelada,mantequilla,fruta,donut,porras|churros,bollycao,ensaimada,muesli,pan con tomate,gofre|avena,granola,chocolate con churros,pan con aceite,porridge,cuajada
+Un animal de zoo|leon,elefante,jirafa,mono,tigre,cebra|oso,pinguino,hipopotamo,cocodrilo,flamenco,rinoceronte|panda,koala,lemur,suricata,nutria,tapir|okapi,binturong,serval,mandril,jabali,casuario|pudu,kinkajou,saiga,wallabi,tarsero,dugongo,aye aye
+Un tipo de vivienda|piso,chalet,adosado,duplex,atico,apartamento|casa rural,bungalow,estudio,loft,mansion,villa|masia,pazo,cortijo,cabana,caravana,palacete|riad,iglu,yurta,palafito,hacienda,castillo|trullo,horreo,borda,casa cueva,tipi,dacha,bohio
+Un tejido o material textil|algodon,lana,seda,lino,cuero,poliester|nailon,lycra,pana,vaquero,terciopelo,punto|cachemir,tweed,franela,gabardina,alpaca,raso|tafetan,organza,damasco,chenilla,bambula,fieltro,mohair|batista,muselina,cheviot,loneta,tul,jacquard,crepe
+Un personaje histórico|napoleon,cleopatra,einstein,colon,franco,hitler|cervantes,julio cesar,leonardo da vinci,newton,gandhi,lincoln|isabel la catolica,carlos v,felipe ii,alejandro magno,churchill,mandela|marie curie,galileo,darwin,bolivar,san martin,hernan cortes|hipatia,averroes,maimonides,ada lovelace,zheng he,ramon y cajal,mansa musa
+Un escritor|cervantes,garcia lorca,shakespeare,borges,neruda,garcia marquez|unamuno,machado,quevedo,tolkien,orwell,dickens|cortazar,vargas llosa,saramago,kafka,dostoievski,tolstoi|benedetti,rulfo,bolano,eco,pessoa,galdos|cela,delibes,matute,pardo bazan,lezama lima,onetti,monterroso
+Una novela|don quijote,cien anos de soledad,harry potter,el principito,1984,el hobbit|la celestina,rayuela,crimen y castigo,dracula,frankenstein,moby dick|los miserables,orgullo y prejuicio,el nombre de la rosa,la sombra del viento,el alquimista,fahrenheit 451|pedro paramo,la regenta,fortunata y jacinta,el tunel,ensayo sobre la ceguera,la metamorfosis|el lazarillo de tormes,la colmena,tiempo de silencio,los pazos de ulloa,sostiene pereira,el castillo,la isla del tesoro
+Un fruto seco|almendra,nuez,avellana,cacahuete,pistacho,anacardo|pasas,datiles,higos secos,ciruela pasa,orejones,castana|nuez de macadamia,pipas,pinon,nuez pecana,coco rallado,arandanos secos|nuez de brasil,fruta confitada,mango deshidratado,chufas,pistacho verde,cacao en grano|nuez de kola,bayas de goji,physalis seco,nuez de pili,noni seco,baya de acai,ginkgo
+Un accesorio|reloj,gafas,bolso,cinturon,pulsera,collar|pendientes,anillo,bufanda,guantes,gorro,paraguas|cartera,mochila,panuelo,broche,diadema,corbata|pajarita,tirantes,gemelos,bandolera,rinonera,peineta|abanico,mantilla,monoculo,cadena de bolsillo,fajin,mitones,polainas
+Un cuento infantil|caperucita roja,cenicienta,blancanieves,los tres cerditos,pinocho,la bella durmiente|hansel y gretel,el patito feo,la sirenita,peter pan,alicia en el pais de las maravillas,pulgarcito|rapunzel,el gato con botas,la bella y la bestia,aladino,ricitos de oro,el flautista de hamelin|el soldadito de plomo,la reina de las nieves,la princesa y el guisante,el sastrecillo valiente,los musicos de bremen,la cerillera|el traje nuevo del emperador,la pastora y el deshollinador,juan sin miedo,tom pulgar,rumpelstiltskin,los doce meses
+Un instrumento de laboratorio|microscopio,probeta,tubo de ensayo,matraz,mechero,balanza|pipeta,bureta,placa de petri,vaso de precipitados,termometro,embudo|centrifuga,espectrometro,autoclave,incubadora,campana extractora,phmetro|colorimetro,mortero,agitador magnetico,desecador,crisol,kitasato|densimetro,viscosimetro,goniometro,polarimetro,refractometro,tamiz molecular
+Una ciudad de Estados Unidos|nueva york,los angeles,chicago,miami,las vegas,san francisco|washington,boston,houston,dallas,seattle,filadelfia|nueva orleans,atlanta,denver,phoenix,san diego,detroit|austin,portland,nashville,orlando,pittsburgh,san antonio|savannah,santa fe,honolulu,anchorage,charleston,duluth,albuquerque
+Una ciudad de Francia o Italia|paris,marsella,lyon,niza,burdeos,toulouse|estrasburgo,nantes,lille,montpellier,cannes,avignon|roma,milan,venecia,florencia,napoles,turin|bolonia,genova,verona,pisa,palermo,siena|rennes,limoges,perpinan,brescia,bari,lecce,trieste
+Un trabajo de oficina|secretaria,contable,recepcionista,administrativo,gerente,director|abogado,comercial,becario,analista,rrhh,programador|auditor,consultor,archivista,asesor fiscal,controller,teleoperador|gestor,notario,scrum master,community manager,project manager,jefe de ventas|actuario,paralegal,tasador,perito,gestor documental,archivero,planificador
+Una marca de comida|nestle,danone,coca cola,pepsi,kinder,nutella|oreo,lays,pringles,kelloggs,heinz,knorr|ferrero,lindt,milka,hacendado,pascual,campofrio|gallina blanca,la lechera,cola cao,nocilla,fontaneda,marilar|chupa chups,gullon,artiach,el pozo,pan bimbo,ybarra,litoral
+Una prueba de atletismo|100 metros,maraton,salto de longitud,salto de altura,lanzamiento de peso,jabalina|400 metros,1500 metros,relevos,vallas,pertiga,disco|martillo,triple salto,decatlon,heptatlon,marcha,3000 obstaculos|5000 metros,10000 metros,cross,media maraton,4x100,4x400|carrera de montana,ultramaraton,pentatlon,marcha 50 km,mixto 4x400,cross de invierno
+Un ruido|bocina,timbre,sirena,alarma,trueno,aplauso|grito,silbido,ladrido,maullido,campana,motor|portazo,estornudo,ronquido,goteo,chasquido,zumbido|susurro,gorgoteo,cremallera,chirrido,tecleo,burbujeo|crujido,tintineo,siseo,rechinar,rumor,estallido,borboteo
+Un sentimiento|alegria,tristeza,miedo,rabia,amor,odio|envidia,celos,verguenza,orgullo,esperanza,nostalgia|ansiedad,culpa,soledad,euforia,asco,sorpresa|melancolia,calma,desconfianza,gratitud,ternura,aburrimiento|saudade,schadenfreude,hiraeth,desazon,anhelo,congoja,desasosiego
+Un tipo de coche|todoterreno,deportivo,furgoneta,utilitario,familiar,berlina|suv,monovolumen,cabrio,descapotable,coupe,pick up|limusina,hatchback,microcoche,roadster,crossover,gran turismo|furgon,buggy,hot rod,rally,dragster,kart|woody,pony car,muscle car,fastback,shooting brake,targa,kei car
+Un destino de vacaciones|playa,montana,campo,ciudad,crucero,camping|pueblo,balneario,parque nacional,isla,resort,hotel|apartamento,casa rural,ruta en coche,safari,esqui,termas|monasterio,faro,albergue,casa flotante,refugio,glamping|hotel iglu,casa del arbol,tren turistico,velero,ashram,hotel cueva
+Una seta|champinon,seta de cardo,boletus,nispero,rebozuelo,amanita|colmenilla,trufa,shiitake,girgola,orellana,senderuela|rovellon,lengua de vaca,seta de ostra,perrechico,pie azul,cantarela|oronja,matamoscas,yesca,cuerno de abundancia,coprino,pie violeta|cordyceps,melena de leon,reishi,pie de cabra,sombrilla,cuesco de lobo
+Un compositor de música clásica|mozart,beethoven,bach,vivaldi,chopin,tchaikovsky|verdi,wagner,haydn,schubert,brahms,debussy|rachmaninov,mahler,liszt,ravel,falla,albeniz|granados,rodrigo,sarasate,paganini,rossini,satie|ligeti,messiaen,arvo part,xenakis,penderecki,cage,shostakovich
+Un cultivo|trigo,maiz,arroz,cebada,avena,centeno|patata,tomate,olivo,vid,girasol,remolacha|algodon,cana de azucar,soja,lino,tabaco,colza|cafe,cacao,te,lupulo,esparrago,alcachofa|quinoa,azafran,sorgo,mijo,teff,kamut,estevia
+Una masa de agua|rio,lago,mar,oceano,estanque,piscina|arroyo,charca,pantano,embalse,canal,cascada|laguna,delta,estuario,ria,fiordo,albufera|golfo,bahia,cala,estrecho,manantial,torrente|geiser,cenote,marisma,turbera,atolon,oasis,fuente termal`;
+X.split("\n").forEach(l=>{const p=l.split("|"),q=Q.find(x=>x[0]===p[0]);
+ if(q){for(let i=1;i<6;i++)if(p[i])q[1][i-1]+=","+p[i]}else if(p.length===6)Q.push([p[0],p.slice(1)])});
+
+// ── Utilidades ──
+const $=id=>document.getElementById(id);
+const norm=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zñ0-9 ]/g," ").replace(/\s+/g," ").trim().replace(/^(el|la|los|las|un|una) /,"");
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()};
+const dayNum=()=>{const d=new Date();return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5)};
+let S;try{S=JSON.parse(localStorage.getItem("orbita"))}catch(e){}
+S=S||{d:0,last:"",res:null};
+const save=()=>{try{localStorage.setItem("orbita",JSON.stringify(S))}catch(e){}};
+const show=id=>["home","game","end"].forEach(x=>$(x).classList.toggle("hide",x!==id));
+const posOf=i=>(i/P.length*100)+"%";
+
+// ── Mapa del sistema solar ──
+function drawMap(rocketIdx){
+ let h='<div class="line"></div>';
+ h+=`<div class="node on" style="left:0"><i style="--c:#4f9dff;width:22px;height:22px"></i><span>Tierra</span></div>`;
+ P.forEach((p,i)=>{
+  const on=i<S.d;
+  h+=`<div class="node ${on?"on":"off"}" style="left:${posOf(i+1)}"><i style="--c:${p.c};width:${p.r}px;height:${p.r}px"></i><span>${on?p.n:"???"}</span></div>`;
+ });
+ h+=`<div class="rocket" id="rk" style="left:${posOf(rocketIdx)}">🚀</div>`;
+ $("map").innerHTML=h;
+}
+
+// ── Pantalla de inicio ──
+function home(){
+ drawMap(S.d);show("home");
+ if(S.d>=P.length){
+  $("goal").textContent="Has recorrido todo el sistema solar";
+  $("goalsub").textContent="Has descubierto los "+P.length+" planetas. Vuelve cuando haya nuevos destinos.";
+  $("go").classList.add("hide");return;
+ }
+ const p=P[S.d];
+ $("go").classList.remove("hide");
+ $("goal").textContent="Destino: "+(S.d===0?"el primer planeta":"el siguiente planeta");
+ $("goalsub").textContent="Necesitas "+p.t+" de 700 puntos para llegar. Cada día tienes un intento.";
+ if(S.last===today()){
+  $("go").textContent="Ver resultado de hoy";
+ }else $("go").textContent="Despegar";
+}
+
+// ── Partida ──
+let qs,qi,pts,log,tmr,t0,lookup;
+function dailyQs(){const s=(dayNum()*7)%Q.length;return Array.from({length:7},(_,i)=>Q[(s+i)%Q.length])}
+function start(){
+ if(S.last===today()&&S.res){return result(S.res,false)}
+ qs=dailyQs();qi=0;pts=0;log=[];show("game");next();
+}
+function next(){
+ clearInterval(tmr);
+ if(qi>=7)return finish();
+ const [text,tiers]=qs[qi];
+ lookup={};tiers.forEach((t,i)=>t.split(",").forEach(a=>lookup[norm(a)]=i));
+ $("qn").textContent="Pregunta "+(qi+1)+" de 7";$("pts").textContent=pts+" pts";
+ $("q").textContent=text;$("fb").textContent="";$("fb").className="fb";
+ $("inp").value="";$("inp").disabled=true;$("send").disabled=true;
+ const bar=$("bar");bar.style.transition="none";bar.style.transform="scaleX(1)";
+ t0=Date.now()+3000;
+ tmr=setInterval(()=>{
+  const left=(t0+25000-Date.now())/1000;
+  if(Date.now()<t0){$("fb").textContent="Lee con calma… "+Math.ceil((t0-Date.now())/1000);return}
+  if($("inp").disabled){$("inp").disabled=false;$("send").disabled=false;$("inp").focus();$("fb").textContent="";
+   bar.style.transition="transform 25s linear";bar.style.transform="scaleX(0)"}
+  if(left<=0){clearInterval(tmr);log.push(0);$("fb").textContent="Se acabó el tiempo";$("fb").className="fb ko";lock();setTimeout(()=>{qi++;next()},1100)}
+ },100);
+}
+function lock(){$("inp").disabled=true;$("send").disabled=true}
+function dist(x,y,max){
+ if(Math.abs(x.length-y.length)>max)return max+1;
+ let p=Array.from({length:y.length+1},(_,j)=>j);
+ for(let i=1;i<=x.length;i++){const c=[i];
+  for(let j=1;j<=y.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(x[i-1]===y[j-1]?0:1));
+  p=c}
+ return p[y.length]}
+function match(a){
+ if(a in lookup)return a;
+ for(const v of [a.replace(/(es|s)$/,""),a.replace(/s$/,""),a+"s",a+"es"])if(v&&v in lookup)return v;
+ return null}
+function suggest(a){
+ if(a.length<3)return null;
+ const max=a.length>=7?2:1;let best=null,bd=max+1;
+ for(const k in lookup){const d=dist(a,k,max);if(d<bd){bd=d;best=k}}
+ return best}
+function submit(){
+ if($("inp").disabled)return;
+ const a0=norm($("inp").value);if(!a0)return;
+ const a=match(a0);
+ if(a===null){
+  const f=$("fb"),sg=suggest(a0);f.className="fb ko";f.textContent="No la acepta. ";
+  if(sg){f.append("¿Has querido decir ");const b=document.createElement("button");b.type="button";b.className="sug";b.textContent=sg;
+   b.onclick=()=>{$("inp").value=sg;submit()};f.append(b,"?")}else f.append("Prueba otra.");
+  $("inp").select();return}
+ clearInterval(tmr);lock();
+ const [nm,pt]=TIER[lookup[a]];pts+=pt;log.push(lookup[a]+1);
+ $("pts").textContent=pts+" pts";
+ $("fb").textContent=nm+": +"+pt;$("fb").className="fb ok";
+ setTimeout(()=>{qi++;next()},1200);
+}
+function finish(){
+ const p=P[S.d],ok=pts>=p.t;
+ const res={pts,ok,target:p.n,need:p.t,log,day:dayNum()};
+ S.last=today();S.res=res;if(ok)S.d++;save();
+ result(res,true);
+}
+
+// ── Resultado ──
+function result(r,animate){
+ show("end");
+ const idx=P.findIndex(p=>p.n===r.target);
+ const from=r.ok?idx:idx,to=idx+1;
+ drawMap(animate?from:(r.ok?to:idx));
+ $("rpts").textContent=r.pts+" pts";
+ if(r.ok){
+  $("rmsg").textContent="¡Has descubierto "+r.target+"!";
+  $("rsub").textContent="Hacían falta "+r.need+". Mañana, rumbo al siguiente planeta.";
+  if(animate)setTimeout(()=>{$("rk").style.left=posOf(to);setTimeout(()=>{S.d=idx+1;drawMap(to)},2500)},150);
+ }else{
+  $("rmsg").textContent="Misión fracasada";
+  $("rsub").textContent="Hacían falta "+r.need+" para llegar a "+r.target+". Vuelve mañana y lo intentas otra vez.";
+  if(animate)setTimeout(()=>{$("rk").style.left=posOf(idx+0.45);setTimeout(()=>{$("rk").textContent="💥"},2400)},150);
+  else{$("rk").style.left=posOf(idx+0.45);$("rk").textContent="💥"}
+ }
+}
+function share(){
+ const r=S.res;if(!r)return;
+ const t="ÓRBITA #"+r.day+"\n"+r.log.map(x=>x?EMO[x-1]:"⬛").join("")+"\n"+r.pts+" pts · "+(r.ok?"¡"+r.target+" descubierto! 🚀":"Misión fracasada 💥")+"\n"+location.href;
+ if(navigator.share)navigator.share({text:t}).catch(()=>{});
+ else if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>$("share").textContent="¡Copiado!");
+}
+
+$("go").onclick=start;
+$("send").onclick=submit;
+$("inp").addEventListener("keydown",e=>{if(e.key==="Enter")submit()});
+$("share").onclick=share;
+$("reset").onclick=()=>{if(confirm("¿Borrar todo el progreso?")){S={d:0,last:"",res:null};save();home()}};
+home();
+['gesturestart','gesturechange','gestureend','dblclick'].forEach(e=>document.addEventListener(e,x=>x.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
+</script>
+</body>
+</html>
