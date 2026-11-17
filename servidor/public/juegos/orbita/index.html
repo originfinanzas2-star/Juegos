@@ -33,7 +33,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 #dash.on{opacity:.9}
 #dl{position:absolute;left:4px;top:9px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tc);white-space:nowrap}
 #tether{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
-#cap{position:absolute;left:50%;margin-left:-48px;top:calc(var(--y0) - 128px);width:96px;z-index:3}
+#cap{position:absolute;left:50%;margin-left:-32px;top:calc(var(--y0) - 82px);width:64px;z-index:3}
 #cap svg{display:block}
 #cap svg{overflow:visible}
 .flame{opacity:0;transition:opacity .3s}#cap.fire .flame{opacity:1}
@@ -42,10 +42,10 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 #cap.fire .flame path:nth-child(2n){animation-duration:.12s;animation-delay:-.05s}
 @keyframes fl{from{transform:scale(.9,.85)}to{transform:scale(1.08,1.2)}}
 .glow{opacity:0;transition:opacity .3s}#cap.fire .glow{opacity:1}
-.smoke{position:absolute;left:0;right:0;top:128px;height:0;opacity:0;transition:opacity .4s}#cap.fire .smoke{opacity:1}
-.smoke i{position:absolute;left:50%;top:0;width:30px;height:30px;margin-left:-15px;border-radius:50%;background:var(--tc);opacity:0}
+.smoke{position:absolute;left:0;right:0;top:92px;height:0;opacity:0;transition:opacity .4s}#cap.fire .smoke{opacity:1}
+.smoke i{position:absolute;left:50%;top:0;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:var(--tc);opacity:0}
 #cap.fire .smoke i{animation:pf 1.3s ease-out infinite;animation-delay:var(--w)}
-@keyframes pf{0%{transform:translate(0,0) scale(.5);opacity:.6}100%{transform:translate(var(--x),220px) scale(1.8);opacity:0}}
+@keyframes pf{0%{transform:translate(0,0) scale(.5);opacity:.6}100%{transform:translate(var(--x),150px) scale(1.8);opacity:0}}
 .bar{position:absolute;left:16px;right:16px;top:var(--top);display:flex;align-items:center;gap:9px;z-index:6;height:44px}
 .bar a{color:var(--tx);text-decoration:none;font-weight:300;letter-spacing:.1em;font-size:18px;white-space:nowrap}
 .rb{width:38px;height:38px;border-radius:50%;border:1.5px solid #3a4050;display:grid;place-items:center;flex:none}
@@ -111,7 +111,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
    <path d="M20 10Q24 6.5 29.5 8.5" stroke="#fff" stroke-opacity=".65" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="29.5" cy="17" r="1" fill="#fff" opacity=".35"/>
    <path d="M29 26L35 30" stroke="#f4f5f8" stroke-width="7" stroke-linecap="round"/><rect x="29.5" y="22.5" width="4.5" height="3" rx=".8" fill="#d4584c"/><circle cx="36.5" cy="31" r="3.9" fill="#6a7388"/>
   </g></g></svg>
- <div id="cap"><svg viewBox="0 0 96 124" width="96" height="124"><defs>
+ <div id="cap"><svg viewBox="0 0 96 124" width="64" height="83"><defs>
    <linearGradient id="cg" x1="0" x2="1"><stop offset="0" stop-color="#c4cad8"/><stop offset=".35" stop-color="#ffffff"/><stop offset=".7" stop-color="#e3e7ef"/><stop offset="1" stop-color="#a3abbd"/></linearGradient>
    <linearGradient id="sm" x1="0" x2="1"><stop offset="0" stop-color="#9aa3b5"/><stop offset=".4" stop-color="#eef0f5"/><stop offset="1" stop-color="#8f98ab"/></linearGradient>
    <radialGradient id="gl" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#8fd0ff"/><stop offset=".45" stop-color="#2a5d96"/><stop offset="1" stop-color="#0c1830"/></radialGradient>
@@ -377,11 +377,11 @@ function pl(i,sz,lock){
  return o+df+X[i]+"</svg>"}
 
 // ── Mundo (la Tierra, la regla y los planetas se desplazan al subir) ──
-const PPM=3.6;let Y0=500,alt=0,cur=0,lookup={};
+const PPM=35;let Y0=500,alt=0,cur=0,lookup={};
 const EARTH='<svg viewBox="0 0 480 120" preserveAspectRatio="none"><path d="M40 34q30-24 70-8t28 40-50 18-52-20z" fill="#3f5a48" opacity=".75"/><path d="M190 22q40-14 70 6t6 36-56 10-34-30z" fill="#aab4c0" opacity=".55"/><path d="M300 40q40-22 76-4t14 44-62 10-38-28z" fill="#3f5a48" opacity=".7"/><path d="M410 20q30-8 50 12t-18 34-40-16z" fill="#aab4c0" opacity=".5"/></svg>';
 function buildWorld(){
  let h=`<div id="earth" style="top:${Y0}px">${EARTH}</div>`;
- for(let a=10;a<=720;a+=10){const y=Y0-a*PPM,b=a%50===0;h+=`<i class="tk${b?" bg":""}" style="top:${y}px"></i>`;if(b)h+=`<span class="tl" style="top:${y-9}px">${a} m</span>`}
+ for(let a=1;a<=720;a++){const y=Y0-a*PPM,b=a%10===0;h+=`<i class="tk${b?" bg":""}" style="top:${y}px"></i>`;if(b)h+=`<span class="tl" style="top:${y-9}px">${a} m</span>`}
  P.forEach((p,i)=>{const y=Y0-p.t*PPM,got=i<S.d,tg=i===S.d;
   h+=`<div class="mk${tg?" tg":""}" style="top:${y}px"><div class="ml"></div><div class="mp">${pl(i,58,!got)}</div><div class="mt"><b style="color:${got?p.c1:tg?"#eceae4":"#6b7385"}">${got?p.n:tg?"Objetivo":"???"}</b><span>${p.t} m</span></div></div>`});
  $("world").innerHTML=h}
@@ -390,9 +390,9 @@ function setAlt(a,sec){const w=$("world");w.style.transition=sec?`transform ${se
  (function f(t){const k=ms?Math.min(1,(t-t0)/ms):1;$("av").textContent=Math.round(from+(a-from)*k);if(k<1)requestAnimationFrame(f)})(t0)}
 function layout(){Y0=Math.round(innerHeight*.6);document.documentElement.style.setProperty("--y0",Y0+"px");buildWorld();
  let s="";for(let i=0;i<70;i++)s+=`${Math.random()*innerWidth|0}px ${Math.random()*innerHeight|0}px 0 ${Math.random()<.2?1:0}px rgba(255,255,255,${(.15+Math.random()*.5).toFixed(2)}),`;$("stars").style.boxShadow=s.slice(0,-1)}
-function tick(t){const cx=innerWidth/2,ay=Y0-165+Math.sin(t/800)*9,ax=42+Math.sin(t/1100)*6;
- $("ast").setAttribute("transform",`translate(${ax.toFixed(1)} ${ay.toFixed(1)})`);$("astb").setAttribute("transform",`rotate(${(Math.sin(t/1300)*7).toFixed(1)} 20 28)`);
- const x0=ax+37,y0=ay+31,x1=cx-27,y1=Y0-60;
+function tick(t){const cx=innerWidth/2,ay=Y0-110+Math.sin(t/800)*8,ax=40+Math.sin(t/1100)*6;
+ $("ast").setAttribute("transform",`translate(${ax.toFixed(1)} ${ay.toFixed(1)}) scale(.68)`);$("astb").setAttribute("transform",`rotate(${(Math.sin(t/1300)*7).toFixed(1)} 20 28)`);
+ const x0=ax+25,y0=ay+21,x1=cx-19,y1=Y0-36;
  $("cord").setAttribute("d",`M${x0} ${y0}C${x0+(x1-x0)*.3} ${y0+55+Math.sin(t/500)*8},${x0+(x1-x0)*.7} ${y1+45-Math.sin(t/650)*8},${x1} ${y1}`);requestAnimationFrame(tick)}
 
 // ── Interfaz ──
