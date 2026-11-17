@@ -85,11 +85,18 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 .row>div:last-child{background:#14161c;padding:4px 8px;border-radius:10px;position:relative}.row .pp{flex:none}.row b{display:block;font-size:19px;letter-spacing:.1em;text-transform:uppercase}.row span{font:13px ui-monospace,Menlo,monospace;color:var(--mu)}.row em{display:block;font-style:normal;color:#aab0be;font-size:14px;margin-top:4px;line-height:1.3}
 #rs{display:block;margin:10px auto 40px;color:var(--mu);border:1px solid #2c3140;border-radius:12px;padding:10px 16px;font-size:14px}
 @media(max-height:720px){.res h3{font-size:42px}.res .ans{font-size:26px;margin-top:6px}.res .pt,.res .fl{font-size:17px;margin-top:6px}.res{top:calc(var(--top) + 64px)}.res .hp{width:86px;height:86px}}
+#vg{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 29% var(--y0),var(--pc,#fff) 0,transparent 58%)}
+#fly{position:absolute;right:16px;top:calc(var(--y0) + 38px);text-align:right;z-index:3;opacity:0;pointer-events:none;white-space:nowrap}
+#fly small{display:block;font-size:11px;font-weight:700;letter-spacing:.22em;color:var(--mu)}
+#fly b{display:block;font-size:38px;line-height:1.05;letter-spacing:.04em;text-transform:uppercase}
+#fly span{font:12px ui-monospace,Menlo,monospace;color:var(--mu)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
 <div id="stage">
  <div id="stars"></div>
+ <div id="vg"></div>
  <div id="world"></div>
+ <div id="fly"></div>
  <div id="dash"><span id="dl"></span></div>
  <div id="tu"><span>TÚ</span><i></i></div>
  <svg id="tether"><path id="cord" fill="none" stroke="#c9ced8" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 0"/>
@@ -150,15 +157,15 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 <script>
 // ── Planetas (los 4 últimos son inventados) ──
 const P=[
- {n:"Marte",t:300,c1:"#f0825a",c2:"#8a2f1c",d:"El planeta rojo. Tu primera parada."},
- {n:"Júpiter",t:350,c1:"#efd2a6",c2:"#a8643a",d:"Gigante de gas con una tormenta eterna."},
- {n:"Saturno",t:400,c1:"#f2dfa8",c2:"#b99a55",d:"Sus anillos son de hielo y roca."},
- {n:"Urano",t:450,c1:"#b5f1f3",c2:"#4aa8b4",d:"Gira tumbado, rodando sobre su órbita."},
- {n:"Neptuno",t:500,c1:"#6f8cff",c2:"#1c2f9c",d:"Vientos de más de 2.000 km/h."},
- {n:"Zafiron",t:550,c1:"#cfa8ff",c2:"#5a2fb0",d:"Un mundo de cristal violeta que canta con el viento."},
- {n:"Ignaris",t:600,c1:"#4a2a24",c2:"#120707",d:"Océanos de magma bajo un cielo de ceniza."},
- {n:"Aurelia",t:650,c1:"#ffe58a",c2:"#c4891e",d:"Nubes de oro líquido y dos lunas gemelas."},
- {n:"Nyxara",t:700,c1:"#6b2a86",c2:"#150820",d:"El último mundo: oscuro, con auroras rosas."}
+ {n:"Marte",t:350,c1:"#f0825a",c2:"#8a2f1c",d:"El planeta rojo. Tu primera parada."},
+ {n:"Júpiter",t:700,c1:"#efd2a6",c2:"#a8643a",d:"Gigante de gas con una tormenta eterna."},
+ {n:"Saturno",t:1050,c1:"#f2dfa8",c2:"#b99a55",d:"Sus anillos son de hielo y roca."},
+ {n:"Urano",t:1400,c1:"#b5f1f3",c2:"#4aa8b4",d:"Gira tumbado, rodando sobre su órbita."},
+ {n:"Neptuno",t:1750,c1:"#6f8cff",c2:"#1c2f9c",d:"Vientos de más de 2.000 km/h."},
+ {n:"Zafiron",t:2100,c1:"#cfa8ff",c2:"#5a2fb0",d:"Un mundo de cristal violeta que canta con el viento."},
+ {n:"Ignaris",t:2450,tc:"#ff8a4a",c1:"#4a2a24",c2:"#120707",d:"Océanos de magma bajo un cielo de ceniza."},
+ {n:"Aurelia",t:2800,c1:"#ffe58a",c2:"#c4891e",d:"Nubes de oro líquido y dos lunas gemelas."},
+ {n:"Nyxara",t:3150,tc:"#d58aff",c1:"#6b2a86",c2:"#150820",d:"El último mundo: oscuro, con auroras rosas."}
 ];
 const TIER=[["Troposfera",10,"#b9bfcb","Todo el mundo diría eso."],["Órbita",30,"#8fd0f0","Bien, pero vas con el grupo."],["Espacio profundo",60,"#6ee7b7","Ya empieza a faltar el aire."],["Borde exterior",85,"#b79cf0","Casi nadie llega hasta aquí."],["Supernova",100,"#ffbf5a","Aquí arriba estás solo."]];
 const EMO=["🟥","🟧","🟨","🟩","🟦"];
@@ -357,37 +364,85 @@ $("mute").onclick=()=>{MUTE=!MUTE;try{localStorage.omute=MUTE?"1":"0"}catch(e){}
 
 // ── Planetas dibujados ──
 let U=0;
+const AT=["#ff9a70","#ffe3b8","#f6e6b0","#c8fbff","#8fa8ff","#cfa8ff","#ff6a30","#ffd86a","#d070ff"];
+function defsOf(g,c1,c2,at,hl){return `<defs><radialGradient id="${g}" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient><radialGradient id="${g}s" cx=".3" cy=".25" r=".95"><stop offset=".45" stop-color="#0000"/><stop offset=".8" stop-color="#0007"/><stop offset="1" stop-color="#000d"/></radialGradient><radialGradient id="${g}h" cx=".3" cy=".22" r=".35"><stop offset="0" stop-color="#fff" stop-opacity="${hl}"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><radialGradient id="${g}a" cx=".5" cy=".5" r=".5"><stop offset=".72" stop-color="${at}" stop-opacity="0"/><stop offset=".76" stop-color="${at}" stop-opacity=".55"/><stop offset="1" stop-color="${at}" stop-opacity="0"/></radialGradient><clipPath id="${g}c"><circle cx="50" cy="50" r="30"/></clipPath><clipPath id="${g}f"><rect x="-20" y="50" width="140" height="70" transform="rotate(-20 50 50)"/></clipPath><clipPath id="${g}v"><rect x="50" y="-20" width="70" height="140" transform="rotate(12 50 50)"/></clipPath></defs>`}
 function pl(i,sz,lock){
  const g="g"+(U++),p=P[i],o=`<svg viewBox="0 0 100 100" width="${sz}" height="${sz}" style="overflow:visible">`;
  if(lock)return o+`<circle cx="50" cy="50" r="30" fill="#232836" stroke="#3a4152" stroke-width="2"/><text x="50" y="61" text-anchor="middle" font-size="30" fill="#4c556b" font-family="Anton,Impact">?</text></svg>`;
- const df=`<defs><radialGradient id="${g}" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="${p.c1}"/><stop offset="1" stop-color="${p.c2}"/></radialGradient><radialGradient id="${g}s" cx=".3" cy=".25" r=".9"><stop offset=".5" stop-color="#0000"/><stop offset="1" stop-color="#000b"/></radialGradient><clipPath id="${g}c"><circle cx="50" cy="50" r="30"/></clipPath><clipPath id="${g}f"><rect x="0" y="50" width="100" height="50" transform="rotate(-20 50 50)"/></clipPath><clipPath id="${g}v"><rect x="50" y="0" width="50" height="100" transform="rotate(12 50 50)"/></clipPath></defs>`;
- const base=`<circle cx="50" cy="50" r="30" fill="url(#${g})"/>`,sh=`<circle cx="50" cy="50" r="30" fill="url(#${g}s)"/>`,cl=`clip-path="url(#${g}c)"`;
- const ringS=`<ellipse cx="50" cy="50" rx="47" ry="11" fill="none" stroke="#e9d49a" stroke-width="5" transform="rotate(-20 50 50)"`;
- const ringU=`<ellipse cx="50" cy="50" rx="6" ry="43" fill="none" stroke="#c6f5f6" stroke-width="2" transform="rotate(12 50 50)"`;
+ const hl=(i===6||i===8)?.18:.55,df=defsOf(g,p.c1,p.c2,AT[i],hl);
+ const atm=`<circle cx="50" cy="50" r="40" fill="url(#${g}a)"/>`,base=`<circle cx="50" cy="50" r="30" fill="url(#${g})"/>`,cl=`clip-path="url(#${g}c)"`;
+ const fin=`<circle cx="50" cy="50" r="30" fill="url(#${g}s)"/><circle cx="50" cy="50" r="30" fill="url(#${g}h)"/>`;
+ const ringS=`<g transform="rotate(-20 50 50)" fill="none"><ellipse cx="50" cy="50" rx="48" ry="12" stroke="#cdb67a" stroke-width="2" opacity=".7"/><ellipse cx="50" cy="50" rx="42" ry="10.5" stroke="#f3dfa6" stroke-width="5" opacity=".95"/><ellipse cx="50" cy="50" rx="36" ry="9" stroke="#a88a4e" stroke-width="2.5" opacity=".85"/><ellipse cx="50" cy="50" rx="33" ry="8.2" stroke="#e6cf94" stroke-width="2" opacity=".8"/></g>`;
+ const ringU=`<g transform="rotate(12 50 50)" fill="none"><ellipse cx="50" cy="50" rx="7" ry="44" stroke="#d6fbfc" stroke-width="2" opacity=".85"/><ellipse cx="50" cy="50" rx="5" ry="40" stroke="#8fe3ea" stroke-width="1" opacity=".6"/></g>`;
+ const ringN=`<g transform="rotate(-20 50 50)" fill="none"><ellipse cx="50" cy="50" rx="46" ry="11" stroke="#ff4fb0" stroke-width="2" opacity=".75"/><ellipse cx="50" cy="50" rx="41" ry="9" stroke="#5ee9ff" stroke-width="1.5" opacity=".7"/></g>`;
+ const sp=(x,y,s)=>`<path d="M${x} ${y-s}l${s*.3} ${s*.7} ${s*.7} ${s*.3}-${s*.7} ${s*.3}-${s*.3} ${s*.7}-${s*.3}-${s*.7}-${s*.7}-${s*.3} ${s*.7}-${s*.3}z" fill="#fff"/>`;
  const X=[
- `${base}<g ${cl}><ellipse cx="38" cy="52" rx="11" ry="6" fill="#7a2a18" opacity=".5"/><ellipse cx="62" cy="63" rx="12" ry="5" fill="#7a2a18" opacity=".45"/><ellipse cx="50" cy="22" rx="13" ry="4" fill="#fff" opacity=".85"/><circle cx="63" cy="40" r="3" fill="#8a301c" opacity=".6"/></g>${sh}`,
- `${base}<g ${cl}><rect y="30" width="100" height="6" fill="#fff" opacity=".3"/><rect y="42" width="100" height="8" fill="#7a3f20" opacity=".35"/><rect y="56" width="100" height="6" fill="#fff" opacity=".28"/><rect y="66" width="100" height="7" fill="#7a3f20" opacity=".3"/><ellipse cx="60" cy="60" rx="7" ry="4" fill="#c4452d"/></g>${sh}`,
- `${ringS} opacity=".9"/>${base}<g ${cl}><rect y="38" width="100" height="5" fill="#8a6a2a" opacity=".3"/><rect y="52" width="100" height="6" fill="#fff" opacity=".25"/></g>${sh}<g clip-path="url(#${g}f)">${ringS}/></g>`,
- `${ringU} opacity=".8"/>${base}<g ${cl}><rect y="44" width="100" height="5" fill="#fff" opacity=".18"/></g>${sh}<g clip-path="url(#${g}v)">${ringU}/></g>`,
- `${base}<g ${cl}><ellipse cx="42" cy="55" rx="9" ry="5" fill="#0d1a66" opacity=".6"/><path d="M26 40q14-8 28 0M40 68q14 6 30-2" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/></g>${sh}`,
- `<circle cx="50" cy="50" r="36" fill="#a06bff" opacity=".15"/>${base}<path d="M50 20L72 40L66 70L50 80L34 70L28 40Z M50 20V80M28 40H72M34 70H66" stroke="#fff" opacity=".5" fill="none" stroke-width="1.3"/><path d="M72 22l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff"/>${sh}`,
- `<circle cx="50" cy="50" r="38" fill="#ff5a36" opacity=".22"/>${base}<g ${cl} fill="none" stroke-linecap="round"><path d="M28 46L42 52L48 42L60 54L74 46M46 62L54 72L66 66M40 36L50 30" stroke="#ff6a24" stroke-width="5" opacity=".5"/><path d="M28 46L42 52L48 42L60 54L74 46M46 62L54 72L66 66M40 36L50 30" stroke="#ffd36e" stroke-width="1.8"/></g>${sh}`,
- `<circle cx="14" cy="30" r="4" fill="#fff1b0"/><circle cx="88" cy="72" r="3" fill="#f5d36a"/>${base}<g ${cl} fill="none" stroke="#fff6c8" stroke-width="2.5" opacity=".55"><path d="M24 42q20-10 52 0M22 54q28 12 56-2M30 68q22-8 40 4"/></g>${sh}`,
- `<ellipse cx="50" cy="50" rx="44" ry="12" fill="none" stroke="#ff4fb0" stroke-width="2" opacity=".7" transform="rotate(25 50 50)"/><ellipse cx="50" cy="50" rx="40" ry="9" fill="none" stroke="#5ee9ff" stroke-width="1.5" opacity=".6" transform="rotate(25 50 50)"/>${base}<g ${cl}><circle cx="38" cy="40" r="14" fill="#ff4fb0" opacity=".3"/><circle cx="62" cy="62" r="12" fill="#8a5cff" opacity=".35"/><circle cx="55" cy="35" r="1.5" fill="#fff"/><circle cx="40" cy="64" r="1.2" fill="#fff"/><circle cx="68" cy="48" r="1.2" fill="#fff"/></g>${sh}`];
+ // Marte
+ `${atm}${base}<g ${cl}><path d="M16 52q10-9 21-4t15 11q-8 9-19 6t-17-13z" fill="#5e1c10" opacity=".5"/><path d="M52 62q10-7 23-2t6 13q-13 7-26 0t-3-11z" fill="#6e2414" opacity=".45"/><path d="M30 34q9-7 20-3t4 9q-11 5-22 0z" fill="#d06a40" opacity=".55"/><path d="M28 57q16 5 36 1" stroke="#4e150a" stroke-width="2.4" fill="none" opacity=".6" stroke-linecap="round"/><path d="M34 56l4 6M44 59l3 6M54 59l3 5" stroke="#4e150a" stroke-width="1.2" opacity=".5"/><ellipse cx="50" cy="20" rx="16" ry="5.5" fill="#fff" opacity=".92"/><ellipse cx="50" cy="81" rx="12" ry="4" fill="#fff" opacity=".6"/><circle cx="65" cy="42" r="4" fill="#5e1c10" opacity=".55"/><circle cx="64" cy="41" r="2.6" fill="#a8442a" opacity=".7"/><circle cx="35" cy="68" r="2.8" fill="#5e1c10" opacity=".5"/><circle cx="26" cy="42" r="1.8" fill="#5e1c10" opacity=".5"/></g>${fin}`,
+ // Júpiter
+ `${atm}${base}<g ${cl}><rect y="24" width="100" height="5" fill="#fff" opacity=".35"/><rect y="30" width="100" height="6" fill="#b8794a" opacity=".55"/><rect y="37" width="100" height="5" fill="#fff" opacity=".4"/><rect y="43" width="100" height="8" fill="#a65f35" opacity=".5"/><rect y="52" width="100" height="5" fill="#fff" opacity=".42"/><rect y="58" width="100" height="7" fill="#b8794a" opacity=".5"/><rect y="66" width="100" height="5" fill="#fff" opacity=".3"/><rect y="72" width="100" height="6" fill="#8e5230" opacity=".4"/><path d="M15 40q9-3 18 0t18 0 18 0 18 0M15 55q9 3 18 0t18 0 18 0 18 0" stroke="#7a3f20" stroke-width="1.2" fill="none" opacity=".45"/><ellipse cx="62" cy="61" rx="9" ry="5.5" fill="#c4452d"/><ellipse cx="62" cy="61" rx="5.5" ry="3" fill="#e5775a"/><path d="M52 60q10-7 20-1M54 66q10 4 18-2" stroke="#f9e3c6" stroke-width="1.2" fill="none" opacity=".6"/></g>${fin}`,
+ // Saturno
+ `${ringS}${base}<g ${cl}><rect y="30" width="100" height="5" fill="#fff" opacity=".22"/><rect y="38" width="100" height="6" fill="#8a6a2a" opacity=".3"/><rect y="47" width="100" height="5" fill="#fff" opacity=".25"/><rect y="55" width="100" height="7" fill="#9a7a38" opacity=".3"/><rect y="65" width="100" height="5" fill="#fff" opacity=".2"/><ellipse cx="50" cy="20" rx="14" ry="5" fill="#8f7a3a" opacity=".3"/></g>${fin}<g clip-path="url(#${g}f)">${ringS}</g>`,
+ // Urano
+ `${ringU}${atm}${base}<g ${cl}><rect y="24" width="100" height="10" fill="#fff" opacity=".18"/><rect y="46" width="100" height="4" fill="#fff" opacity=".14"/><rect y="62" width="100" height="6" fill="#2e8f9c" opacity=".2"/><ellipse cx="38" cy="30" rx="16" ry="9" fill="#fff" opacity=".22"/></g>${fin}<g clip-path="url(#${g}v)">${ringU}</g>`,
+ // Neptuno
+ `${atm}${base}<g ${cl}><path d="M16 34q17-6 34 0t34 0M16 62q17 6 34 0t34 0" stroke="#fff" stroke-width="1.6" fill="none" opacity=".35"/><rect y="46" width="100" height="4" fill="#0d1a66" opacity=".25"/><ellipse cx="40" cy="55" rx="9" ry="5" fill="#0a1560" opacity=".75"/><path d="M52 52q8-4 16-1M30 44q8-4 16-1M46 68q10 4 20-1" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/></g>${fin}`,
+ // Zafiron
+ `<circle cx="50" cy="50" r="40" fill="#a06bff" opacity=".18"/>${atm}${base}<g ${cl}><path d="M50 18L74 34L58 50Z" fill="#fff" opacity=".32"/><path d="M74 34L84 56L58 50Z" fill="#000" opacity=".16"/><path d="M50 18L58 50L34 40Z" fill="#fff" opacity=".14"/><path d="M34 40L58 50L46 70Z" fill="#000" opacity=".14"/><path d="M16 52L34 40L46 70Z" fill="#fff" opacity=".24"/><path d="M16 52L46 70L30 86Z" fill="#000" opacity=".2"/><path d="M46 70L58 50L84 56L70 84Z" fill="#fff" opacity=".12"/><path d="M46 70L70 84L30 86Z" fill="#5a2fb0" opacity=".3"/><path d="M50 18L74 34L58 50L34 40ZM34 40L16 52L46 70L58 50M58 50L84 56L70 84L46 70" fill="none" stroke="#fff" stroke-width=".9" opacity=".55"/></g>${fin}${sp(70,26,6)}${sp(24,70,3.5)}${sp(80,76,2.5)}`,
+ // Ignaris
+ `<circle cx="50" cy="50" r="40" fill="#ff5a36" opacity=".22"/><circle cx="50" cy="50" r="35" fill="#ff7a30" opacity=".16"/>${base}<g ${cl}><path d="M22 40q10-8 22-3t6 9q-12 4-26 0z" fill="#6a3a2c" opacity=".55"/><path d="M54 60q12-6 24 0t-4 12q-14 2-22-4z" fill="#5a2e22" opacity=".5"/></g><g ${cl} fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 48L36 54L44 42L58 56L76 46M44 66L54 76L68 68M38 34L50 28L62 36M58 56L62 70" stroke="#ff5a1a" stroke-width="6" opacity=".45"/><path d="M22 48L36 54L44 42L58 56L76 46M44 66L54 76L68 68M38 34L50 28L62 36M58 56L62 70" stroke="#ffd36e" stroke-width="1.8"/></g>${fin}<circle cx="76" cy="26" r="1.6" fill="#ffb066"/><circle cx="22" cy="28" r="1.2" fill="#ff8a40"/><circle cx="82" cy="40" r="1" fill="#ffd36e"/>`,
+ // Aurelia
+ `<circle cx="50" cy="50" r="40" fill="#ffd86a" opacity=".16"/>${atm}${base}<g ${cl} fill="none" stroke-linecap="round"><path d="M16 38q20-12 66 0" stroke="#fff6c8" stroke-width="3" opacity=".55"/><path d="M14 52q30 14 72-2" stroke="#fff6c8" stroke-width="3.5" opacity=".5"/><path d="M18 66q24-10 60 4" stroke="#fff6c8" stroke-width="3" opacity=".45"/><path d="M24 30q16-6 44 2M20 76q28 8 56-6" stroke="#b07a14" stroke-width="2" opacity=".4"/><ellipse cx="60" cy="46" rx="8" ry="4" fill="#fff" opacity=".35" stroke="none"/><ellipse cx="38" cy="60" rx="9" ry="3.5" fill="#fff" opacity=".3" stroke="none"/></g>${fin}<circle cx="82" cy="24" r="5.5" fill="#f1dfae"/><circle cx="82" cy="24" r="5.5" fill="#0004" clip-path="inset(0 0 0 0)"/><circle cx="80.5" cy="22.5" r="3.2" fill="#fff6d6" opacity=".7"/><circle cx="17" cy="78" r="4" fill="#e8c874"/><circle cx="16" cy="77" r="2.2" fill="#fff0b8" opacity=".7"/>`,
+ // Nyxara
+ `${ringN}<circle cx="50" cy="50" r="40" fill="#9a3cc8" opacity=".18"/>${atm}${base}<g ${cl} fill="none" stroke-linecap="round"><path d="M20 38q14-14 30-6t30-6" stroke="#ff4fb0" stroke-width="9" opacity=".25"/><path d="M20 38q14-14 30-6t30-6" stroke="#ff7ac8" stroke-width="2.2" opacity=".9"/><path d="M24 46q14-10 28-4t26-6" stroke="#5ee9ff" stroke-width="7" opacity=".2"/><path d="M24 46q14-10 28-4t26-6" stroke="#8ff2ff" stroke-width="1.6" opacity=".85"/><circle cx="38" cy="64" r="5" fill="#150820" opacity=".6"/><circle cx="62" cy="60" r="3.4" fill="#150820" opacity=".6"/><circle cx="52" cy="72" r="2.4" fill="#150820" opacity=".55"/></g>${fin}<g clip-path="url(#${g}f)">${ringN}</g><circle cx="14" cy="22" r="1.2" fill="#fff"/><circle cx="88" cy="68" r="1.4" fill="#fff"/><circle cx="84" cy="18" r="1" fill="#ffd0f0"/>`
+ ];
  return o+df+X[i]+"</svg>"}
+function earth(sz){
+ const g="g"+(U++);
+ return `<svg viewBox="0 0 100 100" width="${sz}" height="${sz}" style="overflow:visible"><defs><radialGradient id="${g}" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#63b8ff"/><stop offset=".55" stop-color="#2b6fd0"/><stop offset="1" stop-color="#0c2878"/></radialGradient><radialGradient id="${g}l" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#86cc6c"/><stop offset=".7" stop-color="#4c9c54"/><stop offset="1" stop-color="#2c6a3a"/></radialGradient><radialGradient id="${g}s" cx=".3" cy=".25" r=".95"><stop offset=".45" stop-color="#0000"/><stop offset=".8" stop-color="#0007"/><stop offset="1" stop-color="#000d"/></radialGradient><radialGradient id="${g}h" cx=".3" cy=".22" r=".35"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><radialGradient id="${g}a" cx=".5" cy=".5" r=".5"><stop offset=".72" stop-color="#7cc4ff" stop-opacity="0"/><stop offset=".76" stop-color="#7cc4ff" stop-opacity=".65"/><stop offset="1" stop-color="#7cc4ff" stop-opacity="0"/></radialGradient><clipPath id="${g}c"><circle cx="50" cy="50" r="30"/></clipPath></defs><circle cx="50" cy="50" r="40" fill="url(#${g}a)"/><circle cx="50" cy="50" r="30" fill="url(#${g})"/><g clip-path="url(#${g}c)"><path d="M18 34q6-9 18-9t14 6q-2 7-9 9l-3 8q-5 3-7-1t-7-3-6-10z" fill="url(#${g}l)"/><path d="M40 55q7-3 11 2t1 12-6 10-6-6 0-10-2-8z" fill="url(#${g}l)"/><path d="M62 32q10-5 17 3t0 16-11 8-8-11 2-16z" fill="url(#${g}l)"/><path d="M64 46q6 1 7 6t-4 8-5-6z" fill="#d8bf78" opacity=".85"/><path d="M26 36q5-2 8 1" stroke="#fff" stroke-width="1.2" fill="none" opacity=".5"/><ellipse cx="50" cy="19" rx="15" ry="4.5" fill="#fff" opacity=".9"/><ellipse cx="50" cy="82" rx="14" ry="4" fill="#fff" opacity=".85"/><path d="M20 46q14-8 28-2t24-4" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none" opacity=".6"/><path d="M26 64q14 6 30 0" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".55"/><path d="M58 70q8-2 16-8" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".5"/><ellipse cx="34" cy="28" rx="8" ry="2.4" fill="#fff" opacity=".55"/></g><circle cx="50" cy="50" r="30" fill="url(#${g}s)"/><circle cx="50" cy="50" r="30" fill="url(#${g}h)"/><circle cx="88" cy="16" r="5.5" fill="#cfd3da"/><circle cx="90" cy="18" r="5.5" fill="#0003"/><circle cx="86.5" cy="14.5" r="1.4" fill="#9aa0ab"/><circle cx="89" cy="19" r="1" fill="#9aa0ab"/></svg>`}
 
 // ── Mundo (la Tierra, la regla y los planetas se desplazan al subir) ──
-const PPM=35;let Y0=500,alt=0,cur=0,lookup={};
+const PPM=35,STEP=350,R1=16,R2=12;let Y0=500,cur=0,lookup={},OFF=0,raf=0,touched=new Set(),flyI=-1;
 const EARTH='<svg viewBox="0 0 480 120" preserveAspectRatio="none"><path d="M40 34q30-24 70-8t28 40-50 18-52-20z" fill="#3f5a48" opacity=".75"/><path d="M190 22q40-14 70 6t6 36-56 10-34-30z" fill="#aab4c0" opacity=".55"/><path d="M300 40q40-22 76-4t14 44-62 10-38-28z" fill="#3f5a48" opacity=".7"/><path d="M410 20q30-8 50 12t-18 34-40-16z" fill="#aab4c0" opacity=".5"/></svg>';
-function buildWorld(){
- let h=`<div id="earth" style="top:${Y0}px">${EARTH}</div>`;
- for(let a=1;a<=720;a++){const y=Y0-a*PPM,b=a%10===0;h+=`<i class="tk${b?" bg":""}" style="top:${y}px"></i>`;if(b)h+=`<span class="tl" style="top:${y-9}px">${a} m</span>`}
- P.forEach((p,i)=>{const y=Y0-p.t*PPM,got=i<S.d,tg=i===S.d;
-  h+=`<div class="mk${tg?" tg":""}" style="top:${y}px"><div class="ml"></div><div class="mp">${pl(i,58,!got)}</div><div class="mt"><b style="color:${got?p.c1:tg?"#eceae4":"#6b7385"}">${got?p.n:tg?"Objetivo":"???"}</b><span>${p.t} m</span></div></div>`});
- $("world").innerHTML=h}
-function setAlt(a,sec){const w=$("world");w.style.transition=sec?`transform ${sec}s cubic-bezier(.4,0,.2,1)`:"none";w.style.transform=`translateY(${a*PPM}px)`;
- const from=cur,t0=performance.now(),ms=sec*1000;cur=a;
- (function f(t){const k=ms?Math.min(1,(t-t0)/ms):1;$("av").textContent=Math.round(from+(a-from)*k);if(k<1)requestAnimationFrame(f)})(t0)}
+const bell=(d,R)=>d>=R?0:.5+.5*Math.cos(Math.PI*d/R);
+const cpName=d=>d?P[d-1].n:"la Tierra";
+function buildWorld(){OFF=Math.min(S.d,P.length)*STEP;
+ let h=OFF?"":`<div id="earth" style="top:${Y0}px">${EARTH}</div>`;
+ for(let a=Math.max(1,OFF-20);a<=OFF+720;a++){const y=Y0-(a-OFF)*PPM,b=a%10===0;h+=`<i class="tk${b?" bg":""}" style="top:${y}px"></i>`;if(b)h+=`<span class="tl" style="top:${y-9}px">${a} m</span>`}
+ P.forEach((p,i)=>{const y=Y0-(p.t-OFF)*PPM,got=i<S.d,tg=i===S.d,cp=i===S.d-1;
+  h+=`<div class="mk${tg?" tg":""}" data-i="${i}" style="top:${y}px"><div class="ml"></div><div class="mp">${pl(i,58,!got)}</div><div class="mt"><b style="color:${got?(p.tc||p.c1):tg?"#eceae4":"#6b7385"}">${got?p.n:tg?"Objetivo":"???"}</b><span>${p.t} m${cp?" · checkpoint":""}</span></div></div>`});
+ $("world").innerHTML=h;touched.clear();flyI=-1;flyOff()}
+function put(a){cur=a;$("world").style.transform=`translate3d(0,${(a-OFF)*PPM}px,0)`;$("av").textContent=Math.round(a)}
+function flyOff(){$("fly").style.opacity=0;$("vg").style.opacity=0}
+function planetFx(i,k){const mk=$("world").querySelector(`.mk[data-i="${i}"]`);if(!mk)return;const mp=mk.querySelector(".mp"),mt=mk.querySelector(".mt");
+ if(k<=0){mp.style.transform="";mp.style.filter="";mt.style.opacity="";return}
+ const p=P[i],tx=k*(innerWidth*.29-45),sc=1+3.2*k;
+ mp.style.transform=`translate(${tx.toFixed(1)}px,0) scale(${sc.toFixed(3)})`;
+ mp.style.filter=`drop-shadow(0 0 ${(k*34).toFixed(0)}px ${p.tc||p.c1})`;mt.style.opacity=Math.max(0,1-k*1.8).toFixed(2)}
+function reveal(i){const mk=$("world").querySelector(`.mk[data-i="${i}"]`);if(!mk||mk.dataset.rv)return;mk.dataset.rv=1;const p=P[i];
+ mk.querySelector(".mp").innerHTML=pl(i,58,false);const b=mk.querySelector(".mt b");b.textContent=p.n;b.style.color=p.tc||p.c1}
+function passes(from,to){return to>from?P.map((p,i)=>i).filter(i=>P[i].t>from&&P[i].t<=to):[]}
+function setAlt(a,sec,done){cancelAnimationFrame(raf);
+ if(!sec){touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1;put(a);return}
+ const from=cur,dist=Math.abs(a-from);if(!dist){done&&done();return}
+ const up=a>from,pls=up?passes(from,a):[],v0=pls.length?60:Math.min(70,Math.max(16,dist/1.4));
+ let x=from,last=performance.now();const peak=new Set();
+ (function f(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  const u=Math.min(1,Math.max(0,(x-from)/(a-from))),ease=.3+.7*Math.sin(Math.PI*u);
+  let best=-1,bk=0,mult=1;
+  pls.forEach(i=>{const d=Math.abs(x-P[i].t),p1=bell(d,R1),k=bell(d,R2);
+   if(p1>0){mult=Math.min(mult,.07+.93*Math.pow(1-p1,2));reveal(i);if(!touched.has(i)){touched.add(i);beep(110,1.4,"sine",.04)}}
+   if(k>0){planetFx(i,k);if(k>bk){bk=k;best=i}}
+   else if(touched.has(i)){planetFx(i,0);touched.delete(i)}
+   if(k>.92&&!peak.has(i)){peak.add(i);beep(523,.6,"triangle",.07);setTimeout(()=>beep(784,.7,"triangle",.06),140)}});
+  if(best>=0){const p=P[best],c=p.tc||p.c1;
+   if(flyI!==best){flyI=best;$("fly").innerHTML=`<small>SOBREVOLANDO</small><b class="an" style="color:${c}">${p.n}</b><span>${p.t} m</span>`;$("vg").style.setProperty("--pc",c+"55")}
+   $("fly").style.opacity=Math.min(1,bk*1.6).toFixed(2);$("vg").style.opacity=Math.min(1,bk*1.2).toFixed(2)}
+  else if(flyI>=0){flyOff();flyI=-1}
+  x+=(up?1:-1)*v0*ease*mult*dt;
+  if(up?x>=a:x<=a){put(a);touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1;done&&done();return}
+  put(x);raf=requestAnimationFrame(f)})(last)}
 function layout(){Y0=Math.round(innerHeight*.6);document.documentElement.style.setProperty("--y0",Y0+"px");buildWorld();
  let s="";for(let i=0;i<70;i++)s+=`${Math.random()*innerWidth|0}px ${Math.random()*innerHeight|0}px 0 ${Math.random()<.2?1:0}px rgba(255,255,255,${(.15+Math.random()*.5).toFixed(2)}),`;$("stars").style.boxShadow=s.slice(0,-1)}
 function tick(t){const cx=innerWidth/2,ay=Y0-110+Math.sin(t/800)*8,ax=40+Math.sin(t/1100)*6;
@@ -401,10 +456,10 @@ function dots(c){$("dots").innerHTML=Array.from({length:7},(_,i)=>`<i style="bac
 const card=on=>$("card").classList.toggle("off",!on),rs=h=>{$("res").classList.remove("hm");$("res").innerHTML=h;$("res").classList.toggle("off",!h)};
 const bot=h=>{$("bot").innerHTML=h};
 function home(){
- DC.length=0;dots(-1);card(false);$("dash").classList.remove("on");$("cap").classList.remove("fire");buildWorld();setAlt(0,0);
+ DC.length=0;dots(-1);card(false);$("dash").classList.remove("on");$("cap").classList.remove("fire");buildWorld();setAlt(S.d*STEP,0);
  if(S.d>=P.length){rs('<h3 class="an" style="color:#ffbf5a">Todos los planetas</h3><p class="fl">Has descubierto todos los planetas.</p>');bot('<button class="big gh" id="mp">Ver mapa</button>');$("mp").onclick=openMap;return}
  const p=P[S.d],played=S.last===today()&&S.res;
- rs(`<div class="hp">${pl(S.d,112,true)}</div><small>PRÓXIMO DESTINO</small><h3 class="an" style="color:#eceae4">${p.t} m</h3><p class="fl">Suma ${p.t} de 700 puntos. Un intento al día.</p>`);$("res").classList.add("hm");
+ rs(`<div class="hp">${pl(S.d,112,true)}</div><small>PRÓXIMO DESTINO</small><h3 class="an" style="color:#eceae4">${p.t} m</h3><p class="fl">Sales desde ${cpName(S.d)} (${S.d*STEP} m). Suma ${STEP} puntos para llegar. Un intento al día.</p>`);$("res").classList.add("hm");
  bot(played?`<p class="mu">Ya has despegado hoy. Vuelve mañana.</p><div class="two"><button class="big" id="go">Resultado</button><button class="big gh" id="mp">Mapa</button></div>`:`<div class="two"><button class="big" id="go">Despegar</button><button class="big gh" id="mp">Mapa</button></div>`);
  $("go").onclick=start;$("mp").onclick=openMap}
 let qs,qi,pts,log,tmr,ft;
@@ -426,28 +481,33 @@ function submit(){const raw=$("inp").value.trim(),a0=norm(raw);if(!a0)return;con
 function result(ti,txt){clearInterval(tmr);document.activeElement&&document.activeElement.blur();
  const ok=ti>=0,T=ok?TIER[ti]:["Sin respuesta",0,"#6b7385","Se agotó el tiempo."];
  pts+=T[1];log.push(ok?ti+1:0);DC[qi]=T[2];dots(qi);card(false);
- $("stage").style.setProperty("--tc",T[2]);$("dl").textContent=T[0]+" · "+pts;$("dash").classList.add("on");clearTimeout(ft);if(T[1]>0){$("cap").classList.add("fire");ft=setTimeout(()=>$("cap").classList.remove("fire"),1800)}
+ $("stage").style.setProperty("--tc",T[2]);$("dl").textContent=T[0]+" · "+pts;$("dash").classList.add("on");clearTimeout(ft);const tgt=S.d*STEP+pts,fly=passes(cur,tgt).length>0;if(T[1]>0)$("cap").classList.add("fire");
  rs(`<h3 class="an">${T[0]}</h3><b class="ans" id="an"></b><p class="pt">+${T[1]} puntos<span> · ${T[1]} m más arriba</span></p><p class="fl">${T[3]}</p>`);$("an").textContent=ok?cap(txt):"—";
- setAlt(pts,1.8);beep(ok?220+ti*130:120,.35,"triangle",.09);
- bot(`<button class="big" id="nx">${qi>=6?"Ver resultado":"Seguir subiendo"}</button>`);$("nx").onclick=()=>{if(qi>=6)finish();else{qi++;next()}}}
-function finish(){const p=P[S.d],ok=pts>=p.t,r={pts,ok,target:p.n,idx:S.d,need:p.t,log,day:dayNum()};S.last=today();S.res=r;if(ok)S.d++;save();showEnd(r,true)}
-function showEnd(r,anim){card(false);$("dash").classList.remove("on");$("cap").classList.remove("fire");buildWorld();setAlt(r.pts,0);dots(-1);
- const p=P[r.idx];
- rs(r.ok?`<div class="hp">${pl(r.idx,112)}</div><h3 class="an" style="color:${p.c1}">${p.n}</h3><p class="pt" style="color:${p.c1}">¡Planeta descubierto!</p><p class="fl">${p.d}<br>${r.pts} m · hacían falta ${r.need}</p>`
- :`<h3 class="an" style="color:#ff6b5e">Misión fracasada</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar a ${r.target}.<br>Mañana, otro intento.</p>`);
+ beep(ok?220+ti*130:120,.35,"triangle",.09);
+ bot(`<button class="big" id="nx"${fly?' disabled style="opacity:.35"':""}>${qi>=6?"Ver resultado":"Seguir subiendo"}</button>`);$("nx").onclick=()=>{if(qi>=6)finish();else{qi++;next()}};
+ setAlt(tgt,1.8,()=>{$("cap").classList.remove("fire");const n=$("nx");if(n){n.disabled=false;n.style.opacity=""}})}
+function finish(){const from=S.d,base=from*STEP,to=Math.min(P.length,Math.floor((base+pts)/STEP)),ok=to>from,idx=ok?to-1:from,p=P[idx],
+ r={pts,ok,target:p.n,idx,from,to,need:P[from].t-base,log,day:dayNum()};S.last=today();S.res=r;S.d=to;save();showEnd(r,true)}
+function showEnd(r,anim){card(false);$("dash").classList.remove("on");$("cap").classList.remove("fire");
+ const from=r.from!==undefined?r.from:r.idx,to=r.to!==undefined?r.to:(r.ok?r.idx+1:from),base=from*STEP;
+ buildWorld();dots(-1);setAlt(r.ok||anim?base+r.pts:base,0);
+ const p=P[r.idx],c=p.tc||p.c1,also=to-from>1?`<br>Antes sobrevolaste ${P.slice(from,to-1).map(x=>x.n).join(" y ")}.`:"";
+ rs(r.ok?`<div class="hp">${pl(r.idx,112)}</div><h3 class="an" style="color:${c}">${p.n}</h3><p class="pt" style="color:${c}">¡Planeta descubierto!</p><p class="fl">${p.d}<br>Sumaste ${r.pts} · hacían falta ${r.need}.${also}<br>Checkpoint: ${p.n} (${p.t} m)</p>`
+ :`<h3 class="an" style="color:#ff6b5e">Misión fracasada</h3><p class="pt" style="color:#ff6b5e">+${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar a ${r.target}.<br>Te quedas en ${cpName(from)} (checkpoint).<br>Mañana sales desde ahí.</p>`);
  bot('<div class="two"><button class="big" id="sh">Compartir</button><button class="big gh" id="mp">Mapa</button></div><button class="lnk" id="hm">Volver al inicio</button>');
- $("sh").onclick=()=>share(r);$("mp").onclick=openMap;$("hm").onclick=home;if(r.ok)beep(660,.5,"triangle",.1)}
+ $("sh").onclick=()=>share(r);$("mp").onclick=openMap;$("hm").onclick=home;if(r.ok)beep(660,.5,"triangle",.1);
+ if(!r.ok&&anim)setTimeout(()=>setAlt(base,1.4),900)}
 function share(r){const t="ÓRBITA #"+r.day+"\n"+r.log.map(x=>x?EMO[x-1]:"⬛").join("")+"\n"+r.pts+" m · "+(r.ok?"¡"+r.target+" descubierto! 🚀":"Misión fracasada 💥");
  if(navigator.share)navigator.share({text:t}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>{$("sh").textContent="¡Copiado!"})}
 function openMap(){const m=$("map");
  let h='<div class="mh"><b class="an" style="letter-spacing:.06em">PLANETAS</b><button id="mx" aria-label="Cerrar">✕</button></div><div class="ml2">';
- for(let i=P.length-1;i>=0;i--){const got=i<S.d;h+=`<div class="row ${i%2?"r":"l"}"><div class="pp">${pl(i,100,!got)}</div><div><b style="color:${got?P[i].c1:"#6b7385"}">${got?P[i].n:"???"}</b><span>${P[i].t} m</span><em>${got?P[i].d:i===S.d?"Tu próximo destino":"Sin descubrir"}</em></div></div>`}
- h+='<div class="row l"><div class="pp"><svg viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="30" fill="#3f7fd6"/><path d="M36 40q8-8 16 0t-6 10-10-10zM56 56q10-3 10 6t-10 3z" fill="#4f9a6a"/></svg></div><div><b>Tierra</b><span>0 m</span><em>Punto de partida</em></div></div></div><button id="rs">Reiniciar progreso</button>';
+ for(let i=P.length-1;i>=0;i--){const got=i<S.d;h+=`<div class="row ${i%2?"l":"r"}"><div class="pp">${pl(i,100,!got)}</div><div><b style="color:${got?(P[i].tc||P[i].c1):"#6b7385"}">${got?P[i].n:"???"}</b><span>${P[i].t} m</span><em>${got?P[i].d:i===S.d?"Tu próximo destino":"Sin descubrir"}</em></div></div>`}
+ h+='<div class="row l"><div class="pp">'+earth(100)+'</div><div><b>Tierra</b><span>0 m</span><em>Punto de partida</em></div></div></div><button id="rs">Reiniciar progreso</button>';
  m.innerHTML=h;m.style.display="block";m.scrollTop=m.scrollHeight;
  $("mx").onclick=()=>{m.style.display="none"};$("rs").onclick=()=>{if(confirm("¿Borrar todo el progreso?")){S={d:0,last:"",res:null};save();m.style.display="none";home()}}}
 ['gesturestart','gesturechange','gestureend','dblclick'].forEach(e=>document.addEventListener(e,x=>x.preventDefault(),{passive:false}));
 document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
-addEventListener("resize",()=>{layout();setAlt(cur,0)});
+addEventListener("resize",()=>{const c=cur;layout();setAlt(c,0)});
 layout();home();requestAnimationFrame(tick);
 </script>
 </body></html>
