@@ -1,103 +1,123 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
+<html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-title" content="Órbita">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>ÓRBITA · El viaje diario por el sistema solar</title>
-<meta name="description" content="Cada día 7 preguntas. Cuanto más rara tu respuesta, más lejos llega tu cohete. ¿Cuántos planetas descubrirás?">
-<meta name="theme-color" content="#0b1222">
+<meta name="theme-color" content="#15171e">
+<title>ÓRBITA</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b1222;--tx:#e8ecf5;--mu:#8791ab;--ac:#ffb84d;--ko:#ff6b5e;--ok:#6be3a0;--ln:#232a40}
-*{box-sizing:border-box;margin:0}
-html,body{min-height:100%}
-body{background:radial-gradient(120% 70% at 12% -8%,#3b5bdb55 0,transparent 60%),radial-gradient(90% 60% at 100% 30%,#7c3aed44 0,transparent 62%),linear-gradient(180deg,#0e1730,#0a1020) fixed,var(--bg);-webkit-user-select:none;user-select:none;touch-action:manipulation;overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%;color:var(--tx);font:500 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;padding:env(safe-area-inset-top) 18px env(safe-area-inset-bottom);display:flex;justify-content:center}
-main{width:100%;max-width:520px;padding:52px 0 40px}
-.bk{position:absolute;top:max(14px,env(safe-area-inset-top));left:16px;color:#9fb2cc;text-decoration:none;font-size:17px;padding:6px 4px}
-h1{font-size:2.2rem;letter-spacing:-.02em;line-height:1}
-.sub{color:var(--mu);margin:6px 0 26px}
-.map{position:relative;height:150px;margin:0 22px 8px}
-.line{position:absolute;left:0;right:0;top:56px;border-top:2px dashed var(--ln)}
-.node{position:absolute;top:56px;transform:translate(-50%,-50%);text-align:center}
-.node i{display:block;border-radius:50%;background:var(--c);margin:auto}
-.node.off i{background:var(--ln)}
-.node span{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);font-size:.6rem;color:var(--mu);white-space:nowrap}
-.node.on span{color:var(--tx)}
-.rocket{position:absolute;top:2px;font-size:1.7rem;transform:translateX(-50%) rotate(90deg);transition:left 2.4s cubic-bezier(.5,0,.2,1)}
-.card{border:1px solid var(--ln);border-radius:14px;padding:18px;margin:22px 0}
-.big{font-size:1.4rem;font-weight:700}
-.mu{color:var(--mu);font-size:.92rem}
-button{font:inherit;font-weight:700;background:var(--ac);color:#1a1200;border:0;border-radius:10px;padding:14px 20px;width:100%;cursor:pointer;margin-top:14px}
-button.g{background:transparent;color:var(--mu);border:1px solid var(--ln);font-weight:400}
-button:focus-visible,input:focus-visible{outline:3px solid var(--tx);outline-offset:2px}
-input{-webkit-user-select:text;user-select:text;font:inherit;width:100%;background:#121830;color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:14px;margin-top:14px}
-input:disabled{opacity:.4}
-.bar{height:6px;background:var(--ln);border-radius:3px;margin:18px 0 6px;overflow:hidden}
-.bar b{display:block;height:100%;width:100%;background:var(--ac);transform-origin:left}
-.q{font-size:1.5rem;font-weight:600;line-height:1.25;margin-top:18px;min-height:3.8em}
-.fb{min-height:1.6em;margin-top:10px;font-weight:600}
-.sug{display:inline;width:auto;margin:0 2px;padding:2px 10px;background:transparent;color:var(--ac);border:1px solid var(--ac);border-radius:8px;font-weight:700}
-.fb.ko{color:var(--ko)}.fb.ok{color:var(--ok)}
-.hud{display:flex;justify-content:space-between;color:var(--mu);font-size:.9rem}
-.res{font-size:3rem;font-weight:700;letter-spacing:-.03em}
-.hide{display:none}
-@media(prefers-reduced-motion:reduce){.rocket{transition:none}}
-</style>
-</head>
-<body>
-<main>
- <a class="bk" href="../../">‹ GamesTrackerz</a>
- <h1>ÓRBITA</h1>
- <p class="sub">7 preguntas al día. Cuanto más rara tu respuesta, más lejos llega el cohete.</p>
- <div class="map" id="map"></div>
-
- <section id="home">
-  <div class="card">
-   <div class="big" id="goal"></div>
-   <p class="mu" id="goalsub"></p>
-   <button id="go">Despegar</button>
-  </div>
-  <button class="g" id="reset" style="width:auto;padding:8px 12px;font-size:.8rem">Reiniciar progreso</button>
- </section>
-
- <section id="game" class="hide">
-  <div class="hud"><span id="qn"></span><span id="pts"></span></div>
-  <div class="bar"><b id="bar"></b></div>
-  <div class="q" id="q"></div>
-  <input id="inp" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Escribe tu respuesta" aria-label="Tu respuesta">
-  <div class="fb" id="fb" aria-live="polite"></div>
-  <button id="send">Enviar</button>
- </section>
-
- <section id="end" class="hide">
-  <div class="card">
-   <div class="res" id="rpts"></div>
-   <div class="big" id="rmsg"></div>
-   <p class="mu" id="rsub"></p>
-   <button id="share">Compartir resultado</button>
-  </div>
- </section>
-</main>
-
+:root{--bg:#15171e;--card:#222630;--tx:#eceae4;--mu:#8e94a3;--y0:500px;--tc:#8fd0f0;--top:max(12px,env(safe-area-inset-top))}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font:500 16px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation;overscroll-behavior:none;-webkit-touch-callout:none}
+button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
+.an{font-family:Anton,Impact,"Arial Narrow",sans-serif;font-weight:400}
+#stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(120% 60% at 50% 0,#1d212c,#15171e 70%)}
+#stars{position:absolute;left:0;top:0;width:2px;height:2px;border-radius:50%}
+#world{position:absolute;left:0;right:0;top:0;height:0}
+#earth{position:absolute;left:-70vw;width:240vw;height:240vw;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 6%,#8da0b4,#5b6e83 24%,#323d4c 52%,#1c222c);box-shadow:0 -4px 22px #6fa8e655;border-top:3px solid #7fb2e6aa}
+#earth svg{position:absolute;left:0;top:0;width:100%;height:34%}
+.tk{position:absolute;right:14px;width:9px;border-top:2px solid #ffffff22}.tk.bg{width:18px;border-color:#ffffff44}
+.tl{position:absolute;right:40px;font:12px ui-monospace,Menlo,monospace;color:#8e94a3;letter-spacing:.05em}
+.mk{position:absolute;left:0;right:0;height:0}
+.ml{position:absolute;left:0;right:0;border-top:1.5px dashed #ffffff1c}
+.mp{position:absolute;left:16px;top:-29px}.mk.tg .mp{filter:drop-shadow(0 0 10px #fff6)}
+.mt{position:absolute;left:84px;top:-20px;line-height:1.15}
+.mt b{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase}.mt span{font:12px ui-monospace,Menlo,monospace;color:var(--mu)}
+#tu{position:absolute;right:0;top:calc(var(--y0) - 17px);display:flex;align-items:center;z-index:3}
+#tu span{background:#7fb2e6;color:#12202e;font-weight:800;font-size:15px;padding:6px 12px;border-radius:20px 0 0 20px;margin-right:-1px}
+#tu i{width:56px;height:14px;background:linear-gradient(90deg,#7fb2e6,#7fb2e600);clip-path:polygon(0 0,100% 50%,0 100%)}
+#dash{position:absolute;left:12px;right:60px;top:calc(var(--y0) - 1px);border-top:3px dashed var(--tc);opacity:0;transition:opacity .4s;z-index:2}
+#dash.on{opacity:.9}
+#dl{position:absolute;left:4px;top:9px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tc);white-space:nowrap}
+#tether{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+#cap{position:absolute;left:50%;margin-left:-48px;top:calc(var(--y0) - 128px);width:96px;z-index:3}
+#cap svg{display:block}
+.flame{opacity:0}#cap.fire .flame{opacity:1;animation:fl .12s infinite alternate}
+@keyframes fl{to{transform:scaleY(1.25)}}
+.smoke{position:absolute;left:0;right:0;top:122px;height:0;opacity:0}#cap.fire .smoke{opacity:1}
+.smoke i{position:absolute;left:50%;top:0;width:30px;height:30px;margin-left:-15px;border-radius:50%;background:var(--tc);opacity:0}
+#cap.fire .smoke i{animation:pf 1.3s ease-out infinite;animation-delay:var(--w)}
+@keyframes pf{0%{transform:translate(0,0) scale(.5);opacity:.6}100%{transform:translate(var(--x),220px) scale(1.8);opacity:0}}
+.bar{position:absolute;left:16px;right:16px;top:var(--top);display:flex;align-items:center;gap:9px;z-index:6;height:44px}
+.bar a{color:var(--tx);text-decoration:none;font-weight:300;letter-spacing:.1em;font-size:18px;white-space:nowrap}
+.rb{width:38px;height:38px;border-radius:50%;border:1.5px solid #3a4050;display:grid;place-items:center;flex:none}
+.dots{display:flex;gap:6px;flex:1;justify-content:center}.dots i{width:11px;height:11px;border-radius:50%;background:#2c3140;transition:background .3s}
+.alt{display:flex;align-items:baseline;gap:4px;min-width:62px;justify-content:flex-end}.alt b{font-size:40px;line-height:1}.alt small{font-size:14px;color:var(--mu)}
+.card{position:absolute;left:16px;right:16px;top:calc(var(--top) + 58px);background:var(--card);border-radius:28px;padding:20px 24px 24px;z-index:5;transition:opacity .35s}
+.card small{display:block;letter-spacing:.22em;color:var(--mu);font-weight:700;font-size:13px}
+.card h2{font-size:clamp(30px,9.5vw,42px);line-height:1.03;margin-top:8px}
+.res{position:absolute;left:0;right:0;top:calc(var(--top) + 96px);text-align:center;z-index:5;padding:0 20px;transition:opacity .35s}
+.off{opacity:0;pointer-events:none}
+.res h3{font-size:clamp(44px,15vw,66px);line-height:1;text-transform:uppercase;color:var(--tc)}
+.res .ans{display:block;font-size:34px;font-weight:600;margin-top:10px}
+.res .pt{font-size:21px;font-weight:600;margin-top:6px;color:var(--tc)}.res .pt span{color:var(--mu);font-weight:500}
+.res .fl{font-size:21px;color:#aab0be;margin-top:14px}.res small{letter-spacing:.2em;color:var(--mu);font-weight:700;font-size:12px}
+.res .hp{margin:0 auto 2px;width:112px;height:112px}.res.hm{top:calc(var(--top) + 60px)}.res.hm h3{text-transform:none;font-size:56px}.res.hm .fl{font-size:16px;margin-top:8px}
+#bot{position:absolute;left:16px;right:16px;bottom:max(18px,env(safe-area-inset-bottom));z-index:7}
+.pill{margin:auto;width:fit-content;background:#22262fee;border-radius:30px;padding:16px 30px;font-size:19px}
+.inp{display:flex;align-items:center;gap:10px;border:2.5px solid #9fd0f0;border-radius:44px;background:#1b1e27f2;padding:6px}
+.tm{--p:0;width:56px;height:56px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(#3b4150 calc(var(--p)*1%),var(--tx) 0)}
+.tm b{width:46px;height:46px;border-radius:50%;background:var(--tx);color:#15171e;display:grid;place-items:center;font-size:21px;font-weight:800}
+.inp input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--tx);font:500 20px -apple-system,system-ui,sans-serif;-webkit-user-select:text;user-select:text}
+.inp input::placeholder{color:#6f7686}
+.lz{background:var(--tx);color:#15171e;font-weight:800;font-size:19px;border-radius:30px;padding:0 24px;height:56px;flex:none}
+.sg{min-height:34px;text-align:center;font-weight:600;color:#ff9a8f;margin-bottom:6px}
+.sg button{border:1.5px solid #9fd0f0;color:#9fd0f0;border-radius:14px;padding:3px 12px;margin:0 3px;font-weight:700}
+.big{display:block;width:100%;height:68px;border-radius:36px;background:#eeeeea;color:#16181f;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:18px}
+.big.gh{background:transparent;color:var(--tx);border:1.5px solid #3a4050}
+.two{display:flex;gap:10px}.two .big{flex:1;letter-spacing:.08em}
+.lnk{display:block;margin:12px auto 0;color:var(--mu);font-size:15px;padding:6px}
+.mu{color:var(--mu);text-align:center;margin-bottom:10px}
+#map{position:fixed;inset:0;background:#14161c;overflow-y:auto;z-index:20;display:none;-webkit-overflow-scrolling:touch}
+.mh{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:var(--top) 18px 12px;background:linear-gradient(#14161c 70%,#14161c00);font-size:22px}
+.mh button{width:40px;height:40px;border:1.5px solid #3a4050;border-radius:50%}
+.ml2{position:relative;padding-bottom:20px}.ml2::before{content:"";position:absolute;left:50%;top:30px;bottom:60px;border-left:2px dashed #ffffff22}
+.row{position:relative;display:flex;align-items:center;gap:12px;padding:10px 20px;min-height:140px}
+.row.l{padding-right:26%}.row.r{flex-direction:row-reverse;text-align:right;padding-left:26%}
+.row>div:last-child{background:#14161c;padding:4px 8px;border-radius:10px;position:relative}.row .pp{flex:none}.row b{display:block;font-size:19px;letter-spacing:.1em;text-transform:uppercase}.row span{font:13px ui-monospace,Menlo,monospace;color:var(--mu)}.row em{display:block;font-style:normal;color:#aab0be;font-size:14px;margin-top:4px;line-height:1.3}
+#rs{display:block;margin:10px auto 40px;color:var(--mu);border:1px solid #2c3140;border-radius:12px;padding:10px 16px;font-size:14px}
+@media(max-height:720px){.res h3{font-size:42px}.res .ans{font-size:26px;margin-top:6px}.res .pt,.res .fl{font-size:17px;margin-top:6px}.res{top:calc(var(--top) + 64px)}.res .hp{width:86px;height:86px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div id="stage">
+ <div id="stars"></div>
+ <div id="world"></div>
+ <div id="dash"><span id="dl"></span></div>
+ <div id="tu"><span>TÚ</span><i></i></div>
+ <svg id="tether"><path id="cord" fill="none" stroke="#c9ced8" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 0"/>
+  <g id="ast"><rect x="0" y="12" width="11" height="24" rx="4" fill="#9aa1b0"/><rect x="7" y="18" width="24" height="24" rx="9" fill="#f1f1ee"/><rect x="9" y="38" width="8" height="12" rx="4" fill="#e3e3e0"/><rect x="21" y="38" width="8" height="12" rx="4" fill="#e3e3e0"/><circle cx="20" cy="13" r="12" fill="#f6f6f3"/><ellipse cx="23" cy="13" rx="8" ry="6" fill="#1b2130"/><ellipse cx="25" cy="11" rx="2.5" ry="1.5" fill="#ffffff66"/><rect x="16" y="26" width="9" height="6" rx="2" fill="#aab4cc"/><rect x="27" y="22" width="3" height="3" fill="#d4584c"/></g></svg>
+ <div id="cap"><svg viewBox="0 0 96 124" width="96" height="124"><defs><linearGradient id="cg" x1="0" x2="1"><stop offset="0" stop-color="#f4f5f8"/><stop offset="1" stop-color="#b9bfcc"/></linearGradient></defs>
+  <path d="M46 14L44 2M50 14L54 0" stroke="#9aa1b0" stroke-width="1.5"/>
+  <path d="M30 16h36l10 58H20z" fill="url(#cg)"/><rect x="40" y="30" width="16" height="11" rx="3" fill="#1b2a3a"/><circle cx="45" cy="34" r="2" fill="#6fb4e8"/>
+  <path d="M22 50h5M24.5 47.5v5M69 50h5M71.5 47.5v5" stroke="#6b7385" stroke-width="2"/>
+  <rect x="20" y="74" width="56" height="26" rx="3" fill="#e1e4ea"/><rect x="25" y="80" width="12" height="12" fill="#2d5d8c"/><rect x="42" y="80" width="12" height="12" fill="#cfd4de"/><rect x="62" y="80" width="8" height="12" fill="#e0b050"/>
+  <path d="M26 100h14l-2 14H28zM41 100h14l-1 14H42zM56 100h14l-2 14H58z" fill="#5a6171"/>
+  <g class="flame" style="transform-origin:48px 114px"><ellipse cx="33" cy="118" rx="5" ry="9" fill="#ffb84d"/><ellipse cx="48" cy="118" rx="5" ry="10" fill="#ffd36e"/><ellipse cx="63" cy="118" rx="5" ry="9" fill="#ffb84d"/></g></svg>
+  <div class="smoke"><i style="--w:0s;--x:-6px"></i><i style="--w:.2s;--x:8px"></i><i style="--w:.4s;--x:-10px"></i><i style="--w:.6s;--x:4px"></i><i style="--w:.8s;--x:-4px"></i><i style="--w:1s;--x:10px"></i></div></div>
+ <div class="bar"><a href="../../">‹ ÓRBITA</a><button class="rb" id="mute" aria-label="Sonido"></button><div class="dots" id="dots"></div><div class="alt"><b class="an" id="av">0</b><small>m</small></div></div>
+ <div class="card off" id="card"><small id="qn"></small><h2 class="an" id="q"></h2></div>
+ <div class="res" id="res"></div>
+ <div id="bot"></div>
+ <div id="map"></div>
+</div>
 <script>
-// ── Planetas (orden desde la Tierra; los 4 últimos son inventados) y puntos necesarios ──
+// ── Planetas (los 4 últimos son inventados) ──
 const P=[
- {n:"Marte",t:300,c:"#d9603b",r:14},
- {n:"Júpiter",t:350,c:"#d8a76a",r:28},
- {n:"Saturno",t:400,c:"#e3cf8f",r:24},
- {n:"Urano",t:450,c:"#8fdde0",r:20},
- {n:"Neptuno",t:500,c:"#4a6cf0",r:20},
- {n:"Zafiron",t:550,c:"#b784ff",r:22},
- {n:"Ignaris",t:600,c:"#ff5a36",r:18},
- {n:"Aurelia",t:650,c:"#ffd84d",r:26},
- {n:"Nyxara",t:700,c:"#e84fa8",r:22}
+ {n:"Marte",t:300,c1:"#f0825a",c2:"#8a2f1c",d:"El planeta rojo. Tu primera parada."},
+ {n:"Júpiter",t:350,c1:"#efd2a6",c2:"#a8643a",d:"Gigante de gas con una tormenta eterna."},
+ {n:"Saturno",t:400,c1:"#f2dfa8",c2:"#b99a55",d:"Sus anillos son de hielo y roca."},
+ {n:"Urano",t:450,c1:"#b5f1f3",c2:"#4aa8b4",d:"Gira tumbado, rodando sobre su órbita."},
+ {n:"Neptuno",t:500,c1:"#6f8cff",c2:"#1c2f9c",d:"Vientos de más de 2.000 km/h."},
+ {n:"Zafiron",t:550,c1:"#cfa8ff",c2:"#5a2fb0",d:"Un mundo de cristal violeta que canta con el viento."},
+ {n:"Ignaris",t:600,c1:"#4a2a24",c2:"#120707",d:"Océanos de magma bajo un cielo de ceniza."},
+ {n:"Aurelia",t:650,c1:"#ffe58a",c2:"#c4891e",d:"Nubes de oro líquido y dos lunas gemelas."},
+ {n:"Nyxara",t:700,c1:"#6b2a86",c2:"#150820",d:"El último mundo: oscuro, con auroras rosas."}
 ];
-const TIER=[["Troposfera",10],["Órbita",30],["Espacio profundo",60],["Borde exterior",85],["Supernova",100]];
+const TIER=[["Troposfera",10,"#b9bfcb","Todo el mundo diría eso."],["Órbita",30,"#8fd0f0","Bien, pero vas con el grupo."],["Espacio profundo",60,"#6ee7b7","Ya empieza a faltar el aire."],["Borde exterior",85,"#b79cf0","Casi nadie llega hasta aquí."],["Supernova",100,"#ffbf5a","Aquí arriba estás solo."]];
 const EMO=["🟥","🟧","🟨","🟩","🟦"];
-
 // ── Preguntas: [enunciado, [nivel10, nivel30, nivel60, nivel85, nivel100]] (sin tildes) ──
 const Q=[
 ["Un animal marino",["delfin,tiburon,ballena,pez","pulpo,medusa,tortuga,foca,orca,cangrejo,calamar,atun","estrella de mar,caballito de mar,pez luna,morena,manta raya,langosta,nautilo,pez globo","rape,nudibranquio,ofiura,pepino de mar,narval","dugongo,pez vela,lamprea,cachalote"]],
@@ -280,135 +300,110 @@ const dayNum=()=>{const d=new Date();return Math.floor(Date.UTC(d.getFullYear(),
 let S;try{S=JSON.parse(localStorage.getItem("orbita"))}catch(e){}
 S=S||{d:0,last:"",res:null};
 const save=()=>{try{localStorage.setItem("orbita",JSON.stringify(S))}catch(e){}};
-const show=id=>["home","game","end"].forEach(x=>$(x).classList.toggle("hide",x!==id));
-const posOf=i=>(i/P.length*100)+"%";
+function dist(x,y,max){if(Math.abs(x.length-y.length)>max)return max+1;let p=Array.from({length:y.length+1},(_,j)=>j);for(let i=1;i<=x.length;i++){const c=[i];for(let j=1;j<=y.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(x[i-1]===y[j-1]?0:1));p=c}return p[y.length]}
+function match(a){if(a in lookup)return a;for(const v of [a.replace(/(es|s)$/,""),a.replace(/s$/,""),a+"s",a+"es"])if(v&&v in lookup)return v;return null}
+function suggest(a){if(a.length<3)return null;const max=a.length>=7?2:1;let best=null,bd=max+1;for(const k in lookup){const d=dist(a,k,max);if(d<bd){bd=d;best=k}}return best}
+const dailyQs=()=>{const s=(dayNum()*7)%Q.length;return Array.from({length:7},(_,i)=>Q[(s+i)%Q.length])};
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+// ── Sonido ──
+let AC=null,MUTE=false;try{MUTE=localStorage.omute==="1"}catch(e){}
+function beep(f,d,t,v){if(MUTE)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=t||"sine";o.frequency.value=f;g.gain.setValueAtTime(v||.07,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+(d||.15));o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+(d||.15))}catch(e){}}
+function muteIcon(){$("mute").innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#eceae4" stroke-width="2" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9z"/>'+(MUTE?'<path d="M17 9l5 6M22 9l-5 6"/>':'<path d="M16 9c1.5 1.5 1.5 4.500 0 6M19 6.500c3 3 3 8 0 11"/>')+'</svg>'}
+$("mute").onclick=()=>{MUTE=!MUTE;try{localStorage.omute=MUTE?"1":"0"}catch(e){}muteIcon();beep(500,.1)};muteIcon();
 
-// ── Mapa del sistema solar ──
-function drawMap(rocketIdx){
- let h='<div class="line"></div>';
- h+=`<div class="node on" style="left:0"><i style="--c:#4f9dff;width:22px;height:22px"></i><span>Tierra</span></div>`;
- P.forEach((p,i)=>{
-  const on=i<S.d;
-  h+=`<div class="node ${on?"on":"off"}" style="left:${posOf(i+1)}"><i style="--c:${p.c};width:${p.r}px;height:${p.r}px"></i><span>${on?p.n:"???"}</span></div>`;
- });
- h+=`<div class="rocket" id="rk" style="left:${posOf(rocketIdx)}">🚀</div>`;
- $("map").innerHTML=h;
-}
+// ── Planetas dibujados ──
+let U=0;
+function pl(i,sz,lock){
+ const g="g"+(U++),p=P[i],o=`<svg viewBox="0 0 100 100" width="${sz}" height="${sz}" style="overflow:visible">`;
+ if(lock)return o+`<circle cx="50" cy="50" r="30" fill="#232836" stroke="#3a4152" stroke-width="2"/><text x="50" y="61" text-anchor="middle" font-size="30" fill="#4c556b" font-family="Anton,Impact">?</text></svg>`;
+ const df=`<defs><radialGradient id="${g}" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="${p.c1}"/><stop offset="1" stop-color="${p.c2}"/></radialGradient><radialGradient id="${g}s" cx=".3" cy=".25" r=".9"><stop offset=".5" stop-color="#0000"/><stop offset="1" stop-color="#000b"/></radialGradient><clipPath id="${g}c"><circle cx="50" cy="50" r="30"/></clipPath><clipPath id="${g}f"><rect x="0" y="50" width="100" height="50" transform="rotate(-20 50 50)"/></clipPath><clipPath id="${g}v"><rect x="50" y="0" width="50" height="100" transform="rotate(12 50 50)"/></clipPath></defs>`;
+ const base=`<circle cx="50" cy="50" r="30" fill="url(#${g})"/>`,sh=`<circle cx="50" cy="50" r="30" fill="url(#${g}s)"/>`,cl=`clip-path="url(#${g}c)"`;
+ const ringS=`<ellipse cx="50" cy="50" rx="47" ry="11" fill="none" stroke="#e9d49a" stroke-width="5" transform="rotate(-20 50 50)"`;
+ const ringU=`<ellipse cx="50" cy="50" rx="6" ry="43" fill="none" stroke="#c6f5f6" stroke-width="2" transform="rotate(12 50 50)"`;
+ const X=[
+ `${base}<g ${cl}><ellipse cx="38" cy="52" rx="11" ry="6" fill="#7a2a18" opacity=".5"/><ellipse cx="62" cy="63" rx="12" ry="5" fill="#7a2a18" opacity=".45"/><ellipse cx="50" cy="22" rx="13" ry="4" fill="#fff" opacity=".85"/><circle cx="63" cy="40" r="3" fill="#8a301c" opacity=".6"/></g>${sh}`,
+ `${base}<g ${cl}><rect y="30" width="100" height="6" fill="#fff" opacity=".3"/><rect y="42" width="100" height="8" fill="#7a3f20" opacity=".35"/><rect y="56" width="100" height="6" fill="#fff" opacity=".28"/><rect y="66" width="100" height="7" fill="#7a3f20" opacity=".3"/><ellipse cx="60" cy="60" rx="7" ry="4" fill="#c4452d"/></g>${sh}`,
+ `${ringS} opacity=".9"/>${base}<g ${cl}><rect y="38" width="100" height="5" fill="#8a6a2a" opacity=".3"/><rect y="52" width="100" height="6" fill="#fff" opacity=".25"/></g>${sh}<g clip-path="url(#${g}f)">${ringS}/></g>`,
+ `${ringU} opacity=".8"/>${base}<g ${cl}><rect y="44" width="100" height="5" fill="#fff" opacity=".18"/></g>${sh}<g clip-path="url(#${g}v)">${ringU}/></g>`,
+ `${base}<g ${cl}><ellipse cx="42" cy="55" rx="9" ry="5" fill="#0d1a66" opacity=".6"/><path d="M26 40q14-8 28 0M40 68q14 6 30-2" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/></g>${sh}`,
+ `<circle cx="50" cy="50" r="36" fill="#a06bff" opacity=".15"/>${base}<path d="M50 20L72 40L66 70L50 80L34 70L28 40Z M50 20V80M28 40H72M34 70H66" stroke="#fff" opacity=".5" fill="none" stroke-width="1.3"/><path d="M72 22l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff"/>${sh}`,
+ `<circle cx="50" cy="50" r="38" fill="#ff5a36" opacity=".22"/>${base}<g ${cl} fill="none" stroke-linecap="round"><path d="M28 46L42 52L48 42L60 54L74 46M46 62L54 72L66 66M40 36L50 30" stroke="#ff6a24" stroke-width="5" opacity=".5"/><path d="M28 46L42 52L48 42L60 54L74 46M46 62L54 72L66 66M40 36L50 30" stroke="#ffd36e" stroke-width="1.8"/></g>${sh}`,
+ `<circle cx="14" cy="30" r="4" fill="#fff1b0"/><circle cx="88" cy="72" r="3" fill="#f5d36a"/>${base}<g ${cl} fill="none" stroke="#fff6c8" stroke-width="2.5" opacity=".55"><path d="M24 42q20-10 52 0M22 54q28 12 56-2M30 68q22-8 40 4"/></g>${sh}`,
+ `<ellipse cx="50" cy="50" rx="44" ry="12" fill="none" stroke="#ff4fb0" stroke-width="2" opacity=".7" transform="rotate(25 50 50)"/><ellipse cx="50" cy="50" rx="40" ry="9" fill="none" stroke="#5ee9ff" stroke-width="1.5" opacity=".6" transform="rotate(25 50 50)"/>${base}<g ${cl}><circle cx="38" cy="40" r="14" fill="#ff4fb0" opacity=".3"/><circle cx="62" cy="62" r="12" fill="#8a5cff" opacity=".35"/><circle cx="55" cy="35" r="1.5" fill="#fff"/><circle cx="40" cy="64" r="1.2" fill="#fff"/><circle cx="68" cy="48" r="1.2" fill="#fff"/></g>${sh}`];
+ return o+df+X[i]+"</svg>"}
 
-// ── Pantalla de inicio ──
+// ── Mundo (la Tierra, la regla y los planetas se desplazan al subir) ──
+const PPM=3.6;let Y0=500,alt=0,cur=0,lookup={};
+const EARTH='<svg viewBox="0 0 480 120" preserveAspectRatio="none"><path d="M40 34q30-24 70-8t28 40-50 18-52-20z" fill="#3f5a48" opacity=".75"/><path d="M190 22q40-14 70 6t6 36-56 10-34-30z" fill="#aab4c0" opacity=".55"/><path d="M300 40q40-22 76-4t14 44-62 10-38-28z" fill="#3f5a48" opacity=".7"/><path d="M410 20q30-8 50 12t-18 34-40-16z" fill="#aab4c0" opacity=".5"/></svg>';
+function buildWorld(){
+ let h=`<div id="earth" style="top:${Y0}px">${EARTH}</div>`;
+ for(let a=10;a<=720;a+=10){const y=Y0-a*PPM,b=a%50===0;h+=`<i class="tk${b?" bg":""}" style="top:${y}px"></i>`;if(b)h+=`<span class="tl" style="top:${y-9}px">${a} m</span>`}
+ P.forEach((p,i)=>{const y=Y0-p.t*PPM,got=i<S.d,tg=i===S.d;
+  h+=`<div class="mk${tg?" tg":""}" style="top:${y}px"><div class="ml"></div><div class="mp">${pl(i,58,!got)}</div><div class="mt"><b style="color:${got?p.c1:tg?"#eceae4":"#6b7385"}">${got?p.n:tg?"Objetivo":"???"}</b><span>${p.t} m</span></div></div>`});
+ $("world").innerHTML=h}
+function setAlt(a,sec){const w=$("world");w.style.transition=sec?`transform ${sec}s cubic-bezier(.4,0,.2,1)`:"none";w.style.transform=`translateY(${a*PPM}px)`;
+ const from=cur,t0=performance.now(),ms=sec*1000;cur=a;
+ (function f(t){const k=ms?Math.min(1,(t-t0)/ms):1;$("av").textContent=Math.round(from+(a-from)*k);if(k<1)requestAnimationFrame(f)})(t0)}
+function layout(){Y0=Math.round(innerHeight*.6);document.documentElement.style.setProperty("--y0",Y0+"px");buildWorld();
+ let s="";for(let i=0;i<70;i++)s+=`${Math.random()*innerWidth|0}px ${Math.random()*innerHeight|0}px 0 ${Math.random()<.2?1:0}px rgba(255,255,255,${(.15+Math.random()*.5).toFixed(2)}),`;$("stars").style.boxShadow=s.slice(0,-1)}
+function tick(t){const cx=innerWidth/2,ay=Y0-165+Math.sin(t/800)*9,ax=42+Math.sin(t/1100)*6;
+ $("ast").setAttribute("transform",`translate(${ax.toFixed(1)} ${ay.toFixed(1)})`);
+ const x0=ax+30,y0=ay+30,x1=cx-26,y1=Y0-60;
+ $("cord").setAttribute("d",`M${x0} ${y0}C${x0+(x1-x0)*.3} ${y0+55+Math.sin(t/500)*8},${x0+(x1-x0)*.7} ${y1+45-Math.sin(t/650)*8},${x1} ${y1}`);requestAnimationFrame(tick)}
+
+// ── Interfaz ──
+const DC=[];
+function dots(c){$("dots").innerHTML=Array.from({length:7},(_,i)=>`<i style="background:${DC[i]||(i===c?"#eceae4":"#2c3140")}"></i>`).join("")}
+const card=on=>$("card").classList.toggle("off",!on),rs=h=>{$("res").classList.remove("hm");$("res").innerHTML=h;$("res").classList.toggle("off",!h)};
+const bot=h=>{$("bot").innerHTML=h};
 function home(){
- drawMap(S.d);show("home");
- if(S.d>=P.length){
-  $("goal").textContent="Has recorrido todo el sistema solar";
-  $("goalsub").textContent="Has descubierto los "+P.length+" planetas. Vuelve cuando haya nuevos destinos.";
-  $("go").classList.add("hide");return;
- }
- const p=P[S.d];
- $("go").classList.remove("hide");
- $("goal").textContent="Destino: "+(S.d===0?"el primer planeta":"el siguiente planeta");
- $("goalsub").textContent="Necesitas "+p.t+" de 700 puntos para llegar. Cada día tienes un intento.";
- if(S.last===today()){
-  $("go").textContent="Ver resultado de hoy";
- }else $("go").textContent="Despegar";
-}
-
-// ── Partida ──
-let qs,qi,pts,log,tmr,t0,lookup;
-function dailyQs(){const s=(dayNum()*7)%Q.length;return Array.from({length:7},(_,i)=>Q[(s+i)%Q.length])}
-function start(){
- if(S.last===today()&&S.res){return result(S.res,false)}
- qs=dailyQs();qi=0;pts=0;log=[];show("game");next();
-}
-function next(){
- clearInterval(tmr);
- if(qi>=7)return finish();
- const [text,tiers]=qs[qi];
- lookup={};tiers.forEach((t,i)=>t.split(",").forEach(a=>lookup[norm(a)]=i));
- $("qn").textContent="Pregunta "+(qi+1)+" de 7";$("pts").textContent=pts+" pts";
- $("q").textContent=text;$("fb").textContent="";$("fb").className="fb";
- $("inp").value="";$("inp").disabled=true;$("send").disabled=true;
- const bar=$("bar");bar.style.transition="none";bar.style.transform="scaleX(1)";
- t0=Date.now()+3000;
- tmr=setInterval(()=>{
-  const left=(t0+25000-Date.now())/1000;
-  if(Date.now()<t0){$("fb").textContent="Lee con calma… "+Math.ceil((t0-Date.now())/1000);return}
-  if($("inp").disabled){$("inp").disabled=false;$("send").disabled=false;$("inp").focus();$("fb").textContent="";
-   bar.style.transition="transform 25s linear";bar.style.transform="scaleX(0)"}
-  if(left<=0){clearInterval(tmr);log.push(0);$("fb").textContent="Se acabó el tiempo";$("fb").className="fb ko";lock();setTimeout(()=>{qi++;next()},1100)}
- },100);
-}
-function lock(){$("inp").disabled=true;$("send").disabled=true}
-function dist(x,y,max){
- if(Math.abs(x.length-y.length)>max)return max+1;
- let p=Array.from({length:y.length+1},(_,j)=>j);
- for(let i=1;i<=x.length;i++){const c=[i];
-  for(let j=1;j<=y.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(x[i-1]===y[j-1]?0:1));
-  p=c}
- return p[y.length]}
-function match(a){
- if(a in lookup)return a;
- for(const v of [a.replace(/(es|s)$/,""),a.replace(/s$/,""),a+"s",a+"es"])if(v&&v in lookup)return v;
- return null}
-function suggest(a){
- if(a.length<3)return null;
- const max=a.length>=7?2:1;let best=null,bd=max+1;
- for(const k in lookup){const d=dist(a,k,max);if(d<bd){bd=d;best=k}}
- return best}
-function submit(){
- if($("inp").disabled)return;
- const a0=norm($("inp").value);if(!a0)return;
- const a=match(a0);
- if(a===null){
-  const f=$("fb"),sg=suggest(a0);f.className="fb ko";f.textContent="No la acepta. ";
-  if(sg){f.append("¿Has querido decir ");const b=document.createElement("button");b.type="button";b.className="sug";b.textContent=sg;
-   b.onclick=()=>{$("inp").value=sg;submit()};f.append(b,"?")}else f.append("Prueba otra.");
-  $("inp").select();return}
- clearInterval(tmr);lock();
- const [nm,pt]=TIER[lookup[a]];pts+=pt;log.push(lookup[a]+1);
- $("pts").textContent=pts+" pts";
- $("fb").textContent=nm+": +"+pt;$("fb").className="fb ok";
- setTimeout(()=>{qi++;next()},1200);
-}
-function finish(){
- const p=P[S.d],ok=pts>=p.t;
- const res={pts,ok,target:p.n,need:p.t,log,day:dayNum()};
- S.last=today();S.res=res;if(ok)S.d++;save();
- result(res,true);
-}
-
-// ── Resultado ──
-function result(r,animate){
- show("end");
- const idx=P.findIndex(p=>p.n===r.target);
- const from=r.ok?idx:idx,to=idx+1;
- drawMap(animate?from:(r.ok?to:idx));
- $("rpts").textContent=r.pts+" pts";
- if(r.ok){
-  $("rmsg").textContent="¡Has descubierto "+r.target+"!";
-  $("rsub").textContent="Hacían falta "+r.need+". Mañana, rumbo al siguiente planeta.";
-  if(animate)setTimeout(()=>{$("rk").style.left=posOf(to);setTimeout(()=>{S.d=idx+1;drawMap(to)},2500)},150);
- }else{
-  $("rmsg").textContent="Misión fracasada";
-  $("rsub").textContent="Hacían falta "+r.need+" para llegar a "+r.target+". Vuelve mañana y lo intentas otra vez.";
-  if(animate)setTimeout(()=>{$("rk").style.left=posOf(idx+0.45);setTimeout(()=>{$("rk").textContent="💥"},2400)},150);
-  else{$("rk").style.left=posOf(idx+0.45);$("rk").textContent="💥"}
- }
-}
-function share(){
- const r=S.res;if(!r)return;
- const t="ÓRBITA #"+r.day+"\n"+r.log.map(x=>x?EMO[x-1]:"⬛").join("")+"\n"+r.pts+" pts · "+(r.ok?"¡"+r.target+" descubierto! 🚀":"Misión fracasada 💥")+"\n"+location.href;
- if(navigator.share)navigator.share({text:t}).catch(()=>{});
- else if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>$("share").textContent="¡Copiado!");
-}
-
-$("go").onclick=start;
-$("send").onclick=submit;
-$("inp").addEventListener("keydown",e=>{if(e.key==="Enter")submit()});
-$("share").onclick=share;
-$("reset").onclick=()=>{if(confirm("¿Borrar todo el progreso?")){S={d:0,last:"",res:null};save();home()}};
-home();
+ DC.length=0;dots(-1);card(false);$("dash").classList.remove("on");$("cap").classList.remove("fire");buildWorld();setAlt(0,0);
+ if(S.d>=P.length){rs('<h3 class="an" style="color:#ffbf5a">Sistema completado</h3><p class="fl">Has descubierto todos los planetas.</p>');bot('<button class="big gh" id="mp">Ver mapa</button>');$("mp").onclick=openMap;return}
+ const p=P[S.d],played=S.last===today()&&S.res;
+ rs(`<div class="hp">${pl(S.d,112,true)}</div><small>PRÓXIMO DESTINO</small><h3 class="an" style="color:#eceae4">${p.t} m</h3><p class="fl">Suma ${p.t} de 700 puntos. Un intento al día.</p>`);$("res").classList.add("hm");
+ bot(played?`<p class="mu">Ya has despegado hoy. Vuelve mañana.</p><div class="two"><button class="big" id="go">Resultado</button><button class="big gh" id="mp">Mapa</button></div>`:`<div class="two"><button class="big" id="go">Despegar</button><button class="big gh" id="mp">Mapa</button></div>`);
+ $("go").onclick=start;$("mp").onclick=openMap}
+let qs,qi,pts,log,tmr;
+function start(){if(S.last===today()&&S.res)return showEnd(S.res,false);beep(260,.2);qs=dailyQs();qi=0;pts=0;log=[];DC.length=0;rs("");next()}
+function next(){clearInterval(tmr);$("dash").classList.remove("on");$("cap").classList.remove("fire");rs("");
+ const [t,tiers]=qs[qi];lookup={};tiers.forEach((x,i)=>x.split(",").forEach(a=>lookup[norm(a)]=i));
+ $("qn").textContent="PREGUNTA "+(qi+1)+" DE 7";$("q").textContent=t;card(true);dots(qi);
+ bot('<div class="pill">El reloj empieza en <b id="cd">3</b></div>');const t0=Date.now();
+ tmr=setInterval(()=>{const r=3-Math.floor((Date.now()-t0)/1000);if(r>0){$("cd").textContent=r;return}clearInterval(tmr);answer()},150)}
+function answer(){const T=25000,t0=Date.now();
+ bot('<div class="sg" id="sg"></div><div class="inp"><div class="tm" id="tm"><b id="ts">25</b></div><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Tu respuesta" aria-label="Tu respuesta"><button class="lz" id="send">Lanzar</button></div>');
+ const i=$("inp");i.focus();i.onkeydown=e=>{if(e.key==="Enter")submit()};$("send").onclick=submit;
+ tmr=setInterval(()=>{const l=Math.max(0,T-(Date.now()-t0));$("ts").textContent=Math.ceil(l/1000);$("tm").style.setProperty("--p",(100-l/T*100).toFixed(1));if(l<=0){clearInterval(tmr);result(-1,"")}},100)}
+function submit(){const raw=$("inp").value.trim(),a0=norm(raw);if(!a0)return;const a=match(a0);
+ if(a===null){const sg=suggest(a0),g=$("sg");g.textContent="";
+  if(sg){g.append("¿Has querido decir ");const b=document.createElement("button");b.textContent=sg;b.onclick=()=>{$("inp").value=sg;submit()};g.append(b,"?")}else g.textContent="No la acepta. Prueba otra.";
+  $("inp").select();beep(140,.15,"square",.04);return}
+ clearInterval(tmr);result(lookup[a],raw)}
+function result(ti,txt){clearInterval(tmr);document.activeElement&&document.activeElement.blur();
+ const ok=ti>=0,T=ok?TIER[ti]:["Sin respuesta",0,"#6b7385","Se agotó el tiempo."];
+ pts+=T[1];log.push(ok?ti+1:0);DC[qi]=T[2];dots(qi);card(false);
+ $("stage").style.setProperty("--tc",T[2]);$("dl").textContent=T[0]+" · "+pts;$("dash").classList.add("on");$("cap").classList.add("fire");
+ rs(`<h3 class="an">${T[0]}</h3><b class="ans" id="an"></b><p class="pt">+${T[1]} puntos<span> · ${T[1]} m más arriba</span></p><p class="fl">${T[3]}</p>`);$("an").textContent=ok?cap(txt):"—";
+ setAlt(pts,1.8);beep(ok?220+ti*130:120,.35,"triangle",.09);
+ bot(`<button class="big" id="nx">${qi>=6?"Ver resultado":"Seguir subiendo"}</button>`);$("nx").onclick=()=>{if(qi>=6)finish();else{qi++;next()}}}
+function finish(){const p=P[S.d],ok=pts>=p.t,r={pts,ok,target:p.n,idx:S.d,need:p.t,log,day:dayNum()};S.last=today();S.res=r;if(ok)S.d++;save();showEnd(r,true)}
+function showEnd(r,anim){card(false);$("dash").classList.remove("on");$("cap").classList.remove("fire");buildWorld();setAlt(r.pts,0);dots(-1);
+ const p=P[r.idx];
+ rs(r.ok?`<div class="hp">${pl(r.idx,112)}</div><h3 class="an" style="color:${p.c1}">${p.n}</h3><p class="pt" style="color:${p.c1}">¡Planeta descubierto!</p><p class="fl">${p.d}<br>${r.pts} m · hacían falta ${r.need}</p>`
+ :`<h3 class="an" style="color:#ff6b5e">Misión fracasada</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar a ${r.target}.<br>Mañana, otro intento.</p>`);
+ bot('<div class="two"><button class="big" id="sh">Compartir</button><button class="big gh" id="mp">Mapa</button></div><button class="lnk" id="hm">Volver al inicio</button>');
+ $("sh").onclick=()=>share(r);$("mp").onclick=openMap;$("hm").onclick=home;if(r.ok)beep(660,.5,"triangle",.1)}
+function share(r){const t="ÓRBITA #"+r.day+"\n"+r.log.map(x=>x?EMO[x-1]:"⬛").join("")+"\n"+r.pts+" m · "+(r.ok?"¡"+r.target+" descubierto! 🚀":"Misión fracasada 💥");
+ if(navigator.share)navigator.share({text:t}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>{$("sh").textContent="¡Copiado!"})}
+function openMap(){const m=$("map");
+ let h='<div class="mh"><b class="an" style="letter-spacing:.06em">MAPA DEL SISTEMA</b><button id="mx" aria-label="Cerrar">✕</button></div><div class="ml2">';
+ for(let i=P.length-1;i>=0;i--){const got=i<S.d;h+=`<div class="row ${i%2?"r":"l"}"><div class="pp">${pl(i,100,!got)}</div><div><b style="color:${got?P[i].c1:"#6b7385"}">${got?P[i].n:"???"}</b><span>${P[i].t} m</span><em>${got?P[i].d:i===S.d?"Tu próximo destino":"Sin descubrir"}</em></div></div>`}
+ h+='<div class="row l"><div class="pp"><svg viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="30" fill="#3f7fd6"/><path d="M36 40q8-8 16 0t-6 10-10-10zM56 56q10-3 10 6t-10 3z" fill="#4f9a6a"/></svg></div><div><b>Tierra</b><span>0 m</span><em>Punto de partida</em></div></div></div><button id="rs">Reiniciar progreso</button>';
+ m.innerHTML=h;m.style.display="block";m.scrollTop=m.scrollHeight;
+ $("mx").onclick=()=>{m.style.display="none"};$("rs").onclick=()=>{if(confirm("¿Borrar todo el progreso?")){S={d:0,last:"",res:null};save();m.style.display="none";home()}}}
 ['gesturestart','gesturechange','gestureend','dblclick'].forEach(e=>document.addEventListener(e,x=>x.preventDefault(),{passive:false}));
 document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
+addEventListener("resize",()=>{layout();setAlt(cur,0)});
+layout();home();requestAnimationFrame(tick);
 </script>
-</body>
-</html>
+</body></html>
