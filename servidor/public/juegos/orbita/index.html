@@ -773,11 +773,11 @@ function submit(){const raw=$("inp").value.trim(),a0=norm(raw);if(!a0)return;con
 function result(ti,txt){clearInterval(tmr);document.activeElement&&document.activeElement.blur();
  const ok=ti>=0,T=ok?TIER[ti]:["Sin combustible",0,"#ff6b5e","Te has quedado sin combustible a mitad de vuelo."];
  pts+=T[1];log.push(ok?ti+1:0);DC[qi]=T[2];dots(qi);card(false);
- $("stage").style.setProperty("--tc",T[2]);$("dl").textContent=T[0]+" · "+pts;$("dash").classList.add("on");clearTimeout(ft);const tgt=S.d*STEP+pts,fly=passes(cur,tgt).length>0,lv=ok?ti+1:0;radioSnd();fxStart(lv);flying=T[1]>0;
- rs(`<h3 class="an">${T[0]}</h3><b class="ans" id="an"></b><p class="pt">+${T[1]} puntos<span> · ${T[1]} m más arriba</span></p><p class="fl">${T[3]}</p>`);$("an").textContent=ok?cap(txt):"—";$("res").style.setProperty("--lv",lv);$("res").classList.add("fx");
+ $("stage").style.setProperty("--tc",T[2]);$("dash").classList.add("on");clearTimeout(ft);const tgt=S.d*STEP+pts,fly=passes(cur,tgt).length>0,lv=ok?ti+1:0;radioSnd();fxStart(lv);flying=T[1]>0;
+ const show=()=>{$("dl").textContent=T[0]+" · "+pts;rs(`<h3 class="an">${T[0]}</h3><b class="ans" id="an"></b><p class="pt">+${T[1]} puntos<span> · ${T[1]} m más arriba</span></p><p class="fl">${T[3]}</p>`);$("an").textContent=ok?cap(txt):"—";$("res").style.setProperty("--lv",lv);$("res").classList.add("fx");};
  beep(ok?220+ti*130:120,.35,"triangle",.09);
- bot(`<button class="big" id="nx"${fly?' disabled style="opacity:.35"':""}>${qi>=6?"Ver resultado":"Seguir subiendo"}</button>`);$("nx").onclick=()=>{if(qi>=6)finish();else{qi++;next()}};
- setAlt(tgt,1.8,()=>{if(lv>0){fxOff();cool()}const n=$("nx");if(n){n.disabled=false;n.style.opacity=""}})}
+ bot(`<button class="big" id="nx" disabled style="opacity:.35">${qi>=6?"Ver resultado":"Seguir subiendo"}</button>`);$("nx").onclick=()=>{if(qi>=6)finish();else{qi++;next()}};
+ setAlt(tgt,1.8,()=>{show();if(lv>0){fxOff();cool()}const n=$("nx");if(n){n.disabled=false;n.style.opacity=""}})}
 function finish(){const from=S.d,base=from*STEP,to=Math.min(P.length,Math.floor((base+pts)/STEP)),ok=to>from,idx=ok?to-1:from,p=P[idx],
  r={pts,ok,target:p.n,idx,from,to,need:P[from].t-base,log,day:dayNum()};S.n=(S.n||0)+1;r.n=S.n;S.last=today();S.res=r;S.d=to;save();showEnd(r,true)}
 function showEnd(r,anim){card(false);$("dash").classList.remove("on");fxOff();
