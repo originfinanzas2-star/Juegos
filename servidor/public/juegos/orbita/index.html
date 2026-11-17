@@ -606,11 +606,11 @@ function planetFx(i,k){const mk=$("world").querySelector(`.mk[data-i="${i}"]`);i
 function reveal(i){const mk=$("world").querySelector(`.mk[data-i="${i}"]`);if(!mk||mk.dataset.rv)return;mk.dataset.rv=1;const p=P[i];
  mk.querySelector(".mp").innerHTML=pl(i,58,false);const b=mk.querySelector(".mt b");b.textContent=p.n;b.style.color=p.tc||p.c1}
 function passes(from,to){return to>from?P.map((p,i)=>i).filter(i=>P[i].t>from&&P[i].t<=to):[]}
-var brkT=0,rwT=0,wdT=0;function setAlt(a,sec,done){cancelAnimationFrame(raf);clearTimeout(brkT);clearTimeout(rwT);clearTimeout(wdT);rwStop();$("cap").classList.remove("brk");
+var brkT=0,rwT=0,wdT=0,anim=0;function setAlt(a,sec,done){cancelAnimationFrame(raf);clearTimeout(brkT);clearTimeout(rwT);clearTimeout(wdT);rwStop();anim=0;$("cap").classList.remove("brk");
  if(!sec){touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1;put(a);return}
- const from=cur,dist=Math.abs(a-from);if(!dist){done&&done();return}
+ const from=cur,dist=Math.abs(a-from);if(!dist){done&&done();return}anim=1;
  const up=a>from,pls=up?passes(from,a):[],v0=(pls.length?60:Math.min(70,Math.max(16,dist/1.4)))*SLOW;
- wdT=setTimeout(()=>{cancelAnimationFrame(raf);put(a);try{touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1}catch(e){}done&&done()},Math.max(7000,dist*450+5000));/* si el móvil va muy lento, el vuelo termina igualmente */
+ wdT=setTimeout(()=>{cancelAnimationFrame(raf);anim=0;put(a);try{touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1}catch(e){}done&&done()},Math.max(7000,dist*450+5000));/* si el móvil va muy lento, el vuelo termina igualmente */
  let x=from,last=performance.now(),brk=0;const peak=new Set();
  (function f(now){
   const dt=Math.max(0,Math.min(.12,((now||performance.now())-last)/1000));last=now||performance.now();
@@ -627,7 +627,7 @@ var brkT=0,rwT=0,wdT=0;function setAlt(a,sec,done){cancelAnimationFrame(raf);cle
    $("fly").style.opacity=Math.min(1,bk*1.6).toFixed(2);$("vg").style.opacity=Math.min(1,bk*1.2).toFixed(2)}
   else if(flyI>=0){flyOff();flyI=-1}}catch(e){}
   try{engineMod(Math.min(1,ease/1.5)*mult)}catch(e){}x+=(up?1:-1)*v0*ease*mult*dt;
-  if(up?x>=a:x<=a){clearTimeout(wdT);put(a);$("cap").classList.remove("brk","fire");touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1;done&&done();return}
+  if(up?x>=a:x<=a){clearTimeout(wdT);anim=0;put(a);$("cap").classList.remove("brk","fire");touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1;done&&done();return}
   put(x);raf=requestAnimationFrame(f)})(last)}
 function layout(){Y0=Math.round(innerHeight*.6);document.documentElement.style.setProperty("--y0",Y0+"px");buildWorld();
  let s="";for(let i=0;i<70;i++)s+=`${Math.random()*innerWidth|0}px ${Math.random()*innerHeight|0}px 0 ${Math.random()<.2?1:0}px rgba(255,255,255,${(.15+Math.random()*.5).toFixed(2)}),`;$("stars").style.boxShadow=s.slice(0,-1)}
@@ -810,13 +810,13 @@ function land(){landSnd();const st=$("stage"),x=innerWidth/2,y=Y0+1;
   dx=col?(Math.random()-.5)*50:dir*(20+Math.random()*(70+i*7)),dy=col?-(70+Math.random()*80):-(6+Math.random()*(26+i*3));
   e.style.cssText=`left:${(x+(Math.random()-.5)*30).toFixed(0)}px;top:${y}px;width:${sz|0}px;height:${sz|0}px;margin:${-(sz/2|0)}px 0 0 ${-(sz/2|0)}px`;
   st.appendChild(e);e.animate([{transform:"translate(0,0) scale(.3)",opacity:.95},{transform:`translate(${(dx*.6).toFixed(1)}px,${(dy*.7).toFixed(1)}px) scale(1.4)`,opacity:.8,offset:.4},{transform:`translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px) scale(2.6)`,opacity:0}],{duration:1300+Math.random()*1300,delay:Math.random()*160,easing:"cubic-bezier(.2,.7,.3,1)",fill:"backwards"}).onfinish=()=>e.remove()}}
-function rewind(base){cancelAnimationFrame(raf);const from=cur,dist=from-base;if(dist<.5)return;
+function rewind(base){cancelAnimationFrame(raf);const from=cur,dist=from-base;if(dist<.5)return;anim=1;
  const tr=rwTraj(dist),H=120,D=tr.length/H,st=$("stage"),sk=$("sk");
  mkSk();fxOff();st.classList.add("rw");$("rw").classList.add("on");st.style.setProperty("--tc","#bcd4ff");sk.style.transition="none";sk.style.opacity=".1";
  $("flash").animate([{opacity:0},{opacity:.4},{opacity:0}],{duration:260,easing:"ease-out"});rwSnd(D);
  const t0=performance.now();
  (function f(now){const i=(((now||performance.now())-t0)/1000)*H,k=Math.floor(i);
-  if(k>=tr.length-1){put(base);rwStop();land();return}
+  if(k>=tr.length-1){anim=0;put(base);rwStop();land();return}
   const sp=(tr[k+1]-tr[k])*H;put(from-(tr[k]+(tr[k+1]-tr[k])*(i-k)));sk.style.opacity=Math.min(.95,.12+sp/420*.9).toFixed(2);raf=requestAnimationFrame(f)})(t0)}
 function showEnd(r,anim){card(false);$("dash").classList.remove("on");fxOff();
  const from=r.from!==undefined?r.from:r.idx,to=r.to!==undefined?r.to:(r.ok?r.idx+1:from),base=from*STEP;
@@ -837,7 +837,7 @@ function openMap(){const m=$("map");
  $("mx").onclick=()=>{m.style.display="none"};$("rs").onclick=()=>{if(confirm("¿Borrar todo el progreso?")){S={d:0,last:"",res:null};save();m.style.display="none";home()}}}
 ['gesturestart','gesturechange','gestureend','dblclick'].forEach(e=>document.addEventListener(e,x=>x.preventDefault(),{passive:false}));
 document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
-addEventListener("resize",()=>{const c=cur;layout();setAlt(c,0)});
+addEventListener("resize",()=>{const c=cur;layout();if(anim)put(c);else setAlt(c,0)});/* el teclado de Android abre/cierra y dispara resize: no debe cortar el vuelo */
 mkSk();layout();home();requestAnimationFrame(tick);
 </script>
 </body></html>
