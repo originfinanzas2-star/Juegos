@@ -87,6 +87,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 .two .big.gh{flex:.8;font-size:13px;letter-spacing:.12em;height:48px;background:#1b1e2799;border-color:#ffffff2e;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .two #go{flex:1.5;height:58px;font-size:17px;letter-spacing:.12em;color:#0b1830;background:linear-gradient(180deg,#d4eeff 0,#8fd0f0 55%,#5aa4ea 100%);box-shadow:0 0 0 1.5px #ffffff55 inset,0 8px 26px #4f9cf066,0 2px 0 #ffffff66 inset;transition:transform .12s,box-shadow .2s}
 .two #go:active{transform:scale(.97);box-shadow:0 0 0 1.5px #ffffff55 inset,0 4px 14px #4f9cf066}
+.lnk.rst{color:#ff6b5e;margin:8px auto 28px}
 .lnk{display:block;margin:12px auto 0;color:var(--mu);font-size:15px;padding:6px}
 .mu{color:var(--mu);text-align:center;margin-bottom:10px}
 #map{position:fixed;inset:0;background:#14161c;overflow-y:auto;z-index:20;display:none;-webkit-overflow-scrolling:touch}
@@ -97,7 +98,8 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 .row.l{padding-right:26%}.row.r{flex-direction:row-reverse;text-align:right;padding-left:26%}
 .row>div:last-child{background:#14161c;padding:4px 8px;border-radius:10px;position:relative}.row .pp{flex:none;position:relative}.pp .hm{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;animation:hmf 3s ease-in-out infinite}@keyframes hmf{50%{transform:translateY(-2px)}}.row b{display:block;font-size:19px;letter-spacing:.1em;text-transform:uppercase}.row span{font:13px ui-monospace,Menlo,monospace;color:var(--mu)}.row em{display:block;font-style:normal;color:#aab0be;font-size:14px;margin-top:4px;line-height:1.3}
 #rs{display:block;margin:10px auto 40px;color:var(--mu);border:1px solid #2c3140;border-radius:12px;padding:10px 16px;font-size:14px}
-@media(max-height:720px){.res h3{font-size:42px}.res .ans{font-size:26px;margin-top:6px}.res .pt,.res .fl{font-size:17px;margin-top:6px}.res{top:calc(var(--top) + 64px)}.res .hp{width:86px;height:86px}}
+@media(max-height:720px){.res h3{font-size:42px}.res .ans{font-size:26px;margin-top:6px}.res .pt,.res .fl{font-size:17px;margin-top:6px}
+.fl.rc{margin-top:4px;color:#ffbf5a}.res{top:calc(var(--top) + 64px)}.res .hp{width:86px;height:86px}}
 #vg{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 29% var(--y0),var(--pc,#fff) 0,transparent 58%)}
 #fly{position:absolute;right:16px;top:calc(var(--y0) + 38px);text-align:right;z-index:3;opacity:0;pointer-events:none;white-space:nowrap}
 #fly small{display:block;font-size:11px;font-weight:700;letter-spacing:.22em;color:var(--mu)}
@@ -801,7 +803,7 @@ function result(ti,txt){clearInterval(tmr);document.activeElement&&document.acti
  bot(`<button class="big" id="nx" disabled style="opacity:.35">${qi>=6?"Ver resultado":"Seguir subiendo"}</button>`);$("nx").onclick=()=>{if(qi>=6)finish();else{qi++;next()}};
  setAlt(tgt,1.8,()=>{$("dash").classList.add("on");show();if(lv>0){fxOff();cool()}const n=$("nx");if(n){n.disabled=false;n.style.opacity=""}})}
 function finish(){const from=S.d,base=from*STEP,to=Math.min(P.length,Math.floor((base+pts)/STEP)),ok=to>from,idx=ok?to-1:from,p=P[idx],
- r={pts,ok,target:p.n,idx,from,to,need:P[from].t-base,log,day:dayNum()};S.n=(S.n||0)+1;r.n=S.n;S.last=today();S.res=r;S.d=to;save();showEnd(r,true)}
+ r={pts,ok,target:p.n,idx,from,to,need:P[from].t-base,log,day:dayNum()};const prev=Math.max(S.rec||0,from*STEP),top=base+pts;r.nr=prev>0&&top>prev;S.rec=Math.max(prev,top);S.n=(S.n||0)+1;r.n=S.n;S.last=today();S.res=r;S.d=to;save();showEnd(r,true)}
 // ── Vuelta a casa: rebobinado acelerando y aterrizaje con humo blanco ──
 function rwStop(){const st=$("stage"),sk=$("sk");st.classList.remove("rw");$("rw").classList.remove("on");sk.style.opacity="";sk.style.transition=""}
 function rwTraj(d){const H=120,a=[0];let x=0,t=0;while(x<d-.02&&a.length<1800){const rem=d-x,v=Math.min(420,10+34*Math.pow(t,1.8),4+rem*3.4);x+=v/H;t+=1/H;a.push(x)}a.push(d);return a}
@@ -830,22 +832,23 @@ function rewind(base,lbl){cancelAnimationFrame(raf);const from=cur,dist=from-bas
   const sp=(tr[k+1]-tr[k])*H;put(from-(tr[k]+(tr[k+1]-tr[k])*(i-k)));sk.style.opacity=Math.min(.95,.12+sp/420*.9).toFixed(2);raf=requestAnimationFrame(f)})(t0)}
 function showEnd(r,anim){card(false);$("dash").classList.remove("on");fxOff();
  const from=r.from!==undefined?r.from:r.idx,to=r.to!==undefined?r.to:(r.ok?r.idx+1:from),base=from*STEP;
- $("stage").classList.toggle("ends",!!r.ok);buildWorld();dots(-1);setAlt(anim?base+r.pts:(r.ok?to*STEP:base),0);if(!anim)$("av").textContent=r.pts;
+ $("stage").classList.toggle("ends",!!r.ok);buildWorld();dots(-1);setAlt(anim?base+r.pts:(r.ok?to*STEP:base),0);
  const p=P[r.idx],c=p.tc||p.c1,also=to-from>1?`<br>Antes sobrevolaste ${P.slice(from,to-1).map(x=>x.n).join(" y ")}.`:"";
- rs(r.ok?`<div class="hp">${pl(r.idx,112)}</div><h3 class="an" style="color:${c}">${p.n}</h3><p class="pt" style="color:${c}">¡Planeta descubierto!</p><p class="fl">Checkpoint (${p.t} m)</p>`
- :`<h3 class="an" style="color:#ff6b5e">Misión ${r.n||S.n||1}</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.</p>`);
+ rs(r.ok?`<div class="hp">${pl(r.idx,112)}</div><h3 class="an" style="color:${c}">${p.n}</h3><p class="pt" style="color:${c}">¡Planeta descubierto!</p><p class="fl">Checkpoint (${p.t} m)</p><p class="fl rc">Récord: ${Math.max(S.rec||0,to*STEP)} m${r.nr?" · ¡nuevo!":""}</p>`
+ :`<h3 class="an" style="color:#ff6b5e">Misión ${r.n||S.n||1}</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.</p><p class="fl rc">Récord: ${Math.max(S.rec||0,to*STEP)} m${r.nr?" · ¡nuevo!":""}</p>`);
  bot('<div class="two"><button class="big gh" id="mp" style="grid-column:1/-1;flex:1 1 100%">PLANETARIO</button></div><button class="lnk" id="hm">Volver al inicio</button>');
  $("mp").onclick=openMap;$("hm").onclick=home;if(r.ok)beep(660,.5,"triangle",.1);
- if(anim)rwT=setTimeout(()=>rewind(r.ok?to*STEP:base,r.pts),900)}
+ if(anim)rwT=setTimeout(()=>rewind(r.ok?to*STEP:base),900)}
 function share(r){const t="ÓRBITA #"+r.day+"\n"+r.log.map(x=>x?EMO[x-1]:"⬛").join("")+"\n"+r.pts+" m · "+(r.ok?"¡"+r.target+" descubierto! 🚀":"Misión fracasada 💥");
  if(navigator.share)navigator.share({text:t}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>{$("sh").textContent="¡Copiado!"})}
 const HELM=`<svg class="hm" viewBox="0 0 100 100" width="100" height="100"><defs><radialGradient id="hmg" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#b9c0d0"/></radialGradient><linearGradient id="hmv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b5a99"/><stop offset=".5" stop-color="#16244a"/><stop offset="1" stop-color="#0a1226"/></linearGradient></defs><circle cx="88" cy="16" r="6" fill="url(#hmg)"/><ellipse cx="89.8" cy="16.2" rx="4.4" ry="3.7" fill="url(#hmv)" stroke="#c9a24a" stroke-width=".7"/><path d="M87.4 14.4Q89.2 12.8 91.6 13.6" stroke="#fff" stroke-opacity=".65" stroke-width=".8" fill="none" stroke-linecap="round"/></svg>`;
 function openMap(){const m=$("map");
  let h='<div class="mh"><b class="an" style="letter-spacing:.06em">PLANETAS</b><button id="mx" aria-label="Cerrar">✕</button></div><div class="ml2">';
  for(let i=P.length-1;i>=0;i--){const got=i<S.d;h+=`<div class="row ${i%2?"l":"r"}"><div class="pp">${pl(i,100,!got)}${i===S.d-1?HELM:""}</div><div><b style="color:${got?(P[i].tc||P[i].c1):"#6b7385"}">${got?P[i].n:"???"}</b><span>${P[i].t} m</span><em>${got?P[i].d:i===S.d?"Tu próximo destino":"Sin descubrir"}</em></div></div>`}
- h+='<div class="row l"><div class="pp">'+earth(100)+(S.d===0?HELM:"")+'</div><div><b>Tierra</b><span>0 m</span><em>Punto de partida</em></div></div></div>';
+ h+='<div class="row l"><div class="pp">'+earth(100)+(S.d===0?HELM:"")+'</div><div><b>Tierra</b><span>0 m</span><em>Punto de partida</em></div></div></div><button class="lnk rst" id="rst">Reiniciar progreso</button>';
  m.innerHTML=h;m.style.display="block";m.scrollTop=m.scrollHeight;
- $("mx").onclick=()=>{m.style.display="none"};}
+ $("mx").onclick=()=>{m.style.display="none"};
+ $("rst").onclick=()=>{if(!confirm("¿Reiniciar progreso? Perderás tus planetas y tu récord."))return;S={d:0,last:"",res:null};save();m.style.display="none";home()}}
 ['gesturestart','gesturechange','gestureend','dblclick'].forEach(e=>document.addEventListener(e,x=>x.preventDefault(),{passive:false}));
 document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
 addEventListener("resize",()=>{const c=cur;layout();if(anim)put(c);else setAlt(c,0)});/* el teclado de Android abre/cierra y dispara resize: no debe cortar el vuelo */
