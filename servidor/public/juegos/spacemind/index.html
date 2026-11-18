@@ -156,6 +156,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 .ch{padding:7px 12px;border-radius:16px;background:#2c3140;font-size:16px;border:1px solid transparent}.ch.m{background:#8fd0f01f;color:#8fd0f0;border-color:#8fd0f066}.ch b{font-size:12px;margin-left:6px}
 .pn{font-size:22px;font-weight:700;margin-top:6px}.res h3{margin:4px 0}
 #back{cursor:pointer}
+.two .inp{min-width:0;flex:1.2}.two .inp input{width:100%;min-width:0}.two .big.gh#jn{flex:.8;min-width:110px}
 </style></head><body>
 <div id="stage">
  <div id="stars"></div>
@@ -274,7 +275,7 @@ let peer=null,hc=null,conns={};
 function getUid(){let u;try{u=localStorage.getItem("sm-uid")}catch(e){}if(!u){u="u"+Math.random().toString(36).slice(2,10);try{localStorage.setItem("sm-uid",u)}catch(e){}}return u}
 function fail(e){msg((e&&e.message)||"Error de conexión, inténtalo otra vez.")}
 function home(){lastKey="home";code=null;room=null;players=[];snap(0,0);dots();$("back").textContent="‹ JUEGOS";card(false);rs(`<h3 class="an">SpaceMind</h3><p class="fl">Piensa como los demás. Cada palabra que otro jugador también escriba te hace subir.</p>`);$("res").classList.add("hm");
- bot(`<div class="sg" id="sg"></div><div class="inp"><input id="nm" maxlength="14" placeholder="Tu nombre" value="${esc((saved()||{}).name||"")}"></div><div style="height:10px"></div><button class="big" id="cr">CREAR PARTIDA</button><div class="two" style="margin-top:10px"><div class="inp" style="flex:1"><input id="cd" maxlength="4" placeholder="CÓDIGO" style="text-transform:uppercase;letter-spacing:.2em"></div><button class="big gh" id="jn" style="flex:.7">UNIRSE</button></div>`);
+ bot(`<div class="sg" id="sg"></div><div class="inp"><input id="nm" maxlength="14" placeholder="Tu nombre" value="${esc((saved()||{}).name||"")}"></div><div style="height:10px"></div><button class="big" id="cr">CREAR PARTIDA</button><div class="two" style="margin-top:10px"><div class="inp"><input id="cd" maxlength="4" placeholder="CÓDIGO" style="text-transform:uppercase;letter-spacing:.2em"></div><button class="big gh" id="jn">UNIRSE</button></div>`);
  $("cr").onclick=create;$("jn").onclick=()=>{const n=$("nm").value.trim(),c=$("cd").value;if(!n)return msg("Escribe tu nombre");if(c.length<4)return msg("El código tiene 4 letras");joinRoom(n,c)};$("cd").oninput=e=>e.target.value=e.target.value.toUpperCase().replace(/[^A-Z]/g,"")}
 function create(){const name=$("nm").value.trim();if(!name)return msg("Escribe tu nombre");msg("Creando sala…");
  const go=n=>{if(n>6)return msg("No se pudo crear la sala");const c=Array.from({length:4},()=>"ABCDEFGHJKMNPQRSTUVWXYZ"[Math.random()*23|0]).join(""),p=new Peer("spacemind-"+c,{config:ICE});
