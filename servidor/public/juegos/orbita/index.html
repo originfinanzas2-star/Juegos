@@ -602,11 +602,11 @@ function buildWorld(){OFF=Math.min(S.d,P.length)*STEP;
  $("world").innerHTML=h;touched.clear();flyI=-1;flyOff()}
 function put(a){cur=a;$("world").style.transform=`translate3d(0,${(a-OFF)*PPM}px,0)`;$("av").textContent=Math.round(a)}
 function flyOff(){$("fly").style.opacity=0;$("vg").style.opacity=0}
-function planetFx(i,k){const mk=$("world").querySelector(`.mk[data-i="${i}"]`);if(!mk)return;const mp=mk.querySelector(".mp"),mt=mk.querySelector(".mt");
- if(k<=0){mp.style.transform="";mp.style.filter="";mp.style.removeProperty("--gk");mt.style.opacity="";return}
- const p=P[i],tx=k*(innerWidth/2-45),sc=1+3.2*k;
- mp.style.transform=`translate(${tx.toFixed(1)}px,0) scale(${sc.toFixed(3)})`;
- mp.style.filter="none";mp.style.setProperty("--gc",p.tc||p.c1);mp.style.setProperty("--gk",k.toFixed(3));mt.style.opacity=Math.max(0,1-k*1.8).toFixed(2)}
+function planetFx(i,k,h){const mk=$("world").querySelector(`.mk[data-i="${i}"]`);if(!mk)return;const mp=mk.querySelector(".mp"),mt=mk.querySelector(".mt");
+ if(k<=0&&!(h>0)){mp.style.transform="";mp.style.filter="";mp.style.opacity="";mp.style.removeProperty("--gk");mt.style.opacity="";return}
+ const p=P[i],tx=innerWidth/2-45,sc=1+3.2*k;/* siempre centrado: solo crece en su sitio */
+ mp.style.transform=`translate(${tx.toFixed(1)}px,0) scale(${sc.toFixed(3)})`;mp.style.opacity=Math.min(1,k*4).toFixed(2);
+ mp.style.filter="none";mp.style.setProperty("--gc",p.tc||p.c1);mp.style.setProperty("--gk",k.toFixed(3));mt.style.opacity="0"}
 function reveal(i){const mk=$("world").querySelector(`.mk[data-i="${i}"]`);if(!mk||mk.dataset.rv)return;mk.dataset.rv=1;const p=P[i];
  mk.querySelector(".mp").innerHTML=pl(i,58,false);const b=mk.querySelector(".mt b");b.textContent=p.n;b.style.color=p.tc||p.c1}
 function passes(from,to){return to>from?P.map((p,i)=>i).filter(i=>P[i].t>from&&P[i].t<=to):[]}
@@ -623,8 +623,9 @@ var brkT=0,rwT=0,wdT=0,anim=0;function setAlt(a,sec,done){cancelAnimationFrame(r
   let best=-1,bk=0,mult=1;
   try{pls.forEach(i=>{const d=Math.abs(x-P[i].t),p1=bell(d,R1),k=bell(d,R2);
    if(p1>0){mult=Math.min(mult,.32+.68*Math.pow(1-p1,2));reveal(i);if(!touched.has(i)){touched.add(i);flySwell()}}
-   if(k>0){planetFx(i,k);if(k>bk){bk=k;best=i}}
-   else if(touched.has(i)){planetFx(i,0);touched.delete(i)}
+   if(p1>0)planetFx(i,k,p1);
+   if(k>0){if(k>bk){bk=k;best=i}}
+   else if(touched.has(i)&&p1<=0){planetFx(i,0);touched.delete(i)}
    if(k>.92&&!peak.has(i)){peak.add(i);chime();flyPass()}});
   if(best>=0){const p=P[best],c=p.tc||p.c1;
    if(flyI!==best){flyI=best;$("fly").innerHTML=`<small>SOBREVOLANDO</small><b class="an" style="color:${c}">${p.n}</b><span>${p.t} m</span>`;$("vg").style.setProperty("--pc",c+"55")}
@@ -749,9 +750,9 @@ function cool(){const o=out();if(!o)return;const T=AC.currentTime;
  sNoise("w","bandpass",3500,.7,T,.9,.09,o,1800);
  for(let i=0;i<7;i++){const t=T+.2+i*.17+Math.random()*.12,f=1200+Math.random()*2200;sTone("sine",f,f*.96,t,.07,.035,o,.002)}}
 // paso junto a un planeta: se acerca (barrido que sube) y se aleja (efecto Doppler)
-function flySwell(){sweep(260,1100,.8,1.8,1.2,.7,.35,.75)}
-function flyPass(){sweep(2200,320,.7,1.7,1.2,.45,-.25,.12)}
-function chime(){const o=out();if(!o)return;const T=AC.currentTime;[784,1175,1568].forEach((f,i)=>sTone("sine",f,f*.998,T+i*.1,1,.06-i*.01,o,.01))}
+function flySwell(){}
+function flyPass(){}
+function chime(){const o=out();if(!o)return;const T=AC.currentTime;[392,587].forEach((f,i)=>sTone("sine",f,f*.999,T+i*.18,1.8,.028-i*.008,o,.25))}
 // cuenta atrás y radio de control de misión
 function tickSnd(){const o=out();if(!o)return;sTone("sine",1000,990,AC.currentTime,.09,.1,o,.004)}
 function goSnd(){const o=out();if(!o)return;const T=AC.currentTime;sTone("sine",1500,1490,T,.3,.12,o,.004);sTone("sine",2250,2240,T,.3,.05,o,.004)}
@@ -767,7 +768,7 @@ function home(){
  $("stage").classList.remove("ends");DC.length=0;dots(-1);card(false);$("dash").classList.remove("on");fxOff();buildWorld();setAlt(S.d*STEP,0);
  if(S.d>=P.length){rs('<h3 class="an" style="color:#ffbf5a">Todos los planetas</h3><p class="fl">Has descubierto todos los planetas.</p>');bot('<button class="big gh" id="mp">PLANETARIO</button>');$("mp").onclick=openMap;return}
  const p=P[S.d],played=S.last===today()&&S.res;
- rs(`<div class="hp">${pl(S.d,112,true)}</div><small>PRÓXIMO DESTINO</small><h3 class="an" style="color:#eceae4">${p.t} m</h3><p class="fl">Sales desde ${cpName(S.d)} (${S.d*STEP} m). Un intento al día.</p>`);$("res").classList.add("hm");
+ rs(`<div class="hp">${pl(S.d,112,true)}</div><small>PRÓXIMO DESTINO</small><h3 class="an" style="color:#eceae4">${p.t} m</h3><p class="fl">Sales desde ${cpName(S.d)} (${S.d*STEP} m).<br>Un intento al día.</p>`);$("res").classList.add("hm");
  bot(played?`<p class="mu">Ya lo has intentado hoy. Vuelve mañana.</p><div class="two"><button class="big" id="go">Resultado</button><button class="big gh" id="mp">PLANETARIO</button></div>`:`<div class="two"><button class="big" id="go">Misión ${(S.n||0)+1}</button><button class="big gh" id="mp">PLANETARIO</button></div>`);
  $("go").onclick=start;$("mp").onclick=openMap}
 let qs,qi,pts,log,tmr,ft;
@@ -814,23 +815,23 @@ function land(){landSnd();const st=$("stage"),x=innerWidth/2,y=Y0+1+(st.classLis
   dx=col?(Math.random()-.5)*50:dir*(20+Math.random()*(70+i*7)),dy=col?-(70+Math.random()*80):-(6+Math.random()*(26+i*3));
   e.style.cssText=`left:${(x+(Math.random()-.5)*30).toFixed(0)}px;top:${y}px;width:${sz|0}px;height:${sz|0}px;margin:${-(sz/2|0)}px 0 0 ${-(sz/2|0)}px`;
   st.appendChild(e);e.animate([{transform:"translate(0,0) scale(.3)",opacity:.95},{transform:`translate(${(dx*.6).toFixed(1)}px,${(dy*.7).toFixed(1)}px) scale(1.4)`,opacity:.8,offset:.4},{transform:`translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px) scale(2.6)`,opacity:0}],{duration:1300+Math.random()*1300,delay:Math.random()*160,easing:"cubic-bezier(.2,.7,.3,1)",fill:"backwards"}).onfinish=()=>e.remove()}}
-function rewind(base){cancelAnimationFrame(raf);const from=cur,dist=from-base;if(dist<.5)return;anim=1;
+function rewind(base,lbl){cancelAnimationFrame(raf);const from=cur,dist=from-base;if(dist<.5){if(lbl!==undefined)$("av").textContent=lbl;return}anim=1;
  const tr=rwTraj(dist),H=120,D=tr.length/H,st=$("stage"),sk=$("sk");
  mkSk();fxOff();st.classList.add("rw");$("rw").classList.add("on");st.style.setProperty("--tc","#bcd4ff");sk.style.transition="none";sk.style.opacity=".1";
  $("flash").animate([{opacity:0},{opacity:.4},{opacity:0}],{duration:260,easing:"ease-out"});rwSnd(D);
  const t0=performance.now();
  (function f(now){const i=(((now||performance.now())-t0)/1000)*H,k=Math.floor(i);
-  if(k>=tr.length-1){anim=0;put(base);rwStop();land();return}
+  if(k>=tr.length-1){anim=0;put(base);if(lbl!==undefined)$("av").textContent=lbl;rwStop();land();return}
   const sp=(tr[k+1]-tr[k])*H;put(from-(tr[k]+(tr[k+1]-tr[k])*(i-k)));sk.style.opacity=Math.min(.95,.12+sp/420*.9).toFixed(2);raf=requestAnimationFrame(f)})(t0)}
 function showEnd(r,anim){card(false);$("dash").classList.remove("on");fxOff();
  const from=r.from!==undefined?r.from:r.idx,to=r.to!==undefined?r.to:(r.ok?r.idx+1:from),base=from*STEP;
- $("stage").classList.toggle("ends",!!r.ok);buildWorld();dots(-1);setAlt(anim?base+r.pts:(r.ok?to*STEP:base),0);
+ $("stage").classList.toggle("ends",!!r.ok);buildWorld();dots(-1);setAlt(anim?base+r.pts:(r.ok?to*STEP:base),0);if(!anim)$("av").textContent=r.pts;
  const p=P[r.idx],c=p.tc||p.c1,also=to-from>1?`<br>Antes sobrevolaste ${P.slice(from,to-1).map(x=>x.n).join(" y ")}.`:"";
  rs(r.ok?`<div class="hp">${pl(r.idx,112)}</div><h3 class="an" style="color:${c}">${p.n}</h3><p class="pt" style="color:${c}">¡Planeta descubierto!</p><p class="fl">Checkpoint (${p.t} m)</p>`
  :`<h3 class="an" style="color:#ff6b5e">Misión ${r.n||S.n||1}</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.</p>`);
  bot('<div class="two"><button class="big gh" id="mp" style="grid-column:1/-1;flex:1 1 100%">PLANETARIO</button></div><button class="lnk" id="hm">Volver al inicio</button>');
  $("mp").onclick=openMap;$("hm").onclick=home;if(r.ok)beep(660,.5,"triangle",.1);
- if(anim)rwT=setTimeout(()=>rewind(r.ok?to*STEP:base),900)}
+ if(anim)rwT=setTimeout(()=>rewind(r.ok?to*STEP:base,r.pts),900)}
 function share(r){const t="ÓRBITA #"+r.day+"\n"+r.log.map(x=>x?EMO[x-1]:"⬛").join("")+"\n"+r.pts+" m · "+(r.ok?"¡"+r.target+" descubierto! 🚀":"Misión fracasada 💥");
  if(navigator.share)navigator.share({text:t}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>{$("sh").textContent="¡Copiado!"})}
 function openMap(){const m=$("map");
