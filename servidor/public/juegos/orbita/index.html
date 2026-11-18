@@ -635,9 +635,9 @@ var brkT=0,rwT=0,wdT=0,anim=0;function setAlt(a,sec,done){cancelAnimationFrame(r
   put(x);raf=requestAnimationFrame(f)})(last)}
 function layout(){Y0=Math.round(innerHeight*.6);document.documentElement.style.setProperty("--y0",Y0+"px");buildWorld();
  let s="";for(let i=0;i<70;i++)s+=`${Math.random()*innerWidth|0}px ${Math.random()*innerHeight|0}px 0 ${Math.random()<.2?1:0}px rgba(255,255,255,${(.15+Math.random()*.5).toFixed(2)}),`;$("stars").style.boxShadow=s.slice(0,-1)}
-function tick(t){const cx=innerWidth/2,ay=Y0-110+Math.sin(t/800)*8,ax=40+Math.sin(t/1100)*6;
+function tick(t){const cx=innerWidth/2,sh=$("stage").classList.contains("ends")?64:0,ay=Y0-110+sh+Math.sin(t/800)*8,ax=40+Math.sin(t/1100)*6;
  $("ast").setAttribute("transform",`translate(${ax.toFixed(1)} ${ay.toFixed(1)}) scale(.68)`);$("astb").setAttribute("transform",`rotate(${(Math.sin(t/1300)*7).toFixed(1)} 20 28)`);
- const x0=ax+25,y0=ay+21,x1=cx-19,y1=Y0-36;
+ const x0=ax+25,y0=ay+21,x1=cx-19,y1=Y0-36+sh;
  $("cord").setAttribute("d",`M${x0} ${y0}C${x0+(x1-x0)*.3} ${y0+55+Math.sin(t/500)*8},${x0+(x1-x0)*.7} ${y1+45-Math.sin(t/650)*8},${x1} ${y1}`);requestAnimationFrame(tick)}
 
 // ── Efectos según la calidad de la respuesta ──
