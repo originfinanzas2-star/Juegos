@@ -153,7 +153,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 #stage.rw #sk i{animation-direction:reverse}
 #stage.rw #cap{filter:drop-shadow(2px 0 0 #ff2a6a99) drop-shadow(-2px 0 0 #2ae0ff99)}
 .wsm{position:absolute;border-radius:50%;pointer-events:none;z-index:4;background:radial-gradient(circle,#fff 0,#ffffffd9 38%,#ffffff00 72%);filter:blur(2px)}
-#invb{position:relative;display:grid;place-items:center;background:#1b1e27cc}#invb svg{width:20px;height:20px}
+#invb{position:absolute;left:16px;top:calc(var(--top) + 52px);width:48px;height:48px;z-index:6;display:grid;place-items:center;background:#1b1e27cc}#invb svg{width:24px;height:24px}
 #ivn{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;border-radius:9px;background:#8fd0f0;color:#0b1830;font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 4px}#ivn:empty{display:none}
 #inv h4{margin:18px 18px 8px;color:var(--mu);font-size:12px;letter-spacing:.14em}#inv .hint{margin:8px 18px 0;color:var(--mu);font-size:13px;text-align:center}
 .ig{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
@@ -173,6 +173,8 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 .qk{display:flex;gap:8px;justify-content:center;margin-bottom:10px}.qb{display:flex;align-items:center;gap:7px;border:1.5px solid #3a4050;border-radius:26px;padding:7px 14px 7px 10px;background:#1b1e27e6;color:var(--tx);font-size:13px;font-weight:700}.qb b{color:var(--mu)}.qb.on{border-color:#8fd0f0;background:#8fd0f02e}.qb.on b{color:#8fd0f0}.qb.on b::after{content:" ✓"}
 .ir{display:flex;gap:8px;align-items:center;margin-bottom:8px;min-height:36px}.ib{display:flex;align-items:center;gap:6px;border:1.5px solid #3a4050;border-radius:22px;padding:5px 12px 5px 8px;font-size:13px;font-weight:700;background:#1b1e27e6;color:var(--tx)}.ib b{color:var(--mu)}.ib.on{border-color:#ffb43d;background:#ffb43d26;box-shadow:0 0 14px #ffb43d44}.ib.on b{color:#ffb43d}
 .rdo{display:flex;align-items:center;gap:3px;font-size:13px;font-weight:700}.rdo i{width:14px;height:6px;border-radius:3px}.rdo span{margin-left:6px}.res .gn{color:#ffd98a}.res .gn svg{vertical-align:-4px;margin-right:3px}
+.mr{justify-content:center;margin-bottom:10px}.mr:empty{display:none}
+.pvs{display:flex;align-items:flex-end;justify-content:center;height:200px;padding-bottom:46px;--fs:1;--fx:1}.pvs .flame,.pvs .glow{opacity:1}.pvr svg{width:100px;height:auto;overflow:visible;display:block}.pva svg{width:76px;height:auto;overflow:visible;display:block}.pva{margin-left:-2px;margin-bottom:54px}
 </style></head><body>
 <div id="stage">
  <div id="stars"></div>
@@ -191,7 +193,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
    <radialGradient id="ahl" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c5cbd8"/></radialGradient>
    <linearGradient id="avs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b5a9a"/><stop offset=".55" stop-color="#16213f"/><stop offset="1" stop-color="#0b101f"/></linearGradient>
   </defs>
-  <g id="ast"><g id="astb">
+  <g id="ast"><g id="astb"><g id="adb"></g>
    <rect x="0" y="15" width="13" height="25" rx="5" fill="url(#abp)"/><rect x="2.5" y="19" width="3" height="10" rx="1.5" fill="#6d7587"/><circle cx="4" cy="34" r="1.6" fill="#ff8a4c"/>
    <path d="M14 41L9 52" stroke="#e4e7ee" stroke-width="9" stroke-linecap="round"/><path d="M24 41L28 51" stroke="#d0d5e0" stroke-width="9" stroke-linecap="round"/>
    <path d="M8.5 51L7.5 54" stroke="#566075" stroke-width="10" stroke-linecap="round"/><path d="M28.5 50L29.5 53" stroke="#566075" stroke-width="10" stroke-linecap="round"/>
@@ -201,7 +203,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
    <circle cx="21" cy="13" r="13" fill="url(#ahl)"/>
    <ellipse cx="25" cy="13.5" rx="9.5" ry="8" fill="url(#avs)" stroke="#c9a24a" stroke-width="1.4"/>
    <path d="M20 10Q24 6.5 29.5 8.5" stroke="#fff" stroke-opacity=".65" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="29.5" cy="17" r="1" fill="#fff" opacity=".35"/>
-   <path d="M29 26L35 30" stroke="#f4f5f8" stroke-width="7" stroke-linecap="round"/><rect id="acc" x="29.5" y="22.5" width="4.5" height="3" rx=".8" fill="#d4584c"/><circle cx="36.5" cy="31" r="3.9" fill="#6a7388"/>
+   <path d="M29 26L35 30" stroke="#f4f5f8" stroke-width="7" stroke-linecap="round"/><rect id="acc" x="29.5" y="22.5" width="4.5" height="3" rx=".8" fill="#d4584c"/><circle cx="36.5" cy="31" r="3.9" fill="#6a7388"/><g id="adf"></g>
   </g></g></svg>
  <div id="cap"><svg viewBox="0 0 96 124" width="64" height="83"><defs>
    <linearGradient id="cg" x1="0" x2="1"><stop offset="0" stop-color="#c4cad8"/><stop offset=".35" stop-color="#ffffff"/><stop offset=".7" stop-color="#e3e7ef"/><stop offset="1" stop-color="#a3abbd"/></linearGradient>
@@ -213,7 +215,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
    <linearGradient id="fi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--i0,#ffffff)"/><stop offset=".5" style="stop-color:var(--i1,#ffe57a)"/><stop offset="1" style="stop-color:var(--i2,#ffb347)" stop-opacity="0"/></linearGradient>
    <clipPath id="hull"><path d="M33 15Q48 9 63 15Q66 16 67 20L77 72Q77.5 75 75 75H21Q18.5 75 19 72L29 20Q30 16 33 15Z"/></clipPath>
   </defs>
-  <path d="M46 12L44 2M50 12L54 1" stroke="#aab1c1" stroke-width="1.5" stroke-linecap="round"/><circle cx="44" cy="2" r="1.5" fill="#ff6a5a"/><circle cx="54" cy="1" r="1.5" fill="#8fd0f0"/>
+  <g id="decb"></g><path d="M46 12L44 2M50 12L54 1" stroke="#aab1c1" stroke-width="1.5" stroke-linecap="round"/><circle cx="44" cy="2" r="1.5" fill="#ff6a5a"/><circle cx="54" cy="1" r="1.5" fill="#8fd0f0"/>
   <path d="M33 15Q48 9 63 15Q66 16 67 20L77 72Q77.5 75 75 75H21Q18.5 75 19 72L29 20Q30 16 33 15Z" fill="url(#cg)"/>
   <g clip-path="url(#hull)"><path id="stp" d="M10 52H86V59H10Z" fill="#d9503f"/><path d="M10 59H86V61H10Z" fill="#8c2f24" opacity=".6"/><path d="M10 68H86V75H10Z" fill="#7d879b" opacity=".45"/><path d="M48 9V52" stroke="#9aa3b5" stroke-width=".8" opacity=".6"/></g>
   <circle cx="48" cy="34" r="10.5" fill="#8d96a8"/><circle cx="48" cy="34" r="8.5" fill="url(#gl)" stroke="#52607a" stroke-width="1.2"/><path d="M42.5 31Q46 27.5 51 29" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" fill="none" stroke-linecap="round"/>
@@ -227,14 +229,14 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
   <rect x="20" y="99" width="56" height="3" rx="1.5" fill="#5a6171"/>
   <path d="M26 102h14l-2.5 11H28.5zM41 102h14l-1.5 12H42.5zM56 102h14l-2.5 11H58.5z" fill="url(#nz)"/>
   <ellipse class="glow" cx="33" cy="113.5" rx="5" ry="1.8" style="fill:var(--g1,#ffb84d)"/><ellipse class="glow" cx="48" cy="114.5" rx="5.5" ry="1.8" style="fill:var(--g2,#ffd98a)"/><ellipse class="glow" cx="63" cy="113.5" rx="5" ry="1.8" style="fill:var(--g1,#ffb84d)"/>
-  <g class="flame">
+  <g id="decf"></g><g class="flame">
    <path d="M27.5 113Q26 128 33 142Q40 128 38.5 113Z" fill="url(#fo)"/><path d="M30 113Q30 124 33 133Q36 124 36 113Z" fill="url(#fi)"/>
    <path d="M42 114Q40.5 133 48 152Q55.5 133 54 114Z" fill="url(#fo)"/><path d="M44.5 114Q44.5 127 48 140Q51.5 127 51.5 114Z" fill="url(#fi)"/>
    <path d="M57.5 113Q56 128 63 142Q70 128 68.5 113Z" fill="url(#fo)"/><path d="M60 113Q60 124 63 133Q66 124 66 113Z" fill="url(#fi)"/>
   </g></svg>
   <div class="halo"></div><div class="smoke"><i style="--w:0.0s;--x:-6px"></i><i style="--w:0.1s;--x:8px"></i><i style="--w:0.2s;--x:-10px"></i><i style="--w:0.3s;--x:4px"></i><i style="--w:0.4s;--x:-4px"></i><i style="--w:0.5s;--x:10px"></i><i style="--w:0.6s;--x:-8px"></i><i style="--w:0.7s;--x:6px"></i><i style="--w:0.8s;--x:-12px"></i><i style="--w:0.9s;--x:12px"></i><i style="--w:1.0s;--x:-2px"></i><i style="--w:1.1s;--x:2px"></i></div></div>
- <div class="bar"><a href="../../">‹ SPACESHOT</a><button class="rb" id="mute" aria-label="Sonido"></button><div class="dots" id="dots"></div><button class="rb" id="invb" aria-label="Inventario"><svg viewBox="0 0 28 28" fill="none" stroke="#eceae4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="16" height="15" rx="5"/><path d="M10 10V8a4 4 0 0 1 8 0v2M10 17h8"/></svg><b id="ivn"></b></button><div class="alt"><b class="an" id="av">0</b><small>m</small></div></div>
- <div class="card off" id="card"><small id="qn"></small><h2 class="an" id="q"></h2></div>
+ <div class="bar"><a href="../../">‹ SPACESHOT</a><button class="rb" id="mute" aria-label="Sonido"></button><div class="dots" id="dots"></div><div class="alt"><b class="an" id="av">0</b><small>m</small></div></div>
+ <button class="rb" id="invb" aria-label="Inventario"><svg viewBox="0 0 28 28" fill="none" stroke="#eceae4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="16" height="15" rx="5"/><path d="M10 10V8a4 4 0 0 1 8 0v2M10 17h8"/></svg><b id="ivn"></b></button><div class="card off" id="card"><small id="qn"></small><h2 class="an" id="q"></h2></div>
  <div class="res" id="res"></div>
  <div id="bot"></div>
  <div id="map"></div><div id="inv"></div>
@@ -908,15 +910,15 @@ function home(){$("invb").style.display="";
  $("stage").classList.remove("ends");DC.length=0;dots(-1);card(false);$("dash").classList.remove("on");fxOff();buildWorld();setAlt(B(),0);
  if(S.d>=P.length){rs('<h3 class="an" style="color:#ffbf5a">Todos los planetas</h3><p class="fl">Has descubierto todos los planetas.</p>');bot('<button class="big gh" id="mp">PLANETARIO</button>');$("mp").onclick=openMap;return}
  const p=P[S.d],played=S.last===today()&&S.res;
- rs(`<div class="hp">${pl(S.d,112,true)}</div><small>PRÓXIMO DESTINO</small><h3 class="an" style="color:#eceae4">${p.t} m</h3><p class="fl">${S.x?"Sales desde tu satélite":"Sales desde "+cpName(S.d)} (${B()} m).<br>Un intento al día.</p>`);$("res").classList.add("hm");
+ rs(`<div class="hp">${pl(S.d,112,true)}</div><small>PRÓXIMO DESTINO</small><h3 class="an" style="color:#eceae4">${p.t} m</h3><p class="fl">${S.x?"Sales desde tu estación orbital":"Sales desde "+cpName(S.d)} (${B()} m).<br>Un intento al día.</p>`);$("res").classList.add("hm");
  bot(played?`<p class="mu">Ya lo has intentado hoy. Vuelve mañana.</p><div class="two"><button class="big" id="go">Resultado</button><button class="big gh" id="mp">PLANETARIO</button></div>`:`<div class="two"><button class="big" id="go">Misión ${(S.n||0)+1}</button><button class="big gh" id="mp">PLANETARIO</button></div>`);
- $("go").onclick=start;$("mp").onclick=openMap;quick()}
-let qs,qi,pts,log,tmr,ft,NQ=7,fuelOn=0,satOn=0,bstOn=0,rdOn=0;
-function start(){if(S.last===today()&&S.res)return showEnd(S.res,false);$("invb").style.display="none";$("stage").classList.remove("ends");beep(260,.2);qs=dailyQs();fuelOn=!!(S.arm.fuel&&S.inv.fuel>0);satOn=!!(S.arm.sat&&S.inv.sat>0);if(fuelOn)qs.push(Q[((dayNum()*7)%Q.length+7)%Q.length]);NQ=qs.length;qi=0;pts=0;log=[];DC.length=0;rs("");next()}
+ $("go").onclick=start;$("mp").onclick=openMap}
+let qs,qi,pts,log,tmr,ft,NQ=7,fuelOn=0,satOn=0,bstOn=0,rdOn=0,RB=0,stA=0;
+function start(){if(S.last===today()&&S.res)return showEnd(S.res,false);$("invb").style.display="none";$("stage").classList.remove("ends");beep(260,.2);qs=dailyQs();fuelOn=0;satOn=0;RB=B();stA=0;NQ=qs.length;qi=0;pts=0;log=[];DC.length=0;rs("");next()}
 function next(){rdOn=0;bstOn=0;clearInterval(tmr);$("dash").classList.remove("on");if(!flying)fxOff();rs("");
  const [t,tiers]=qs[qi];lookup={};tiers.forEach((x,i)=>x.split(",").forEach(a=>lookup[norm(a)]=i));
  $("qn").textContent="PREGUNTA "+(qi+1)+" DE "+NQ;$("q").textContent=t;card(true);dots(qi);
- bot('<div class="pill">El reloj empieza en <b id="cd">3</b></div>');const t0=Date.now();let lr=0;
+ bot('<div class="ir mr" id="mr"></div><div class="pill">El reloj empieza en <b id="cd">3</b></div>');midRow();const t0=Date.now();let lr=0;
  tmr=setInterval(()=>{const r=3-Math.floor((Date.now()-t0)/1000);if(r>0){if(r!==lr){lr=r;tickSnd()}$("cd").textContent=r;return}clearInterval(tmr);goSnd();answer()},150)}
 function answer(){const T=30000,t0=Date.now();
  bot('<div class="sg" id="sg"></div><div class="ir" id="ir"></div><div class="inp"><div class="tm" id="tm"><b id="ts">30</b></div><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Tu respuesta" aria-label="Tu respuesta"><button class="lz" id="send">Lanzar</button></div>');
@@ -930,12 +932,12 @@ function submit(){const raw=$("inp").value.trim(),a0=norm(raw);if(!a0)return;con
 function result(ti,txt){clearInterval(tmr);document.activeElement&&document.activeElement.blur();
  const ok=ti>=0;let T=ok?TIER[ti]:["Sin combustible",0,"#ff6b5e","Te has quedado sin combustible a mitad de vuelo."];
  if(bstOn&&T[1]){T=T.slice();T[1]*=2}bstOn=0;pts+=T[1];log.push(ok?ti+1:0);DC[qi]=T[2];dots(qi);card(false);
- $("stage").style.setProperty("--tc",T[2]);clearTimeout(ft);const tgt=B()+pts,fly=passes(cur,tgt).length>0,lv=ok?ti+1:0;radioSnd();fxStart(lv);flying=T[1]>0;
+ $("stage").style.setProperty("--tc",T[2]);clearTimeout(ft);const tgt=RB+pts,fly=passes(cur,tgt).length>0,lv=ok?ti+1:0;radioSnd();fxStart(lv);flying=T[1]>0;
  const show=()=>{$("dl").textContent=T[0]+" · "+pts;rs(`<h3 class="an">${T[0]}</h3><b class="ans" id="an"></b><p class="pt">+${T[1]} puntos<span> · ${T[1]} m más arriba</span></p><p class="fl">${T[3]}</p>`);$("an").textContent=ok?cap(txt):"—";$("res").style.setProperty("--lv",lv);$("res").classList.add("fx");};
  beep(ok?220+ti*130:120,.35,"triangle",.09);
- bot(`<button class="big" id="nx" disabled style="opacity:.35">${qi>=NQ-1?"Ver resultado":"Seguir subiendo"}</button>`);$("nx").onclick=()=>{if(qi>=NQ-1)finish();else{qi++;next()}};
+ bot(`<div class="ir mr" id="mr"></div><button class="big" id="nx" disabled style="opacity:.35">${qi>=NQ-1?"Ver resultado":"Seguir subiendo"}</button>`);midRow();$("nx").onclick=()=>{if(qi>=NQ-1)finish();else{qi++;next()}};
  setAlt(tgt,1.8,()=>{$("dash").classList.add("on");show();if(lv>0){fxOff();cool()}const n=$("nx");if(n){n.disabled=false;n.style.opacity=""}})}
-function finish(){const from=S.d,base=B(),to=Math.min(P.length,Math.floor((base+pts)/STEP)),ok=to>from,idx=ok?to-1:from,p=P[idx],
+function finish(){const from=S.d,base=RB,to=Math.min(P.length,Math.floor((base+pts)/STEP)),ok=to>from,idx=ok?to-1:from,p=P[idx],
  r={pts,ok,target:p.n,idx,from,to,need:P[from].t-base,log,day:dayNum(),b0:base};const prev=Math.max(S.rec||0,from*STEP),top=base+pts;r.nr=prev>0&&top>prev;S.rec=Math.max(prev,top);S.n=(S.n||0)+1;r.n=S.n;S.last=today();S.res=r;S.d=to;settle(r,from,to,ok,base);save();showEnd(r,true)}
 // ── Vuelta a casa: rebobinado acelerando y aterrizaje con humo blanco ──
 function rwStop(){const st=$("stage"),sk=$("sk");st.classList.remove("rw");$("rw").classList.remove("on");sk.style.opacity="";sk.style.transition=""}
@@ -968,7 +970,7 @@ function showEnd(r,anim){$("invb").style.display="";card(false);$("dash").classL
  $("stage").classList.toggle("ends",!!r.ok);buildWorld();dots(-1);setAlt(anim?base+r.pts:nb,0);
  const p=P[r.idx],c=p.tc||p.c1,also=to-from>1?`<br>Antes sobrevolaste ${P.slice(from,to-1).map(x=>x.n).join(" y ")}.`:"";
  rs(r.ok?`<div class="hp">${pl(r.idx,112)}</div><h3 class="an" style="color:${c}">${p.n}</h3><p class="pt" style="color:${c}">¡Planeta descubierto!</p><p class="fl">Checkpoint (${p.t} m)</p>${gainH(r)}<p class="fl rc">Récord: ${Math.max(S.rec||0,to*STEP)} m${r.nr?" · ¡nuevo!":""}</p>`
- :`<h3 class="an" style="color:#ff6b5e">Misión ${r.n||S.n||1}</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.${r.sat?"<br>🛰️ Satélite desplegado a "+r.nb+" m.":""}</p><p class="fl rc">Récord: ${Math.max(S.rec||0,to*STEP)} m${r.nr?" · ¡nuevo!":""}</p>`);
+ :`<h3 class="an" style="color:#ff6b5e">Misión ${r.n||S.n||1}</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.${r.sat?"<br>"+ic("sat",18)+" Estación desplegada a "+r.nb+" m.":""}</p><p class="fl rc">Récord: ${Math.max(S.rec||0,to*STEP)} m${r.nr?" · ¡nuevo!":""}</p>`);
  bot('<div class="two"><button class="big gh" id="mp" style="grid-column:1/-1;flex:1 1 100%">PLANETARIO</button></div><button class="lnk" id="hm">Volver al inicio</button>');
  $("mp").onclick=openMap;$("hm").onclick=home;if(r.ok)beep(660,.5,"triangle",.1);
  if(anim)rwT=setTimeout(()=>rewind(nb),900)}
@@ -988,9 +990,9 @@ addEventListener("resize",()=>{const c=cur;layout();if(anim)put(c);else setAlt(c
 
 // ── Inventario, premios y aspectos ──
 const ORD=["fuel","boost","sat","radar"];
-const ITEMS={fuel:{c:"#ffb43d",n:"Bote de combustible",d:"+1 pregunta en tu próxima misión",u:"Se usa antes de la misión"},boost:{c:"#ff6a4a",n:"Propulsor doble",d:"Duplica los metros de una pregunta",u:"Se usa durante la misión"},sat:{c:"#6fb4e8",n:"Satélite orbital",d:"Guarda tu altura si no llegas a un planeta",u:"Se usa antes de la misión"},radar:{c:"#5ee0a0",n:"Radar",d:"Mide el nivel de tu respuesta antes de enviarla",u:"Se usa durante la misión"}};
-const QT={fuel:"+1 pregunta",sat:"Satélite"},BT={boost:"×2",radar:"Radar"};
-const IC={fuel:'<path d="M9 10h11l3 3v13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2z"/><path d="M12 10V6h6l2 4"/><path d="M16.5 15l-3.5 5h5l-3.5 5"/>',boost:'<path d="M16 3c4.5 3.5 5.5 9 4 15h-8c-1.5-6-.5-11.5 4-15z"/><circle cx="16" cy="11" r="2"/><path d="M12 18l-3.5 4.5L12 22M20 18l3.5 4.5L20 22M13.5 25L16 29l2.5-4"/>',sat:'<g transform="rotate(-40 16 16)"><rect x="12" y="11" width="8" height="10" rx="1.5"/><rect x="2" y="12.5" width="8" height="7" rx="1"/><rect x="22" y="12.5" width="8" height="7" rx="1"/><path d="M16 11V7M13.5 7h5"/></g>',radar:'<circle cx="16" cy="16" r="12"/><circle cx="16" cy="16" r="6.5"/><path d="M16 16L25 7.5"/><circle cx="21" cy="21.5" r="1.5" fill="currentColor" stroke="none"/>'};
+const ITEMS={fuel:{c:"#ffb43d",n:"Bote de combustible",d:"+1 pregunta en tu misión",u:"Se usa entre preguntas"},boost:{c:"#ff6a4a",n:"Propulsor doble",d:"Duplica los metros de una pregunta",u:"Se usa en la pregunta"},sat:{c:"#6fb4e8",n:"Estación orbital",d:"Fija un checkpoint a la altura donde la uses",u:"Se usa entre preguntas"},radar:{c:"#5ee0a0",n:"Radar",d:"Mide el nivel de tu respuesta antes de enviarla",u:"Se usa en la pregunta"}};
+const QT={fuel:"+1 pregunta",sat:"Estación"},BT={boost:"×2",radar:"Radar"};
+const IC={fuel:'<path d="M9 10h11l3 3v13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2z"/><path d="M12 10V6h6l2 4"/><path d="M16.5 15l-3.5 5h5l-3.5 5"/>',boost:'<path d="M16 3c4.5 3.5 5.5 9 4 15h-8c-1.5-6-.5-11.5 4-15z"/><circle cx="16" cy="11" r="2"/><path d="M12 18l-3.5 4.5L12 22M20 18l3.5 4.5L20 22M13.5 25L16 29l2.5-4"/>',sat:'<rect x="12" y="9" width="8" height="14" rx="2.5"/><path d="M12 16h8M16 9V5M14 5h4"/><rect x="2" y="11" width="7" height="10" rx="1"/><rect x="23" y="11" width="7" height="10" rx="1"/><path d="M9 16h3M20 16h3"/>',radar:'<circle cx="16" cy="16" r="12"/><circle cx="16" cy="16" r="6.5"/><path d="M16 16L25 7.5"/><circle cx="21" cy="21.5" r="1.5" fill="currentColor" stroke="none"/>'};
 const ic=(k,s=28)=>`<svg viewBox="0 0 32 32" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:${ITEMS[k].c}">${IC[k]}</svg>`;
 // [nombre, planetas necesarios, casco x4, franja, llama x4, traje x3]
 const SETS=[["Clásico",0,["#c4cad8","#ffffff","#e3e7ef","#a3abbd"],"#d9503f",["#fff4b8","#ffb43d","#ff5a14","#ff3c0a"],["#cdd2dd","#ffffff","#dfe3ea"]],
@@ -1001,21 +1003,55 @@ const SETS=[["Clásico",0,["#c4cad8","#ffffff","#e3e7ef","#a3abbd"],"#d9503f",["
 ["Nyxara",9,["#4a3a66","#8c6fb8","#5a4378","#2a1c40"],"#d58aff",["#ffe0ff","#ff7ad9","#d58aff","#6b2a86"],["#3a2c55","#7a60a8","#46345f"]],
 ["Cosmara",14,["#ffd1f2","#ffffff","#ffc2ea","#a77cff"],"#6b4bd8",["#ffffff","#ffd1f2","#ff9ad5","#6b4bd8"],["#ffd8f3","#ffffff","#ffe3f7"]]];
 function fix(){if(!S.inv)S.inv={fuel:1,boost:1,sat:1,radar:1};if(!S.arm)S.arm={fuel:0,sat:0};S.x=S.x||0;S.sk=S.sk||0;if(!SETS[S.sk]||SETS[S.sk][1]>S.d)S.sk=0;{const e=$("ivn");if(e){const n=Object.values(S.inv).reduce((a,b)=>a+b,0);e.textContent=n||""}}}
-function skin(){const k=SETS[S.sk]||SETS[0],c=$("cap");
- document.querySelectorAll("#cg stop").forEach((e,i)=>e.setAttribute("stop-color",k[2][i]));
- document.querySelectorAll("#asu stop").forEach((e,i)=>e.setAttribute("stop-color",k[5][i]));
- $("stp").setAttribute("fill",k[3]);$("acc").setAttribute("fill",k[3]);
+// ── Piezas de decoración: cada conjunto añade más cosas ──
+const C=k=>({a:k[3],e:k[2][3],l:k[2][2],h:k[2][1],f:k[4][1],g:k[4][2],s:k[5][1],t:k[5][0]});
+const HU="M33 15Q48 9 63 15Q66 16 67 20L77 72Q77.5 75 75 75H21Q18.5 75 19 72L29 20Q30 16 33 15Z";
+const FIN=c=>`<path d="M21 58L5 94L22 88Z" fill="${c.a}" stroke="${c.e}" stroke-width="1.3" stroke-linejoin="round"/><path d="M75 58L91 94L74 88Z" fill="${c.a}" stroke="${c.e}" stroke-width="1.3" stroke-linejoin="round"/>`;
+const BOO=c=>[6,80].map(x=>`<path d="M${x} 52Q${x+5} 38 ${x+10} 52V92H${x}Z" fill="${c.l}" stroke="${c.e}" stroke-width="1.2"/><rect x="${x}" y="60" width="10" height="4" fill="${c.a}"/><path d="M${x+1} 92h8l-1 6h-6z" fill="#3a4150"/><g class="flame"><path d="M${x+2} 98Q${x+5} 118 ${x+5} 122Q${x+5} 118 ${x+8} 98Z" fill="${c.g}"/></g>`).join("")+`<rect x="15" y="61" width="7" height="3" fill="${c.e}"/><rect x="74" y="61" width="7" height="3" fill="${c.e}"/>`;
+const WNG=c=>`<path d="M22 48L2 70L6 100L22 88Z" fill="${c.l}" stroke="${c.e}" stroke-width="1.3" stroke-linejoin="round"/><path d="M22 48L6 100M22 66L4 82" stroke="${c.a}" stroke-width="1" opacity=".8"/><path d="M74 48L94 70L90 100L74 88Z" fill="${c.l}" stroke="${c.e}" stroke-width="1.3" stroke-linejoin="round"/><path d="M74 48L90 100M74 66L92 82" stroke="${c.a}" stroke-width="1" opacity=".8"/>`;
+const RNB=c=>`<path d="M5 62Q48 42 91 62" fill="none" stroke="${c.a}" stroke-width="3.4" stroke-linecap="round" opacity=".85"/>`;
+const RNF=c=>`<path d="M5 62Q48 82 91 62" fill="none" stroke="${c.a}" stroke-width="3.4" stroke-linecap="round" opacity=".85"/>`;
+const GEM=c=>`<path d="M48 58l6 8-6 8-6-8z" fill="${c.a}" stroke="${c.h}" stroke-width="1.2" stroke-linejoin="round"/><path d="M42 66h12M48 58v16" stroke="${c.h}" stroke-width=".7" opacity=".8"/>`;
+const NEO=c=>`<path d="${HU}" fill="none" stroke="${c.a}" stroke-width="3.5" opacity=".28"/><path d="${HU}" fill="none" stroke="${c.a}" stroke-width="1.4"/><path d="M34 24L27 66M62 24L69 66" stroke="${c.a}" stroke-width="1.2" opacity=".9"/>`;
+const STR=(col,p)=>p.map(([x,y,r])=>`<path transform="translate(${x} ${y}) scale(${r})" d="M0-3L.8-.8 3 0 .8 .8 0 3-.8 .8-3 0-.8-.8Z" fill="${col}"/>`).join("");
+const AUR=c=>`<radialGradient id="aur" cx=".5" cy=".5" r=".5"><stop offset=".55" stop-color="${c.f}" stop-opacity="0"/><stop offset=".85" stop-color="${c.f}" stop-opacity=".3"/><stop offset="1" stop-color="${c.f}" stop-opacity="0"/></radialGradient><circle cx="48" cy="62" r="54" fill="url(#aur)"/>`;
+const DEC=[c=>["",""],
+ c=>[FIN(c),`<path d="M30 66H66" stroke="${c.a}" stroke-width="1.2" opacity=".8"/>`],
+ c=>[FIN(c)+RNB(c),RNF(c)],
+ c=>[BOO(c),`<path d="M31 44H34M62 44H65M33 66H63" stroke="${c.a}" stroke-width="1.3" stroke-linecap="round"/>`],
+ c=>[WNG(c),GEM(c)],
+ c=>[WNG(c),NEO(c)+GEM(c)],
+ c=>[AUR(c)+WNG(c)+RNB(c),RNF(c)+GEM(c)+STR("#fff",[[34,66,1.2],[60,64,1],[14,30,1.8],[84,26,1.5],[10,108,1.3],[88,104,1.6]])]];
+const DA=[0,1,2,3,4,5,6].map(n=>c=>{let b="",f="";
+ if(n>=1)f+=`<rect x="8" y="36" width="25" height="3" fill="${c.a}"/>`;
+ if(n>=1&&n<3)f+=`<circle cx="12" cy="24" r="2.6" fill="${c.a}"/>`;
+ if(n>=2)f+=`<path d="M21 0V-5" stroke="#aab1c1" stroke-width="1.4" stroke-linecap="round"/><circle cx="21" cy="-6" r="1.7" fill="${c.a}"/>`;
+ if(n>=3)f+=`<ellipse cx="11" cy="24" rx="5" ry="3.3" fill="${c.s}" stroke="${c.a}" stroke-width="1.2"/><ellipse cx="29" cy="23" rx="5" ry="3.3" fill="${c.s}" stroke="${c.a}" stroke-width="1.2"/>`;
+ if(n>=4){f+=`<rect x="3" y="8" width="4" height="8" rx="1.5" fill="${c.a}"/>`;b+=`<path d="M1 40Q4 54 7 40Z" fill="${c.f}"/>`}
+ if(n>=5)b=`<path d="M12 22Q-9 34 -5 62Q6 52 15 42Z" fill="${c.a}" opacity=".92"/><path d="M12 22Q-4 36 -2 54" stroke="${c.h}" stroke-width="1" fill="none" opacity=".6"/>`+b;
+ if(n>=6)f+=`<ellipse cx="21" cy="-10" rx="11" ry="3" fill="none" stroke="#ffe27a" stroke-width="1.6"/>`+STR("#fff",[[38,6,1.4],[-3,10,1.2],[40,46,1.1]]);
+ return[b,f]});
+function paintR(r,k){const d=DEC[SETS.indexOf(k)](C(k));r.querySelectorAll("#cg stop").forEach((e,i)=>e.setAttribute("stop-color",k[2][i]));r.querySelector("#stp").setAttribute("fill",k[3]);r.querySelector("#decb").innerHTML=d[0];r.querySelector("#decf").innerHTML=d[1]}
+function paintA(r,k){const d=DA[SETS.indexOf(k)](C(k));r.querySelectorAll("#asu stop").forEach((e,i)=>e.setAttribute("stop-color",k[5][i]));r.querySelector("#acc").setAttribute("fill",k[3]);r.querySelector("#adb").innerHTML=d[0];r.querySelector("#adf").innerHTML=d[1]}
+function skin(){const k=SETS[S.sk]||SETS[0],c=$("cap");paintR(c,k);paintA(document,k);
  ["--f0","--f1","--f2","--f3"].forEach((v,i)=>c.style.setProperty(v,k[4][i]));c.style.setProperty("--g1",k[4][1]);c.style.setProperty("--g2",k[4][0])}
+const uniq=(h,u)=>h.replace(/id="([^"]+)"/g,'id="$1'+u+'"').replace(/url\(#([^)]+)\)/g,'url(#$1'+u+')');
+function pvHTML(k){const r=$("cap").querySelector("svg").cloneNode(true);r.removeAttribute("width");r.removeAttribute("height");paintR(r,k);
+ const a=document.createElementNS("http://www.w3.org/2000/svg","svg");a.setAttribute("viewBox","-12 -18 64 84");a.innerHTML="<defs>"+$("tether").querySelector("defs").innerHTML+"</defs><g>"+$("astb").innerHTML+"</g>";paintA(a,k);
+ return `<div class="pvs" style="--f0:${k[4][0]};--f1:${k[4][1]};--f2:${k[4][2]};--f3:${k[4][3]};--g1:${k[4][1]};--g2:${k[4][0]}"><div class="pvr">${uniq(r.outerHTML,"r")}</div><div class="pva">${uniq(a.outerHTML,"a")}</div></div>`}
 function settle(r,from,to,ok,base){const I=S.inv;
- if(fuelOn){I.fuel--;S.arm.fuel=0}
- if(satOn){if(!ok&&r.pts>0){I.sat--;S.x=base+r.pts-from*STEP;r.sat=1}S.arm.sat=0}
- r.nb=ok?to*STEP:base+(r.sat?r.pts:0);
+ if(satOn&&!ok)r.sat=1;
+ r.nb=ok?to*STEP:(r.sat?stA:base);
  if(ok){S.x=0;r.gain=[];for(let j=from;j<to;j++){const k=ORD[j%4];I[k]++;r.gain.push(k)}SETS.forEach((t,i)=>{if(t[1]>from&&t[1]<=to)r.gain.push("set"+i)})}
  fuelOn=satOn=0;fix()}
 const gainH=r=>r.gain&&r.gain.length?'<p class="fl gn">'+r.gain.map(k=>k.slice(0,3)==="set"?"✦ Aspecto "+SETS[k.slice(3)][0]:ic(k,18)+ITEMS[k].n).join(" &nbsp;·&nbsp; ")+"</p>":"";
-function quick(){const b=$("bot");if(S.last===today()&&S.res)return;const k=["fuel","sat"].filter(x=>S.inv[x]>0);if(!k.length)return;
- const d=document.createElement("div");d.className="qk";d.innerHTML=k.map(x=>`<button class="qb${S.arm[x]?" on":""}" data-k="${x}">${ic(x,22)}<span>${QT[x]}</span><b>×${S.inv[x]}</b></button>`).join("");b.insertBefore(d,b.firstChild);
- d.querySelectorAll("button").forEach(e=>e.onclick=()=>{const x=e.dataset.k;S.arm[x]=S.arm[x]?0:1;save();e.classList.toggle("on");beep(S.arm[x]?620:320,.08)})}
+function midRow(){const e=$("mr");if(!e)return;const I=S.inv;let h="";
+ [["fuel","+1 pregunta",fuelOn],["sat",satOn?"Estación · "+stA+" m":"Estación",satOn]].forEach(([x,t,on])=>{if(I[x]>0||on)h+=`<button class="ib${on?" on":""}" data-k="${x}">${ic(x,22)}<span>${on?t+" ✓":t}</span><b>${on?"":"×"+I[x]}</b></button>`});
+ e.innerHTML=h;
+ e.querySelectorAll("button").forEach(b=>b.onclick=()=>{const x=b.dataset.k;
+  if(x==="fuel"&&!fuelOn&&S.inv.fuel>0){fuelOn=1;S.inv.fuel--;qs.push(Q[((dayNum()*7)%Q.length+7)%Q.length]);NQ=qs.length;dots(qi);const n=$("nx");if(n)n.textContent=qi>=NQ-1?"Ver resultado":"Seguir subiendo";const q=$("qn");if(q)q.textContent="PREGUNTA "+(qi+1)+" DE "+NQ}
+  else if(x==="sat"&&!satOn&&S.inv.sat>0){satOn=1;S.inv.sat--;stA=RB+pts;S.x=stA-S.d*STEP}else return;
+  save();beep(620,.1);midRow()})}
 function itemRow(){const e=$("ir");if(!e)return;const I=S.inv;let h="";
  if(I.boost>0||bstOn)h+=`<button class="ib${bstOn?" on":""}" id="ib1">${ic("boost",22)}<span>${bstOn?"×2 listo":"×2"}</span><b>${bstOn?"":"×"+I.boost}</b></button>`;
  if(I.radar>0||rdOn)h+=`<button class="ib${rdOn?" on":""}" id="ib2">${ic("radar",22)}<span>Radar</span><b>${rdOn?"":"×"+I.radar}</b></button>`;
@@ -1028,14 +1064,13 @@ function radar(){const o=$("rdo"),i=$("inp");if(!o||!i)return;if(!rdOn){o.textCo
  if(!a){o.textContent="Escribe y mido su nivel";o.style.color="#8e94a3";return}
  const m=match(a);if(m===null){o.textContent="No la acepta";o.style.color="#8e94a3";return}
  const t=lookup[m];o.style.color="";o.innerHTML=[0,1,2,3,4].map(j=>`<i style="background:${j<=t?TIER[t][2]:"#2c3140"}"></i>`).join("")+`<span style="color:${TIER[t][2]}">${TIER[t][0]} · ${TIER[t][1]} m</span>`}
-const mini=(k,z)=>`<svg viewBox="0 0 60 60" width="${z||54}" height="${z||54}"><path d="M30 5Q38 12 40 24L44 44H16L20 24Q22 12 30 5Z" fill="${k[2][2]}" stroke="${k[2][3]}" stroke-width="1.5"/><path d="M19 38H41L42 43H18Z" fill="${k[3]}"/><circle cx="30" cy="24" r="4.5" fill="#16213f" stroke="${k[3]}" stroke-width="1.5"/><path d="M25 44Q30 58 35 44Z" fill="${k[4][1]}"/><circle cx="50" cy="16" r="7" fill="${k[5][1]}" stroke="${k[5][0]}"/><ellipse cx="51.5" cy="16" rx="4" ry="3.3" fill="#16213f" stroke="${k[3]}" stroke-width=".8"/></svg>`;
 let PV=-1;
 function openInv(){const m=$("inv"),ys=m.scrollTop;fix();if(PV<0||!SETS[PV])PV=S.sk;const k=SETS[PV],lk=k[1]>S.d,pn=lk?P[k[1]-1]:null;
  let h='<div class="mh"><b class="an" style="letter-spacing:.06em">INVENTARIO</b><button id="ix" aria-label="Cerrar">✕</button></div><h4>OBJETOS</h4><div class="ig">';
- ORD.forEach(x=>{const t=ITEMS[x],n=S.inv[x],pre=x==="fuel"||x==="sat",on=pre&&S.arm[x]&&n>0;
+ ORD.forEach(x=>{const t=ITEMS[x],n=S.inv[x],pre=0,on=0;
   h+=`<div class="ic${n?"":" z"}${on?" on":""}"><div class="ico" style="--c:${t.c}">${ic(x,30)}<b>×${n}</b></div><strong>${t.n}</strong><em>${t.d}</em>${pre?`<button class="tg${on?" on":""}" data-k="${x}"${n?"":" disabled"}>${on?"Activado ✓":"Activar"}</button>`:`<span class="tag">${t.u}</span>`}</div>`});
- h+='</div><p class="hint">Cada planeta nuevo te da un objeto. También puedes activarlos desde la pantalla de inicio.</p><h4>ASPECTOS · COHETE Y TRAJE</h4>';
- h+=`<div class="pv" style="--g:${k[4][1]}">${mini(k,128)}<b>${k[0]}</b><small>${lk?"Bloqueado · descubre "+pn.n+" ("+pn.t+" m)":PV===S.sk?"Equipado":"Disponible"}</small>${!lk&&PV!==S.sk?'<button class="eqb" id="eqb">EQUIPAR</button>':""}</div><div class="sw">`;
+ h+='</div><p class="hint">Cada planeta nuevo te da un objeto. Se activan jugando: el propulsor y el radar en cada pregunta; el combustible y la estación, entre preguntas.</p><h4>ASPECTOS · COHETE Y TRAJE</h4>';
+ h+=`<div class="pv" style="--g:${k[4][1]}">${pvHTML(k)}<b>${k[0]}</b><small>${lk?"Bloqueado · descubre "+pn.n+" ("+pn.t+" m)":PV===S.sk?"Equipado":"Disponible"}</small>${!lk&&PV!==S.sk?'<button class="eqb" id="eqb">EQUIPAR</button>':""}</div><div class="sw">`;
  SETS.forEach((q,i)=>{h+=`<button class="sq${i===PV?" sel":""}${i===S.sk?" eq":""}${q[1]>S.d?" lk":""}" data-s="${i}" aria-label="${q[0]}" style="background:linear-gradient(135deg,${q[2][2]} 50%,${q[3]} 50%)"></button>`});
  m.innerHTML=h+"</div>";m.style.display="block";m.scrollTop=ys;
  $("ix").onclick=()=>{m.style.display="none";PV=-1};
