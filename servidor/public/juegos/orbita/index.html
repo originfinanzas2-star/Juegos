@@ -982,10 +982,10 @@ const HELM=`<svg class="hm" viewBox="0 0 100 100" width="100" height="100"><defs
 function openMap(){const m=$("map");
  let h='<div class="mh"><b class="an" style="letter-spacing:.06em">PLANETAS</b><button id="mx" aria-label="Cerrar">✕</button></div><div class="ml2">';
  for(let i=P.length-1;i>=0;i--){const got=i<S.d;h+=`<div class="row ${i%2?"l":"r"}"><div class="pp">${pl(i,100,!got)}${i===S.d-1?HELM:""}</div><div><b style="color:${got?(P[i].tc||P[i].c1):"#6b7385"}">${got?P[i].n:"???"}</b><span>${P[i].t} m</span><em>${got?P[i].d:i===S.d?"Tu próximo destino":"Sin descubrir"}</em></div></div>`}
- h+='<div class="row l"><div class="pp">'+earth(100)+(S.d===0?HELM:"")+'</div><div><b>Tierra</b><span>0 m</span><em>Punto de partida</em></div></div></div><button class="lnk rst" id="rst">Reiniciar progreso</button>';
+ h+='<div class="row l"><div class="pp">'+earth(100)+(S.d===0?HELM:"")+'</div><div><b>Tierra</b><span>0 m</span><em>Punto de partida</em></div></div></div>';
  m.innerHTML=h;m.style.display="block";m.scrollTop=m.scrollHeight;
  $("mx").onclick=()=>{m.style.display="none"};
- $("rst").onclick=()=>{if(!confirm("¿Reiniciar progreso? Perderás tus planetas y tu récord."))return;S={d:0,last:"",res:null};fix();skin();save();m.style.display="none";home()}}
+}
 ['gesturestart','gesturechange','gestureend','dblclick'].forEach(e=>document.addEventListener(e,x=>x.preventDefault(),{passive:false}));
 document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
 addEventListener("resize",()=>{const c=cur;layout();if(anim)put(c);else setAlt(c,0)});/* el teclado de Android abre/cierra y dispara resize: no debe cortar el vuelo */
