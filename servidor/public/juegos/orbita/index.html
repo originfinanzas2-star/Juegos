@@ -175,6 +175,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 .rdo{display:flex;align-items:center;gap:3px;font-size:13px;font-weight:700}.rdo i{width:14px;height:6px;border-radius:3px}.rdo span{margin-left:6px}.res .gn{color:#ffd98a}.res .gn svg{vertical-align:-4px;margin-right:3px}
 .mr{justify-content:center;margin-bottom:10px}.mr:empty{display:none}
 .pvs{display:flex;align-items:flex-end;justify-content:center;height:200px;padding-bottom:46px;--fs:1;--fx:1}.pvs .flame,.pvs .glow{opacity:1}.pvr svg{width:100px;height:auto;overflow:visible;display:block}.pva svg{width:76px;height:auto;overflow:visible;display:block}.pva{margin-left:-2px;margin-bottom:54px}
+.dots i.xd{border-radius:3px;transform:rotate(45deg) scale(.85);box-shadow:0 0 0 1.5px #ffb43d}.stn{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#6fb4e8}.pvs.lkp{align-items:center;padding-bottom:0;color:#6b7285}.sq{display:grid;place-items:center;color:#8e94a3}
 </style></head><body>
 <div id="stage">
  <div id="stars"></div>
@@ -903,7 +904,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)engineStop(
 
 // ── Interfaz ──
 const DC=[];
-function dots(c){$("dots").innerHTML=Array.from({length:NQ},(_,i)=>`<i style="background:${DC[i]||(i===c?"#eceae4":"#2c3140")}"></i>`).join("")}
+function dots(c){$("dots").innerHTML=Array.from({length:NQ},(_,i)=>`<i${fuelOn&&i===NQ-1?' class="xd"':""} style="background:${DC[i]||(i===c?"#eceae4":"#2c3140")}"></i>`).join("")}
 const card=on=>$("card").classList.toggle("off",!on),rs=h=>{$("res").classList.remove("hm","fx");$("res").innerHTML=h;$("res").classList.toggle("off",!h)};
 const bot=h=>{$("bot").innerHTML=h};
 function home(){$("invb").style.display="";
@@ -913,8 +914,8 @@ function home(){$("invb").style.display="";
  rs(`<div class="hp">${pl(S.d,112,true)}</div><small>PRÓXIMO DESTINO</small><h3 class="an" style="color:#eceae4">${p.t} m</h3><p class="fl">${S.x?"Sales desde tu estación orbital":"Sales desde "+cpName(S.d)} (${B()} m).<br>Un intento al día.</p>`);$("res").classList.add("hm");
  bot(played?`<p class="mu">Ya lo has intentado hoy. Vuelve mañana.</p><div class="two"><button class="big" id="go">Resultado</button><button class="big gh" id="mp">PLANETARIO</button></div>`:`<div class="two"><button class="big" id="go">Misión ${(S.n||0)+1}</button><button class="big gh" id="mp">PLANETARIO</button></div>`);
  $("go").onclick=start;$("mp").onclick=openMap}
-let qs,qi,pts,log,tmr,ft,NQ=7,fuelOn=0,satOn=0,bstOn=0,rdOn=0,RB=0,stA=0;
-function start(){if(S.last===today()&&S.res)return showEnd(S.res,false);$("invb").style.display="none";$("stage").classList.remove("ends");beep(260,.2);qs=dailyQs();fuelOn=0;satOn=0;RB=B();stA=0;NQ=qs.length;qi=0;pts=0;log=[];DC.length=0;rs("");next()}
+let qs,qi,pts,log,tmr,ft,NQ=7,fuelOn=0,satOn=0,bstOn=0,rdOn=0,RB=0,stA=0,usedK=0;
+function start(){if(S.last===today()&&S.res)return showEnd(S.res,false);$("invb").style.display="none";$("stage").classList.remove("ends");beep(260,.2);qs=dailyQs();fuelOn=0;satOn=0;usedK=0;RB=B();stA=0;NQ=qs.length;qi=0;pts=0;log=[];DC.length=0;rs("");next()}
 function next(){rdOn=0;bstOn=0;clearInterval(tmr);$("dash").classList.remove("on");if(!flying)fxOff();rs("");
  const [t,tiers]=qs[qi];lookup={};tiers.forEach((x,i)=>x.split(",").forEach(a=>lookup[norm(a)]=i));
  $("qn").textContent="PREGUNTA "+(qi+1)+" DE "+NQ;$("q").textContent=t;card(true);dots(qi);
@@ -935,8 +936,8 @@ function result(ti,txt){clearInterval(tmr);document.activeElement&&document.acti
  $("stage").style.setProperty("--tc",T[2]);clearTimeout(ft);const tgt=RB+pts,fly=passes(cur,tgt).length>0,lv=ok?ti+1:0;radioSnd();fxStart(lv);flying=T[1]>0;
  const show=()=>{$("dl").textContent=T[0]+" · "+pts;rs(`<h3 class="an">${T[0]}</h3><b class="ans" id="an"></b><p class="pt">+${T[1]} puntos<span> · ${T[1]} m más arriba</span></p><p class="fl">${T[3]}</p>`);$("an").textContent=ok?cap(txt):"—";$("res").style.setProperty("--lv",lv);$("res").classList.add("fx");};
  beep(ok?220+ti*130:120,.35,"triangle",.09);
- bot(`<div class="ir mr" id="mr"></div><button class="big" id="nx" disabled style="opacity:.35">${qi>=NQ-1?"Ver resultado":"Seguir subiendo"}</button>`);midRow();$("nx").onclick=()=>{if(qi>=NQ-1)finish();else{qi++;next()}};
- setAlt(tgt,1.8,()=>{$("dash").classList.add("on");show();if(lv>0){fxOff();cool()}const n=$("nx");if(n){n.disabled=false;n.style.opacity=""}})}
+ bot(`<div class="ir mr" id="mr"></div><button class="big" id="nx" disabled style="opacity:.35">${qi>=NQ-1?"Ver resultado":"Seguir subiendo"}</button>`);$("nx").onclick=()=>{if(qi>=NQ-1)finish();else{qi++;next()}};
+ setAlt(tgt,1.8,()=>{$("dash").classList.add("on");show();if(lv>0){fxOff();cool()}const n=$("nx");if(n){n.disabled=false;n.style.opacity=""}midRow()})}
 function finish(){const from=S.d,base=RB,to=Math.min(P.length,Math.floor((base+pts)/STEP)),ok=to>from,idx=ok?to-1:from,p=P[idx],
  r={pts,ok,target:p.n,idx,from,to,need:P[from].t-base,log,day:dayNum(),b0:base};const prev=Math.max(S.rec||0,from*STEP),top=base+pts;r.nr=prev>0&&top>prev;S.rec=Math.max(prev,top);S.n=(S.n||0)+1;r.n=S.n;S.last=today();S.res=r;S.d=to;settle(r,from,to,ok,base);save();showEnd(r,true)}
 // ── Vuelta a casa: rebobinado acelerando y aterrizaje con humo blanco ──
@@ -1046,32 +1047,34 @@ function settle(r,from,to,ok,base){const I=S.inv;
  fuelOn=satOn=0;fix()}
 const gainH=r=>r.gain&&r.gain.length?'<p class="fl gn">'+r.gain.map(k=>k.slice(0,3)==="set"?"✦ Aspecto "+SETS[k.slice(3)][0]:ic(k,18)+ITEMS[k].n).join(" &nbsp;·&nbsp; ")+"</p>":"";
 function midRow(){const e=$("mr");if(!e)return;const I=S.inv;let h="";
- [["fuel","+1 pregunta",fuelOn],["sat",satOn?"Estación · "+stA+" m":"Estación",satOn]].forEach(([x,t,on])=>{if(I[x]>0||on)h+=`<button class="ib${on?" on":""}" data-k="${x}">${ic(x,22)}<span>${on?t+" ✓":t}</span><b>${on?"":"×"+I[x]}</b></button>`});
+ if(!usedK){[["fuel","+1 pregunta"],["sat","Estación"]].forEach(([x,t])=>{if(I[x]>0)h+=`<button class="ib" data-k="${x}">${ic(x,22)}<span>${t}</span><b>×${I[x]}</b></button>`})}
+ else if(satOn)h=`<span class="stn">${ic("sat",18)} Estación fijada a ${stA} m</span>`;
  e.innerHTML=h;
- e.querySelectorAll("button").forEach(b=>b.onclick=()=>{const x=b.dataset.k;
-  if(x==="fuel"&&!fuelOn&&S.inv.fuel>0){fuelOn=1;S.inv.fuel--;qs.push(Q[((dayNum()*7)%Q.length+7)%Q.length]);NQ=qs.length;dots(qi);const n=$("nx");if(n)n.textContent=qi>=NQ-1?"Ver resultado":"Seguir subiendo";const q=$("qn");if(q)q.textContent="PREGUNTA "+(qi+1)+" DE "+NQ}
-  else if(x==="sat"&&!satOn&&S.inv.sat>0){satOn=1;S.inv.sat--;stA=RB+pts;S.x=stA-S.d*STEP}else return;
+ e.querySelectorAll("button").forEach(b=>b.onclick=()=>{const x=b.dataset.k;if(usedK)return;
+  if(x==="fuel"&&S.inv.fuel>0){usedK="fuel";fuelOn=1;S.inv.fuel--;qs.push(Q[((dayNum()*7)%Q.length+7)%Q.length]);NQ=qs.length;dots(qi);const n=$("nx");if(n)n.textContent=qi>=NQ-1?"Ver resultado":"Seguir subiendo";const q=$("qn");if(q)q.textContent="PREGUNTA "+(qi+1)+" DE "+NQ}
+  else if(x==="sat"&&S.inv.sat>0){usedK="sat";satOn=1;S.inv.sat--;stA=RB+pts;S.x=stA-S.d*STEP}else return;
   save();beep(620,.1);midRow()})}
 function itemRow(){const e=$("ir");if(!e)return;const I=S.inv;let h="";
- if(I.boost>0||bstOn)h+=`<button class="ib${bstOn?" on":""}" id="ib1">${ic("boost",22)}<span>${bstOn?"×2 listo":"×2"}</span><b>${bstOn?"":"×"+I.boost}</b></button>`;
- if(I.radar>0||rdOn)h+=`<button class="ib${rdOn?" on":""}" id="ib2">${ic("radar",22)}<span>Radar</span><b>${rdOn?"":"×"+I.radar}</b></button>`;
+ if((!usedK&&I.boost>0)||bstOn)h+=`<button class="ib${bstOn?" on":""}" id="ib1">${ic("boost",22)}<span>${bstOn?"×2 listo":"×2"}</span><b>${bstOn?"":"×"+I.boost}</b></button>`;
+ if((!usedK&&I.radar>0)||rdOn)h+=`<button class="ib${rdOn?" on":""}" id="ib2">${ic("radar",22)}<span>Radar</span><b>${rdOn?"":"×"+I.radar}</b></button>`;
  e.innerHTML=h+'<span class="rdo" id="rdo"></span>';
  const a=$("ib1"),b=$("ib2");
- if(a)a.onclick=()=>{if(!bstOn&&S.inv.boost>0){bstOn=1;S.inv.boost--;save();beep(520,.1);itemRow();$("inp").focus()}};
- if(b)b.onclick=()=>{if(!rdOn&&S.inv.radar>0){rdOn=1;S.inv.radar--;save();beep(700,.1);itemRow();radar();$("inp").focus()}};
+ if(a)a.onclick=()=>{if(!usedK&&S.inv.boost>0){usedK="boost";bstOn=1;S.inv.boost--;save();beep(520,.1);itemRow();$("inp").focus()}};
+ if(b)b.onclick=()=>{if(!usedK&&S.inv.radar>0){usedK="radar";rdOn=1;S.inv.radar--;save();beep(700,.1);itemRow();radar();$("inp").focus()}};
  radar()}
 function radar(){const o=$("rdo"),i=$("inp");if(!o||!i)return;if(!rdOn){o.textContent="";return}const a=norm(i.value);
  if(!a){o.textContent="Escribe y mido su nivel";o.style.color="#8e94a3";return}
  const m=match(a);if(m===null){o.textContent="No la acepta";o.style.color="#8e94a3";return}
  const t=lookup[m];o.style.color="";o.innerHTML=[0,1,2,3,4].map(j=>`<i style="background:${j<=t?TIER[t][2]:"#2c3140"}"></i>`).join("")+`<span style="color:${TIER[t][2]}">${TIER[t][0]} · ${TIER[t][1]} m</span>`}
 let PV=-1;
+const LKS=z=>`<svg viewBox="0 0 24 24" width="${z}" height="${z}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>`;
 function openInv(){const m=$("inv"),ys=m.scrollTop;fix();if(PV<0||!SETS[PV])PV=S.sk;const k=SETS[PV],lk=k[1]>S.d,pn=lk?P[k[1]-1]:null;
  let h='<div class="mh"><b class="an" style="letter-spacing:.06em">INVENTARIO</b><button id="ix" aria-label="Cerrar">✕</button></div><h4>OBJETOS</h4><div class="ig">';
  ORD.forEach(x=>{const t=ITEMS[x],n=S.inv[x],pre=0,on=0;
-  h+=`<div class="ic${n?"":" z"}${on?" on":""}"><div class="ico" style="--c:${t.c}">${ic(x,30)}<b>×${n}</b></div><strong>${t.n}</strong><em>${t.d}</em>${pre?`<button class="tg${on?" on":""}" data-k="${x}"${n?"":" disabled"}>${on?"Activado ✓":"Activar"}</button>`:`<span class="tag">${t.u}</span>`}</div>`});
- h+='</div><p class="hint">Cada planeta nuevo te da un objeto. Se activan jugando: el propulsor y el radar en cada pregunta; el combustible y la estación, entre preguntas.</p><h4>ASPECTOS · COHETE Y TRAJE</h4>';
- h+=`<div class="pv" style="--g:${k[4][1]}">${pvHTML(k)}<b>${k[0]}</b><small>${lk?"Bloqueado · descubre "+pn.n+" ("+pn.t+" m)":PV===S.sk?"Equipado":"Disponible"}</small>${!lk&&PV!==S.sk?'<button class="eqb" id="eqb">EQUIPAR</button>':""}</div><div class="sw">`;
- SETS.forEach((q,i)=>{h+=`<button class="sq${i===PV?" sel":""}${i===S.sk?" eq":""}${q[1]>S.d?" lk":""}" data-s="${i}" aria-label="${q[0]}" style="background:linear-gradient(135deg,${q[2][2]} 50%,${q[3]} 50%)"></button>`});
+  h+=`<div class="ic${n?"":" z"}${on?" on":""}"><div class="ico" style="--c:${t.c}">${ic(x,30)}<b>×${n}</b></div><strong>${t.n}</strong><em>${t.d}</em></div>`});
+ h+='</div><p class="hint">Cada planeta nuevo te da un objeto.</p><h4>ASPECTOS · COHETE Y TRAJE</h4>';
+ h+=`<div class="pv" style="--g:${lk?"#5a6070":k[4][1]}">${lk?`<div class="pvs lkp">${LKS(84)}</div>`:pvHTML(k)}<b>${lk?"Bloqueado":k[0]}</b><small>${lk?"Descubre "+pn.n+" ("+pn.t+" m)":PV===S.sk?"Equipado":"Disponible"}</small>${!lk&&PV!==S.sk?'<button class="eqb" id="eqb">EQUIPAR</button>':""}</div><div class="sw">`;
+ SETS.forEach((q,i)=>{h+=`<button class="sq${i===PV?" sel":""}${i===S.sk?" eq":""}${q[1]>S.d?" lk":""}" data-s="${i}" aria-label="${q[1]>S.d?"Bloqueado":q[0]}" style="background:${q[1]>S.d?"#252a36":`linear-gradient(135deg,${q[2][2]} 50%,${q[3]} 50%)`}">${q[1]>S.d?LKS(18):""}</button>`});
  m.innerHTML=h+"</div>";m.style.display="block";m.scrollTop=ys;
  $("ix").onclick=()=>{m.style.display="none";PV=-1};
  m.querySelectorAll(".tg").forEach(b=>b.onclick=()=>{const x=b.dataset.k;if(S.inv[x]>0){S.arm[x]=S.arm[x]?0:1;save();openInv()}});
