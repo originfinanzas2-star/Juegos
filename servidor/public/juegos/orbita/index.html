@@ -742,7 +742,7 @@ function buildWorld(){OFF=TT(S.d);
  let h=OFF?`<div id="bigp" style="top:calc(${Y0}px - 80vw);${HR[Math.min(S.d,P.length)-1]||""}">${bigPl(Math.min(S.d,P.length)-1)}</div>`:`<div id="earth" style="top:${Y0}px">${EARTH}</div>`;
  for(let a=Math.max(1,OFF-20);a<=OFF+720;a++){const y=Y0-(a-OFF)*PPM,b=a%10===0;h+=`<i class="tk${b?" bg":""}" style="top:${y}px"></i>`;if(b)h+=`<span class="tl" style="top:${y-9}px">${a} m</span>`}
  P.forEach((p,i)=>{const y=Y0-(p.t-OFF)*PPM,got=i<S.d,tg=i===S.d,cp=i===S.d-1;
-  h+=`<div class="mk${tg?" tg":""}${cp?" cp":""}" data-i="${i}" style="top:${y}px"><div class="ml"></div><div class="mp">${pl(i,58,!got)}</div><div class="mt"><b style="color:${got?(p.tc||p.c1):tg?"#eceae4":"#6b7385"}">${got?p.n:tg?"Objetivo":"???"}</b><span>${p.t} m${cp?" · checkpoint":""}</span></div></div>`});
+  h+=`<div class="mk${tg?" tg":""}${cp?" cp":""}" data-i="${i}" style="top:${y}px"><div class="ml"></div><div class="mp">${pl(i,58,!got)}</div><div class="mt"><b style="color:${got?(p.tc||p.c1):tg?"#eceae4":"#6b7385"}">${tg&&!got?"Objetivo":""}</b><span>${p.t} m${cp?" · checkpoint":""}</span></div></div>`});
  $("world").innerHTML=h;touched.clear();flyI=-1;flyOff()}
 function put(a){cur=a;$("world").style.transform=`translate3d(0,${(a-OFF)*PPM}px,0)`;$("av").textContent=Math.round(a)}
 function flyOff(){$("fly").style.opacity=0;$("vg").style.opacity=0}
@@ -752,7 +752,7 @@ function planetFx(i,k,h){const mk=$("world").querySelector(`.mk[data-i="${i}"]`)
  mp.style.transform=`translate(${tx.toFixed(1)}px,0) scale(${sc.toFixed(3)})`;mp.style.opacity=Math.min(1,k*4).toFixed(2);
  mp.style.filter="none";mp.style.setProperty("--gc",p.tc||p.c1);mp.style.setProperty("--gk",k.toFixed(3));mt.style.opacity="0"}
 function reveal(i){const mk=$("world").querySelector(`.mk[data-i="${i}"]`);if(!mk||mk.dataset.rv)return;mk.dataset.rv=1;const p=P[i];
- mk.querySelector(".mp").innerHTML=pl(i,58,false);const b=mk.querySelector(".mt b");b.textContent=p.n;b.style.color=p.tc||p.c1}
+ mk.querySelector(".mp").innerHTML=pl(i,58,false);}
 function passes(from,to){return to>from?P.map((p,i)=>i).filter(i=>P[i].t>from&&P[i].t<=to):[]}
 var brkT=0,rwT=0,wdT=0,anim=0;function setAlt(a,sec,done){cancelAnimationFrame(raf);clearTimeout(brkT);clearTimeout(rwT);clearTimeout(wdT);rwStop();anim=0;$("cap").classList.remove("brk");
  if(!sec){touched.forEach(i=>planetFx(i,0));touched.clear();flyOff();flyI=-1;put(a);return}
