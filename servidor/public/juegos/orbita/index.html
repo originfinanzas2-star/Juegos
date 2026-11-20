@@ -972,7 +972,7 @@ function showEnd(r,anim){$("invb").style.display="";card(false);$("dash").classL
  $("stage").classList.toggle("ends",!!r.ok);buildWorld();dots(-1);setAlt(anim?base+r.pts:nb,0);
  const p=P[r.idx],c=p.tc||p.c1,also=to-from>1?`<br>Antes sobrevolaste ${P.slice(from,to-1).map(x=>x.n).join(" y ")}.`:"";
  rs(r.ok?`<div class="hp">${pl(r.idx,112)}</div><h3 class="an" style="color:${c}">${p.n}</h3><p class="pt" style="color:${c}">¡Planeta descubierto!</p><p class="fl">Checkpoint (${p.t} m)</p>${gainH(r)}<p class="fl rc">Récord: ${Math.max(S.rec||0,TT(to))} m${r.nr?" · ¡nuevo!":""}</p>`
- :`<h3 class="an" style="color:#ff6b5e">Misión ${r.n||S.n||1}</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.${r.sat?"<br>"+ic("sat",18)+" Estación desplegada a "+r.nb+" m.":""}</p>${gainH(r)}${!r.cons&&r.fs?`<p class="fl">Fallos seguidos: ${r.fs} de ${FAILN}</p>`:""}<p class="fl rc">Récord: ${Math.max(S.rec||0,TT(to))} m${r.nr?" · ¡nuevo!":""}</p>`);
+ :`<h3 class="an" style="color:#ff6b5e">Misión ${r.n||S.n||1}</h3><p class="pt" style="color:#ff6b5e">${r.pts} m</p><p class="fl">Te faltaron ${r.need-r.pts} m para llegar al siguiente planeta.<br>Mañana, otro intento.${r.sat?"<br>"+ic("sat",18)+" Estación desplegada a "+r.nb+" m.":""}</p>${gainH(r)}<p class="fl rc">Récord: ${Math.max(S.rec||0,TT(to))} m${r.nr?" · ¡nuevo!":""}</p>`);
  bot('<div class="two"><button class="big gh" id="mp" style="grid-column:1/-1;flex:1 1 100%">PLANETARIO</button></div><button class="lnk" id="hm">Volver al inicio</button>');
  $("mp").onclick=openMap;$("hm").onclick=home;if(r.ok)beep(660,.5,"triangle",.1);
  if(anim)rwT=setTimeout(()=>rewind(nb),900)}
@@ -1074,7 +1074,7 @@ const LKS=z=>`<svg viewBox="0 0 24 24" width="${z}" height="${z}" fill="none" st
 function openInv(){const m=$("inv"),ys=m.scrollTop;fix();if(PV<0||!SETS[PV])PV=S.sk;const k=SETS[PV],lk=k[1]>S.d,pn=lk?P[k[1]-1]:null;
  let h='<div class="mh"><b class="an" style="letter-spacing:.06em">INVENTARIO</b><button id="ix" aria-label="Cerrar">✕</button></div><h4>OBJETOS</h4><div class="ig">';
  ORD.forEach(x=>{const t=ITEMS[x],n=S.inv[x],pre=0,on=0;
-  h+=`<div class="ic${n?"":" z"}${on?" on":""}"><div class="ico" style="--c:${t.c}">${ic(x,30)}<b>×${n}</b></div><strong>${t.n}</strong><em>${t.d}</em></div>`});
+  h+=`<div class="ic${n?"":" z"}${on?" on":""}"><div class="ico" style="--c:${t.c}">${ic(x,30)}<b>${n}</b></div><strong>${t.n}</strong><em>${t.d}</em></div>`});
  h+='</div><p class="hint">Cada planeta nuevo te da un objeto.</p><h4>ASPECTOS · COHETE Y TRAJE</h4>';
  h+=`<div class="pv" style="--g:${lk?"#5a6070":k[4][1]}">${lk?`<div class="pvs lkp">${LKS(84)}</div>`:pvHTML(k)}<b>${lk?"Bloqueado":k[0]}</b><small>${lk?"Descubre "+pn.n+" ("+pn.t+" m)":PV===S.sk?"Equipado":"Disponible"}</small>${!lk&&PV!==S.sk?'<button class="eqb" id="eqb">EQUIPAR</button>':""}</div><div class="sw">`;
  SETS.forEach((q,i)=>{h+=`<button class="sq${i===PV?" sel":""}${i===S.sk?" eq":""}${q[1]>S.d?" lk":""}" data-s="${i}" aria-label="${q[1]>S.d?"Bloqueado":q[0]}" style="background:${q[1]>S.d?"#252a36":`linear-gradient(135deg,${q[2][2]} 50%,${q[3]} 50%)`}">${q[1]>S.d?LKS(18):""}</button>`});
